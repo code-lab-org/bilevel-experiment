@@ -23,8 +23,13 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final int X_SHIFT =    0;
+	public static final int X_SHIFT = -310;
 	public static final int Y_SHIFT =   50;
+	
+	/* Game file */
+	private String game;
+	public String getGame() { return game; }
+	public void setGame(String game_file) { this.game = game_file; }
 	
 	/* Variables xScreen and yScreen, setters, and getters */
 	private int xScreen = 1920/2 + X_SHIFT;
@@ -44,7 +49,7 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 		JFrame frame = new JFrame("Collective Design Laboratory");
 		
 		/* Create the aforementioned "main_frame" object of class MainUI. */
-		final MainUI main_frame = new MainUI();
+		final MainUI main_frame = new MainUI("PB01");
 		
 		/* Now, object "main_frome" becomes the content source
 		 * of the JFrame object "frame" defined previously.
@@ -97,13 +102,15 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 	}
 			
 	/* MainUI method */
-	public MainUI() {
-
+	public MainUI(String game_file) {
+		
+		setGame(game_file);
+		
 		/* JPanel preferred size */
 		this.setPreferredSize(new Dimension(1920,1080));
 //		this.setPreferredSize(new Dimension(800,600));
 //		this.setPreferredSize(getMaximumSize());
-		this.setBackground(Color.WHITE);
+		this.setBackground(Color.BLACK);
 		
 	}
 	
@@ -122,7 +129,7 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 		
 		DesignSpaceUI DS = null;
 		try {
-			DS = new DesignSpaceUI(g2D,"PB01");
+			DS = new DesignSpaceUI(g2D,getGame());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

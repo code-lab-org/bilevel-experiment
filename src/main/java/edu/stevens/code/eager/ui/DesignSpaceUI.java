@@ -67,6 +67,18 @@ public class DesignSpaceUI {
 	public void setPayoff(int new_payoff) { payoff = new_payoff; }
 	
 	
+	/* Payoff at A */
+	private int[] pA = new int[2];
+	public int[] getPA() { return pA; }
+	public void setPA(int[] new_pA) { pA = new_pA; }
+	
+	
+	/* Payoff at B*/
+	private int[] pB = new int[2];
+	public int[] getPB() { return pB; }
+	public void setPB(int[] new_pB) { pB = new_pB; }
+	
+	
 	/* Strategy */
 	private String strategy = "NN";
 	public String getStrategy() { return strategy; }
@@ -84,6 +96,9 @@ public class DesignSpaceUI {
 		// Use each value to query a color from a list or 1-dimensional array of Strings
 				
 		this.g2D = g2D_object;
+		
+		g2D_object.setColor(Color.WHITE);
+		g2D_object.fillRect(1622+X, 0, 1920-(1622+X), 1080);
 		
 		/* This is how I call the "game_file" stored in package "games";
 		 * To switch between games more easily, a drow-down list containing
@@ -266,7 +281,6 @@ public class DesignSpaceUI {
 		}
 		
 		g2D.setColor(Color.decode( colors.get(payoff/5) ));
-		g2D.setStroke(new BasicStroke(0));
 		g2D.fillRect((40*xi)+dx, dy-(40*xj), 40, 40);
 		
 	}
@@ -297,15 +311,20 @@ public class DesignSpaceUI {
 	/* Compute payoff of selected cell */
 	public void computePayoff(String SS, int xi, int xj){
 		
+		int[] p_A = new int[2];
+		int[] p_B = new int[2];
+		
 		switch (SS){
-			case "AA": setPayoff(getAA(xi,xj)); break;
-			case "AB": setPayoff(getAB(xi,xj)); break;
-			case "BA": setPayoff(getBA(xi,xj)); break;
-			case "BB": setPayoff(getBB(xi,xj)); break;
+			case "AA": p_A[0] = getAA(xi,xj); setPayoff(p_A[0]); break;
+			case "AB": p_A[1] = getAB(xi,xj); setPayoff(p_A[1]); break;
+			case "BA": p_B[1] = getBA(xi,xj); setPayoff(p_B[1]); break;
+			case "BB": p_B[0] = getBB(xi,xj); setPayoff(p_B[0]); break;
 			
 			default:
 				SS = "NN"; setPayoff(-5); break;
 		}
+		
+		setPA(p_A); setPB(p_B);
 				
 	}
 	
@@ -351,8 +370,8 @@ public class DesignSpaceUI {
 			   break;
 			
 			default:
-				fill[0] = Color.BLACK; fill[0] = Color.BLACK;
-				edge[0] = Color.BLACK; fill[0] = Color.BLACK;
+				fill[0] = Color.WHITE; fill[0] = Color.WHITE;
+				edge[0] = Color.WHITE; fill[0] = Color.WHITE;
 				break;
 //				throw new IllegalArgumentException("Invalid strategy: " + SS);
 		}
@@ -385,7 +404,7 @@ public class DesignSpaceUI {
 		g2D.setColor(fill[0]); g2D.fillPolygon(xiPoints, yiPoints, 3);
 		g2D.setColor(edge[0]); g2D.drawPolygon(xiPoints, yiPoints, 3);
 		
-		g2D.setColor(Color.BLACK);
+		g2D.setColor(Color.WHITE);
 		g2D.drawString("Your preference", xiPoints[2]-125, yiPoints[0]+40);
 				
 		/* Draw vertical triangular ruler mark */
@@ -394,7 +413,7 @@ public class DesignSpaceUI {
 		g2D.setColor(fill[1]); g2D.fillPolygon(xjPoints, yjPoints, 3);
 		g2D.setColor(edge[1]); g2D.drawPolygon(xjPoints, yjPoints, 3);
 		
-		g2D.setColor(Color.BLACK);
+		g2D.setColor(Color.WHITE);
 		g2D.drawString("Mia's", xjPoints[0]-95, yjPoints[2]+12);
 		
 		/* Print strategy, x values, and payoff on UI */
@@ -403,26 +422,48 @@ public class DesignSpaceUI {
 		String output = SS+"  ("+String.format("%2d",getXi())+","+
 		                          String.format("%2d",getXj())+") "+
 				                  String.format("%3d",getPayoff());
-		System.out.println(SS+","+String.valueOf(getXi())+","+String.valueOf(getXj())+","+String.valueOf(getPayoff()));
+//		System.out.println(SS+","+String.valueOf(getXi())+","+String.valueOf(getXj())+","+String.valueOf(getPayoff()));
 		g2D.drawString( output,  1680, 40);
 		
 		/* Draw triangular colorbar mark */
+//		drawColorbarMark();		
 		int ci = getPayoff()/5;
-		int[] xcPoints = {1541+t/2 + X,1589+t/2 + X,1589+t/2 + X};
+		int[] xcPoints = {1540+t/2 + X,1588+t/2 + X,1588+t/2 + X};
 		int[] ycPoints = {920-Y-(40*ci)+20,920-Y-(40*ci)-28+20,920-Y-(40*ci)+28+20};
 		
 		if (ci > -1) {
 			g2D.setColor(Color.decode(colors.get(ci)));
 		} else {
-			g2D.setColor(Color.BLACK);
+			g2D.setColor(Color.WHITE);
 		}
 		
 		g2D.fillPolygon(xcPoints, ycPoints, 3);
-		g2D.setColor(fill[0]);
+		g2D.setColor(edge[0]);
 		g2D.drawPolygon(xcPoints, ycPoints, 3);
-		
+				
 		
 	}
+	
+	
+	
+	
+	
+//	/* Draw colorbar triangular marks */
+//	private void drawColorbarMark(){
+//		
+//		int[] xcPoints = {1540 + X,1588 + X,1588 + X};
+//		
+//		int cA = getPA()[0]/5;
+//		int[] ycPointsA = {920-Y-(40*cA)+20,920-Y-(40*cA)+20,920-Y-(40*cA)-28+20};
+//		g2D.setColor(Color.RED);
+//		g2D.fillPolygon(xcPoints, ycPointsA, 3);
+//		
+//		int cB = getPB()[0]/5;
+//		int[] ycPointsB = {920-Y-(40*cB)+20,920-Y-(40*cB)+20,920-Y-(40*cB)+28+20};
+//		g2D.setColor(Color.BLUE);
+//		g2D.fillPolygon(xcPoints, ycPointsB, 3);
+//		
+//	}
 	
 
 }

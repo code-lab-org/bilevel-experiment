@@ -52,11 +52,11 @@ public class DesignSpaceUI {
 
 	
 	/* Variables xi and xj, setters, and getters */
-	private int xi;
+	private int xi = 10;
 	public int getXi() { return xi; }
 	public void setXi(int xi) { this.xi = xi; }
 
-	private int xj;
+	private int xj = 10;
 	public int getXj() { return xj; }
 	public void setXj(int xj) { this.xj = xj; }
 	
@@ -98,7 +98,9 @@ public class DesignSpaceUI {
 		this.g2D = g2D_object;
 		
 		g2D_object.setColor(Color.WHITE);
-		g2D_object.fillRect(1622+X, 0, 1920-(1622+X), 1080);
+		
+		g2D_object.fillRect(MainUI.X_RANGE, 0, 1920-MainUI.X_RANGE/* width = 610 */, 1080);
+//		System.out.println(1920-MainUI.X_RANGE);
 		
 		/* This is how I call the "game_file" stored in package "games";
 		 * To switch between games more easily, a drow-down list containing
@@ -178,10 +180,10 @@ public class DesignSpaceUI {
 		g2D_object.setStroke(new BasicStroke(t));
 		
 		/* Border for Mia's strategy boxes */
-		g2D_object.setColor(Color.RED);
+		g2D_object.setColor(R2);
 		g2D_object.fillRect( 500 + X, 120-Y,  40, 400);
 		g2D_object.fillRect(1380 + X, 120-Y, 40, 400);
-		g2D_object.setColor(Color.BLUE);
+		g2D_object.setColor(B2);
 		g2D_object.fillRect( 500 + X, 560-Y,  40, 400);
 		g2D_object.fillRect(1380 + X, 560-Y, 40, 400);
 		
@@ -300,12 +302,14 @@ public class DesignSpaceUI {
 		
 	}
 		
-	private void screenToXij(int x_screen, int y_screen){
-		
-		setXi( (int) (Math.floor((20*Math.floor((x_screen+1)/20.) + 20 - X)/40) - 14) );
-		setXj( (int) (23 - Math.floor((20*Math.floor((y_screen+1)/20.) + Y)/40)) );
-		
-	}
+//	private void screenToXij(int x_screen, int y_screen){
+//				
+//		if (x_screen > -1 && x_screen < MainUI.X_RANGE){
+//			setXi( (int) (Math.floor((20*Math.floor((x_screen+1)/20.) + 20 - X)/40) - 14) );
+//			setXj( (int) (23 - Math.floor((20*Math.floor((y_screen+1)/20.) + Y)/40)) );
+//		}
+//		
+//	}
 	
 	
 	/* Compute payoff of selected cell */
@@ -328,12 +332,14 @@ public class DesignSpaceUI {
 				
 	}
 	
-	public void drawRuler(int x_screen, int y_screen){
+	public void drawRuler(int x_i, int x_j){
 		
-		screenToXij(x_screen, y_screen);
-        
-		int x_i = getXi();
-		int x_j = getXj();
+//		screenToXij(x_screen, y_screen);
+//        
+//		int x_i = getXi();
+//		int x_j = getXj();
+		
+		setXi(x_i); setXj(x_j);
 		
 		/* Internal variables */
 		String SS = new String("");
@@ -404,8 +410,8 @@ public class DesignSpaceUI {
 		g2D.setColor(fill[0]); g2D.fillPolygon(xiPoints, yiPoints, 3);
 		g2D.setColor(edge[0]); g2D.drawPolygon(xiPoints, yiPoints, 3);
 		
-		g2D.setColor(Color.WHITE);
-		g2D.drawString("Your preference", xiPoints[2]-125, yiPoints[0]+40);
+		g2D.setColor(fill[0]);
+		g2D.drawString("Your pick", xiPoints[2]-72, yiPoints[0]+40);
 				
 		/* Draw vertical triangular ruler mark */
 		int[] xjPoints = {452-2*t + X, 452-2*t + X,500-2*t + X};
@@ -413,7 +419,7 @@ public class DesignSpaceUI {
 		g2D.setColor(fill[1]); g2D.fillPolygon(xjPoints, yjPoints, 3);
 		g2D.setColor(edge[1]); g2D.drawPolygon(xjPoints, yjPoints, 3);
 		
-		g2D.setColor(Color.WHITE);
+//		g2D.setColor(Color.WHITE);
 		g2D.drawString("Mia's", xjPoints[0]-95, yjPoints[2]+12);
 		
 		/* Print strategy, x values, and payoff on UI */

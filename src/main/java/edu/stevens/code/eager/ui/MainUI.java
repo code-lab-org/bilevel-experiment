@@ -23,8 +23,13 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final int X_SHIFT = -310;
+//	private JFrame frame;
+//	private JPanel designPanel;
+//	private JPanel strategyPanel;
+	
+	public static final int X_SHIFT = -314;
 	public static final int Y_SHIFT =   50;
+	public static final int X_RANGE = 1624 + X_SHIFT;
 	
 	/* Game file */
 	private String game;
@@ -38,7 +43,16 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 	
 	private int yScreen = 1080/2 - Y_SHIFT;
 	public int getYscreen() { return yScreen; }
-	public void setYscreen(int y_screen) { this.yScreen = y_screen; }	
+	public void setYscreen(int y_screen) { this.yScreen = y_screen; }
+	
+	/* Variables xi and xj, setters, and getters */
+	private int xi;
+	public int getXi() { return xi; }
+	public void setXi(int xi) { this.xi = xi; }
+
+	private int xj;
+	public int getXj() { return xj; }
+	public void setXj(int xj) { this.xj = xj; }
 	
 	/* Main */
 	public static void main(String[] args) {
@@ -112,7 +126,30 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 //		this.setPreferredSize(getMaximumSize());
 		this.setBackground(Color.BLACK);
 		
+//		designPanel = new JPanel();
+//		designPanel.setSize(X_RANGE, 1080);
+//		designPanel.setBackground(Color.BLACK);
+//		designPanel.setLocation(0, 0);
+//		designPanel.setVisible(true);
+//		
+//		strategyPanel = new JPanel();
+//		strategyPanel.setSize(1920-X_RANGE, 1080);
+//		strategyPanel.setBackground(Color.WHITE);
+//		strategyPanel.setLocation(X_RANGE, 0);
+//		strategyPanel.setVisible(true);
+		
 	}
+
+	
+	private void screenToXij(int x_screen, int y_screen){
+				
+		if (x_screen > -1 && x_screen < MainUI.X_RANGE){
+			setXi( (int) (Math.floor((20*Math.floor((x_screen+1)/20.) + 20 - X_SHIFT)/40) - 14) );
+			setXj( (int) (23 - Math.floor((20*Math.floor((y_screen+1)/20.) + Y_SHIFT)/40)) );
+		}
+		
+	}
+	
 	
 	/* All the painting of the frame is done next. */
 	@Override
@@ -137,7 +174,9 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 				
 		/* Draw Design Space */
 		DS.drawDesignSpace();
-		DS.drawRuler( getXscreen(), getYscreen() );
+		
+		screenToXij(getXscreen(), getYscreen());		
+		DS.drawRuler( getXi(), getXj() );
 		
 	}
 	

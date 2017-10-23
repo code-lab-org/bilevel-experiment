@@ -101,7 +101,6 @@ public class DesignSpaceUI {
 		
 		g2D_object.fillRect(MainUI.X_RANGE, 0, 1920-MainUI.X_RANGE/* width = 610 */, 1080);
 //		System.out.println(1920-MainUI.X_RANGE);
-		g2D_object.fillRect(1622+X, 0, 1920-(1622+X), 1080);
 		
 		/* This is how I call the "game_file" stored in package "games";
 		 * To switch between games more easily, a drow-down list containing

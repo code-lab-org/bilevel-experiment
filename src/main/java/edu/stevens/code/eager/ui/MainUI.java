@@ -142,10 +142,16 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 
 	
 	private void screenToXij(int x_screen, int y_screen){
-				
-		if (x_screen > -1 && x_screen < MainUI.X_RANGE){
-			setXi( (int) (Math.floor((20*Math.floor((x_screen+1)/20.) + 20 - X_SHIFT)/40) - 14) );
-			setXj( (int) (23 - Math.floor((20*Math.floor((y_screen+1)/20.) + Y_SHIFT)/40)) );
+		
+		int x0 = 1920/2 + X_SHIFT - 420;
+		int xn = 1920/2 + X_SHIFT + 420;
+		
+		int y0 = 1080/2 - Y_SHIFT + 420;
+//		int yn = 1080/2 - Y_SHIFT - 420;
+		
+		if (x_screen >= x0 && x_screen < xn){
+			setXi( (int) Math.floor((x_screen - x0)/40.) );
+			setXj( (int) Math.floor((y0 - y_screen)/40.) );
 		}
 		
 	}

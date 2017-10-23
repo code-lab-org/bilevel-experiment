@@ -101,6 +101,7 @@ public class DesignSpaceUI {
 		
 		g2D_object.fillRect(MainUI.X_RANGE, 0, 1920-MainUI.X_RANGE/* width = 610 */, 1080);
 //		System.out.println(1920-MainUI.X_RANGE);
+		g2D_object.fillRect(1622+X, 0, 1920-(1622+X), 1080);
 		
 		/* This is how I call the "game_file" stored in package "games";
 		 * To switch between games more easily, a drow-down list containing
@@ -419,7 +420,7 @@ public class DesignSpaceUI {
 		g2D.setColor(fill[1]); g2D.fillPolygon(xjPoints, yjPoints, 3);
 		g2D.setColor(edge[1]); g2D.drawPolygon(xjPoints, yjPoints, 3);
 		
-//		g2D.setColor(Color.WHITE);
+		g2D.setColor(edge[1]);
 		g2D.drawString("Mia's", xjPoints[0]-95, yjPoints[2]+12);
 		
 		/* Print strategy, x values, and payoff on UI */

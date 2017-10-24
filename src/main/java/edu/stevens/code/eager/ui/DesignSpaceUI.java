@@ -13,14 +13,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.stevens.code.eager.designer.DesignerUI;
+
 
 public class DesignSpaceUI {
 	
-	private static final int X = MainUI.X_SHIFT;
-	private static final int Y = MainUI.Y_SHIFT;
+	private static final int X = DesignerUI.X_SHIFT;
+	private static final int Y = DesignerUI.Y_SHIFT;
 	
-	private static final Font MONOSPACED = new Font("Consolas", Font.BOLD, 28);
-	private static final Font SANS_SERIF = new Font("Arial", Font.BOLD, 32);
+	public static final Font MONO1 = new Font("Consolas", Font.BOLD, 28);
+	public static final Font MONO2 = new Font("Consolas", Font.BOLD, 48);
+	public static final Font SANS1 = new Font("Arial", Font.BOLD, 32);
 	
 	/* Set of colors for the ruler marks */
 	private static final Color R1 = new Color(255, 230, 230);
@@ -52,11 +55,11 @@ public class DesignSpaceUI {
 
 	
 	/* Variables xi and xj, setters, and getters */
-	private int xi = 10;
+	private int xi;
 	public int getXi() { return xi; }
 	public void setXi(int xi) { this.xi = xi; }
 
-	private int xj = 10;
+	private int xj;
 	public int getXj() { return xj; }
 	public void setXj(int xj) { this.xj = xj; }
 	
@@ -99,68 +102,13 @@ public class DesignSpaceUI {
 		
 		g2D_object.setColor(Color.WHITE);
 		
-		g2D_object.fillRect(MainUI.X_RANGE, 0, 1920-MainUI.X_RANGE/* width = 610 */, 1080);
+		g2D_object.fillRect(DesignerUI.X_RANGE, 0, 1920-DesignerUI.X_RANGE/* width = 610 */, 1080);
 //		System.out.println(1920-MainUI.X_RANGE);
 		
-		/* This is how I call the "game_file" stored in package "games";
-		 * To switch between games more easily, a drow-down list containing
-		 * the names of all the game (.csv) files in "games" should be added,
-		 * and picking a new game from that list should automatically
-		 * update the design space of the interface.
-		 */
-		BufferedReader br = new BufferedReader(new FileReader(new File("src/test/java/games/"+game_file+".csv")));
-        
-		/* The next String "line" will get every line from the the game (.csv) file.
-		 * Them, every value betwee commas in this line will be added to
-		 * the Integer list "values".
-		 */
-        String line;
-        List<Integer> values = new ArrayList<Integer> ();
-        
-        
-        while((line = br.readLine())!= null){
-        	/* Create a String array "r" from every line
-        	 * by splitting it after every comma */     
-        	String[] r = line.split(",");
-        	
-        	/* Now, take every element in "r"  and add it
-        	 * as an Integer to the "values" list.
-        	 */
-        	for(int i = 0; i < r.length; i++){
-        		int val = Integer.parseInt(r[i]);
-        		values.add((int) val);
-        	}
-        }
-        /* Close the game (.csv) file with safely */
-        br.close();
-		
-        /* Now, create the 2D int arrays that will store the
-         * values for every quadrant in the design space.
-         */
-		int[][] gameAA = new int[10][10];
-		int[][] gameAB = new int[10][10];
-		int[][] gameBA = new int[10][10];
-		int[][] gameBB = new int[10][10];
-		
-		/* Take the entries in the "values" list and assign them to
-		 * the appropriate 2D int array in the design space
-		 */
-        for (int i=0; i<10; i++) {
-            for (int j=0; j<10; j++) {
-            	gameAA[j][i] = values.get(    10*i+j);
-            	gameAB[j][i] = values.get(100+10*i+j);
-            	gameBA[j][i] = values.get(200+10*i+j);
-            	gameBB[j][i] = values.get(300+10*i+j);
-            }
-        }
+		setDesignSpace(game_file);
 
 //        System.out.println(Arrays.deepToString(gameBA));
         
-        /* Now, update the private 2D int arrays */
-        setAA(gameAA);
-        setAB(gameAB);
-        setBA(gameBA);
-        setBB(gameBB);
 		
 	}
 	
@@ -212,8 +160,8 @@ public class DesignSpaceUI {
 		}
 		
 		/* The color scale */
-		g2D_object.setFont(MONOSPACED);
-		int fs = MONOSPACED.getSize();
+		g2D_object.setFont(MONO1);
+		int fs = MONO1.getSize();
 		FontMetrics fm = g2D_object.getFontMetrics(g2D_object.getFont());
 		int fh = 20 + (5*fs/2)/7;
 		
@@ -237,8 +185,8 @@ public class DesignSpaceUI {
 	/* The (xi,xj) axis, 0 <= xi,xj <= 9 */
 	public static void addAxis(Graphics2D g2D_object){
 		
-		g2D_object.setFont(MONOSPACED);
-		int fs = MONOSPACED.getSize();
+		g2D_object.setFont(MONO1);
+		int fs = MONO1.getSize();
 		
 		g2D_object.setColor(Color.WHITE);
 		
@@ -265,6 +213,69 @@ public class DesignSpaceUI {
 		
 		
 	}
+	
+	/* Set design space */
+	protected void setDesignSpace(String game_file) throws NumberFormatException, IOException{
+		/** This is how I call the "game_file" stored in package "games";
+		 * To switch between games more easily, a drow-down list containing
+		 * the names of all the game (.csv) files in "games" should be added,
+		 * and picking a new game from that list should automatically
+		 * update the design space of the interface.
+		 */
+		BufferedReader br = new BufferedReader(new FileReader(new File("src/test/java/games/"+game_file+".csv")));
+        
+		/** The next String "line" will get every line from the the game (.csv) file.
+		 * Them, every value between commas in this line will be added to
+		 * the Integer list "values".
+		 */
+        String line;
+        List<Integer> values = new ArrayList<Integer> ();
+        
+        
+        while((line = br.readLine())!= null){
+        	/* Create a String array "r" from every line
+        	 * by splitting it after every comma */     
+        	String[] r = line.split(",");
+        	
+        	/* Now, take every element in "r"  and add it
+        	 * as an Integer to the "values" list.
+        	 */
+        	for(int i = 0; i < r.length; i++){
+        		int val = Integer.parseInt(r[i]);
+        		values.add((int) val);
+        	}
+        }
+        /* Close the game (.csv) file with safely */
+        br.close();
+		
+        /* Now, create the 2D int arrays that will store the
+         * values for every quadrant in the design space.
+         */
+		int[][] gameAA = new int[10][10];
+		int[][] gameAB = new int[10][10];
+		int[][] gameBA = new int[10][10];
+		int[][] gameBB = new int[10][10];
+		
+		/* Take the entries in the "values" list and assign them to
+		 * the appropriate 2D int array in the design space
+		 */
+        for (int i=0; i<10; i++) {
+            for (int j=0; j<10; j++) {
+            	gameAA[j][i] = values.get(    10*i+j);
+            	gameAB[j][i] = values.get(100+10*i+j);
+            	gameBA[j][i] = values.get(200+10*i+j);
+            	gameBB[j][i] = values.get(300+10*i+j);
+            }
+        }
+        
+        /* Now, update the private 2D int arrays */
+        setAA(gameAA);
+        setAB(gameAB);
+        setBA(gameBA);
+        setBB(gameBB);
+	}
+	
+	
 	
 	/* Draws each cell on each of the quadrants of the design space */
 	protected void drawCell(String SS, int xi, int xj, int payoff){
@@ -332,6 +343,100 @@ public class DesignSpaceUI {
 				
 	}
 	
+	/* Ruler Ai */
+	public void drawRulerA(int x_i, int x_j){
+		
+		g2D.setFont(SANS1);
+		
+		/* Draw ruler, thickness = t */
+		int t = 6;
+		g2D.setStroke(new BasicStroke(t));
+		g2D.setColor(new Color(147, 93, 116));
+		
+		/* Ruler moving along horizontal axis (vertical box) */
+		g2D.drawRect(540+X+(40*x_i)-t/2, 80-Y-3*t/2, 40+t, 920+3*t);
+		
+		/* Draw horizontal triangular ruler marks */
+		int[] xiPoints = {540+X+(40*x_i)-28+20, 540+X+(40*x_i)+20-t/2, 540+X+(40*x_i)+20-t/2};
+		int[] yiPoints = {1048-Y+2*t, 1048-Y+2*t, 1000-Y+2*t};
+		g2D.setColor(R2); g2D.fillPolygon(xiPoints, yiPoints, 3);
+		g2D.setColor(Color.RED); g2D.drawPolygon(xiPoints, yiPoints, 3);
+	}
+	
+	/* Ruler Bi */
+	public void drawRulerB(int x_i, int x_j){
+		
+		x_i = x_i + 11;
+		
+		g2D.setFont(SANS1);
+		
+		/* Draw ruler, thickness = t */
+		int t = 6;
+		g2D.setStroke(new BasicStroke(t));
+		g2D.setColor(new Color(147, 93, 116));
+		
+		/* Ruler moving along horizontal axis (vertical box) */
+		g2D.drawRect(540+X+(40*x_i)-t/2, 80-Y-3*t/2, 40+t, 920+3*t);
+		
+		/* Draw horizontal triangular ruler marks */
+		int[] xiPoints = {540+X+(40*x_i)+20+t/2, 540+X+(40*x_i)+28+20, 540+X+(40*x_i)+20+t/2};
+		int[] yiPoints = {1048-Y+2*t, 1048-Y+2*t, 1000-Y+2*t};
+		g2D.setColor(B2); g2D.fillPolygon(xiPoints, yiPoints, 3);
+		g2D.setColor(Color.BLUE); g2D.drawPolygon(xiPoints, yiPoints, 3);
+	}
+	
+	
+	
+	/* Selected cell */
+	public void selectCell(int x_i, int x_j){
+		
+		String SS = new String("");
+		int t = 8;
+		
+		g2D.setStroke(new BasicStroke(t));
+		g2D.setColor(Color.MAGENTA);
+		g2D.drawRect(540+X+(40*x_i)-t/2,920-Y-(40*x_j)-t/2, 40+t, 40+t);
+		
+		/* Which strategy? Compute payoff */
+		setXi(x_i); setXj(x_j);
+		
+		if      (x_i > -1 && x_i < 10) { SS = SS+"A";}
+		else if (x_i > 10 && x_i < 21) { SS = SS+"B"; setXi(x_i - 11);}
+		else { SS = SS+"N"; setXi(10); }
+				
+		if      (x_j > -1 && x_j < 10) { SS = SS+"B";}
+		else if (x_j > 10 && x_j < 21) { SS = SS+"A"; setXj(x_j - 11);}
+		else { SS = SS+"N"; setXj(10); }
+		
+		computePayoff(SS, getXi(), getXj());
+		
+		/* Test string on screen */
+		g2D.setColor(Color.BLACK);
+		String output = SS+"  ("+String.format("%2d",getXi())+","+
+                String.format("%2d",getXj())+") "+
+                String.format("%3d",getPayoff());
+		g2D.drawString( output,  1680, 40);
+				
+		/* Draw triangular colorbar mark */
+		t = 6;
+		int ci = getPayoff()/5;
+		int[] xcPoints = {1540+t/2 + X,1588+t/2 + X,1588+t/2 + X};
+		int[] ycPoints = {920-Y-(40*ci)+20,920-Y-(40*ci)-28+20,920-Y-(40*ci)+28+20};
+		
+		if (ci > -1) {
+			g2D.setColor(Color.decode(colors.get(ci)));
+		} else {
+			g2D.setColor(Color.BLACK);
+		}
+		
+		g2D.fillPolygon(xcPoints, ycPoints, 3);
+		g2D.setStroke(new BasicStroke(t));
+		g2D.setColor(Color.MAGENTA);
+		g2D.drawPolygon(xcPoints, ycPoints, 3);
+				
+	}
+	
+	
 	public void drawRuler(int x_i, int x_j){
 		
 //		screenToXij(x_screen, y_screen);
@@ -384,7 +489,7 @@ public class DesignSpaceUI {
 		
 		setStrategy(SS);
 		
-		g2D.setFont(SANS_SERIF);
+		g2D.setFont(SANS1);
 		
 		/* Draw ruler, thickness = t */
 		int t = 6;
@@ -446,11 +551,23 @@ public class DesignSpaceUI {
 		g2D.fillPolygon(xcPoints, ycPoints, 3);
 		g2D.setColor(edge[0]);
 		g2D.drawPolygon(xcPoints, ycPoints, 3);
-				
 		
 	}
 	
-	
+	/* Draw normal form of the game */
+	public void drawNormalForm(int pAA, int pAB, int pBA, int pBB){
+				
+		g2D.setFont(DesignSpaceUI.MONO2);
+		g2D.setColor(Color.BLACK);
+		
+		g2D.drawString( String.format("%3d",pAA), 1560, 290);
+		g2D.drawString( String.format("%3d",pAB), 1560, 350);
+
+		g2D.drawString( String.format("%3d",pBA), 1700, 290);
+		g2D.drawString( String.format("%3d",pBB), 1700, 350);
+		
+	}
+		
 	
 	
 	

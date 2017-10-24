@@ -1,4 +1,4 @@
-package edu.stevens.code.eager.ui;
+package edu.stevens.code.eager.designer;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,27 +16,25 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class MainUI extends JPanel implements ActionListener, KeyListener{
+import edu.stevens.code.eager.ui.DesignSpaceUI;
+
+public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	
 	/**
 	 * This is the Main file for execution of the user interface
 	 */
 	private static final long serialVersionUID = 1L;
 	
-//	private JFrame frame;
-//	private JPanel designPanel;
-//	private JPanel strategyPanel;
-	
 	public static final int X_SHIFT = -314;
 	public static final int Y_SHIFT =   50;
 	public static final int X_RANGE = 1624 + X_SHIFT;
 	
-	/* Game file */
+	/** Game file */
 	private String game;
 	public String getGame() { return game; }
 	public void setGame(String game_file) { this.game = game_file; }
 	
-	/* Variables xScreen and yScreen, setters, and getters */
+	/** Variables xScreen and yScreen, setters, and getters */
 	private int xScreen = 1920/2 + X_SHIFT;
 	public int getXscreen() { return xScreen; }
 	public void setXscreen(int x_screen) { this.xScreen = x_screen; }
@@ -45,14 +43,49 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 	public int getYscreen() { return yScreen; }
 	public void setYscreen(int y_screen) { this.yScreen = y_screen; }
 	
-	/* Variables xi and xj, setters, and getters */
-	private int xi;
+	/** Variables xAi and xBi, setters, and getters for player i (horizontal axis) */
+	private int xi = 10;
 	public int getXi() { return xi; }
-	public void setXi(int xi) { this.xi = xi; }
+	public void setXi(int x_i) { this.xi = x_i; }
+	
+	private int xAi = 10;
+	public int getXAi() { return xAi; }
+	public void setXAi(int x_Ai) { this.xAi = x_Ai; }
+	
+	private int xBi = -1;
+	public int getXBi() { return xBi; }
+	public void setXBi(int x_Bi) { this.xBi = x_Bi; }
 
-	private int xj;
+	/** Variables xAj and xBj, setters, and getters for player j (vertical axis) */
+	private int xj = 10;
 	public int getXj() { return xj; }
-	public void setXj(int xj) { this.xj = xj; }
+	public void setXj(int x_j) { this.xj = x_j; }
+	
+	private int xAj = 10;
+	public int getXAj() { return xAj; }
+	public void setXAj(int x_Aj) { this.xAj = x_Aj; }
+
+	private int xBj = -1;
+	public int getXBj() { return xBj; }
+	public void setXBj(int x_Bj) { this.xBj = x_Bj; }
+	
+	/** Payoffs for player i */
+	private int pAA/*i's payoff @ AA*/ = 0;
+	public int getPAA() { return pAA; }
+	public void setPAA(int p_AA) { this.pAA = p_AA; }
+	
+	private int pAB/*i's payoff @ AB*/ = 0;
+	public int getPAB() { return pAB; }
+	public void setPAB(int p_AB) { this.pAB = p_AB; }
+	
+	private int pBA/*i's payoff @ BA*/ = 0;
+	public int getPBA() { return pBA; }
+	public void setPBA(int p_BA) { this.pBA = p_BA; }
+	
+	private int pBB/*i's payoff @ BB*/ = 0;
+	public int getPBB() { return pBB; }
+	public void setPBB(int p_BB) { this.pBB = p_BB; }
+	
 	
 	/* Main */
 	public static void main(String[] args) {
@@ -63,7 +96,7 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 		JFrame frame = new JFrame("Collective Design Laboratory");
 		
 		/* Create the aforementioned "main_frame" object of class MainUI. */
-		final MainUI main_frame = new MainUI("PB01");
+		final DesignerUI main_frame = new DesignerUI("PB01");
 		
 		/* Now, object "main_frome" becomes the content source
 		 * of the JFrame object "frame" defined previously.
@@ -96,9 +129,9 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 			public void mousePressed(MouseEvent me) {
 				
 				/* The next two lines take the (x,y) position of the MouseEvent "me"
-				 * and assign it to xi and xj.
-				 * I might use main_frame.setXi(int) and main_frame.setXj(int)
-				 * instead of main_frame.xi = int and main_frame.xj = int,
+				 * and assign it to xAi and xAj.
+				 * I might use main_frame.setXAi(int) and main_frame.setXAj(int)
+				 * instead of main_frame.xAi = int and main_frame.xAj = int,
 				 * respectively; that could be a better practice. IDK!
 				 */
 				
@@ -116,7 +149,7 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 	}
 			
 	/* MainUI method */
-	public MainUI(String game_file) {
+	public DesignerUI(String game_file) {
 		
 		setGame(game_file);
 		
@@ -143,19 +176,31 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 	
 	private void screenToXij(int x_screen, int y_screen){
 		
-		int x0 = 1920/2 + X_SHIFT - 420;
-		int xn = 1920/2 + X_SHIFT + 420;
+		int xA0 = 1920/2 + X_SHIFT - 420;
+		int xAn = 1920/2 + X_SHIFT -  20;
 		
-		int y0 = 1080/2 - Y_SHIFT + 420;
+		int xB0 = 1920/2 + X_SHIFT +  20;
+		int xBn = 1920/2 + X_SHIFT + 420;
+		
+		int yS0 = 1080/2 - Y_SHIFT + 420;
 //		int yn = 1080/2 - Y_SHIFT - 420;
 		
-		if (x_screen >= x0 && x_screen < xn){
-			setXi( (int) Math.floor((x_screen - x0)/40.) );
-			setXj( (int) Math.floor((y0 - y_screen)/40.) );
+		if (x_screen >= xA0 && x_screen < xBn && y_screen > yS0 - 840 && y_screen <= yS0){
+			setXi( (int) Math.floor((x_screen - xA0)/40.) );
+			setXj( (int) Math.floor((yS0 - y_screen)/40.) );
+		}
+				
+		if (x_screen >= xA0 && x_screen < xAn){
+			setXAi( (int) Math.floor((x_screen - xA0)/40.) );
+			setXAj( (int) Math.floor((yS0 - y_screen)/40.) );
+		}
+		
+		if (x_screen >= xB0 && x_screen < xBn){
+			setXBi( (int) Math.floor((x_screen - xB0)/40.) );
+			setXBj( (int) Math.floor((yS0 - y_screen)/40.) );
 		}
 		
 	}
-	
 	
 	/* All the painting of the frame is done next. */
 	@Override
@@ -172,7 +217,7 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 		
 		DesignSpaceUI DS = null;
 		try {
-			DS = new DesignSpaceUI(g2D,getGame());
+			DS = new DesignSpaceUI( g2D,getGame() );
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -181,10 +226,41 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 		/* Draw Design Space */
 		DS.drawDesignSpace();
 		
-		screenToXij(getXscreen(), getYscreen());		
-		DS.drawRuler( getXi(), getXj() );
+		screenToXij( getXscreen(), getYscreen() );		
+//		DS.drawRuler( getXAi(), getXAj() );
+		DS.drawRulerA( getXAi(), getXAj() );
+		DS.drawRulerB( getXBi(), getXBj() );
+		
+		DS.selectCell( getXi(), getXj() );
+		DS.drawNormalForm( getPAA(), getPAB(), getPBA(), getPBB() );
 		
 	}
+	
+//	/* Draw normal form of the game */
+//	public void drawNormalForm(Graphics g){
+//		
+//		paintComponent(g);
+//		
+//		Graphics2D g2D = (Graphics2D) g;
+//		
+//		g2D.setFont(DesignSpaceUI.MONO2);
+//		g2D.setColor(Color.BLACK);
+//		
+////		g2D.drawString( String.format("%3d",getPA()[0]), 1560, 290);
+////		g2D.drawString( String.format("%3d",getPA()[1]), 1560, 350);
+////
+////		g2D.drawString( String.format("%3d",getPB()[1]), 1700, 290);
+////		g2D.drawString( String.format("%3d",getPB()[0]), 1700, 350);
+//		
+//		g2D.drawString( String.format("%3d",2), 1560, 290);
+//		g2D.drawString( String.format("%3d",3), 1560, 350);
+//
+//		g2D.drawString( String.format("%3d",4), 1700, 290);
+//		g2D.drawString( String.format("%3d",5), 1700, 350);
+//		
+//		repaint();
+//		
+//	}
 	
 	/* Using the arrow keys */
 	@Override
@@ -203,16 +279,16 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 	        setYscreen(getYscreen()+40);
 	    }
 	    
-	    if (getXscreen() > 1920/2 + X_SHIFT + 20 + 440) {
-	    	setXscreen(1920/2 + X_SHIFT + 440);
-	    } else if (getXscreen() < 1920/2 + X_SHIFT - 20 - 440) {
-	    	setXscreen(1920/2 + X_SHIFT - 440);
+	    if (getXscreen() > 1920/2 + X_SHIFT + 20 + 400) {
+	    	setXscreen(1920/2 + X_SHIFT + 400);
+	    } else if (getXscreen() < 1920/2 + X_SHIFT - 20 - 400) {
+	    	setXscreen(1920/2 + X_SHIFT - 400);
 	    }
 	    
-	    if (getYscreen() < 1080/2 - Y_SHIFT - 20 - 440) {
-	    	setYscreen(1080/2 - Y_SHIFT - 440);
-	    } else if (getYscreen() > 1080/2 - Y_SHIFT + 20 + 440) {
-	    	setYscreen(1080/2 - Y_SHIFT + 440);
+	    if (getYscreen() < 1080/2 - Y_SHIFT - 20 - 400) {
+	    	setYscreen(1080/2 - Y_SHIFT - 400);
+	    } else if (getYscreen() > 1080/2 - Y_SHIFT + 20 + 400) {
+	    	setYscreen(1080/2 - Y_SHIFT + 400);
 	    }
 	    
 	    repaint();
@@ -233,5 +309,5 @@ public class MainUI extends JPanel implements ActionListener, KeyListener{
 		// TODO Auto-generated method stub
 		
 	}
-	
+		
 }

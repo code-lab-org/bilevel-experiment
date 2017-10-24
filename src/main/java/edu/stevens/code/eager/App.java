@@ -1,4 +1,4 @@
-package edu.stevens.code.eager.designer_exp;
+package edu.stevens.code.eager;
 
 /**
  * Hello world!

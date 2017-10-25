@@ -91,19 +91,19 @@ public class DesignSpaceUI {
 	/* Default constructor. */
 	public DesignSpaceUI(Graphics2D g2D_object, String game_file) throws IOException {
 		
-		// Remark:
-		// ------------------------------------------------------------------------------
-		// Add matrix/array input to default constructor
-		// The matrix/array should of size 10x10
-		// Each element of this matrix is a payoff pk = 0:5:100 (21 data points)
-		// Use each value to query a color from a list or 1-dimensional array of Strings
+		/** Remark:
+		 * ------------------------------------------------------------------------------
+		 * Add matrix/array input to default constructor
+		 * The matrix/array should of size 10x10
+		 * Each element of this matrix is a payoff pk = 0:5:100 (21 data points)
+		 * Use each value to query a color from a list or 1-dimensional array of Strings
+		 */
 				
 		this.g2D = g2D_object;
 		
 		g2D_object.setColor(Color.WHITE);
 		
 		g2D_object.fillRect(DesignerUI.X_RANGE, 0, 1920-DesignerUI.X_RANGE/* width = 610 */, 1080);
-//		System.out.println(1920-MainUI.X_RANGE);
 		
 		setDesignSpace(game_file);
 
@@ -217,7 +217,7 @@ public class DesignSpaceUI {
 	/* Set design space */
 	protected void setDesignSpace(String game_file) throws NumberFormatException, IOException{
 		/** This is how I call the "game_file" stored in package "games";
-		 * To switch between games more easily, a drow-down list containing
+		 * To switch between games more easily, a drop-down list containing
 		 * the names of all the game (.csv) files in "games" should be added,
 		 * and picking a new game from that list should automatically
 		 * update the design space of the interface.
@@ -312,15 +312,6 @@ public class DesignSpaceUI {
 		}
 		
 	}
-		
-//	private void screenToXij(int x_screen, int y_screen){
-//				
-//		if (x_screen > -1 && x_screen < MainUI.X_RANGE){
-//			setXi( (int) (Math.floor((20*Math.floor((x_screen+1)/20.) + 20 - X)/40) - 14) );
-//			setXj( (int) (23 - Math.floor((20*Math.floor((y_screen+1)/20.) + Y)/40)) );
-//		}
-//		
-//	}
 	
 	
 	/* Compute payoff of selected cell */
@@ -358,9 +349,9 @@ public class DesignSpaceUI {
 		
 		/* Draw horizontal triangular ruler marks */
 		int[] xiPoints = {540+X+(40*x_i)-28+20, 540+X+(40*x_i)+20-t/2, 540+X+(40*x_i)+20-t/2};
-		int[] yiPoints = {1048-Y+2*t, 1048-Y+2*t, 1000-Y+2*t};
-		g2D.setColor(R2); g2D.fillPolygon(xiPoints, yiPoints, 3);
-		g2D.setColor(Color.RED); g2D.drawPolygon(xiPoints, yiPoints, 3);
+		int[] yiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
+		g2D.setColor(Color.RED); g2D.fillPolygon(xiPoints, yiPoints, 3);
+		g2D.setColor(R2); g2D.drawPolygon(xiPoints, yiPoints, 3);
 	}
 	
 	/* Ruler Bi */
@@ -380,9 +371,9 @@ public class DesignSpaceUI {
 		
 		/* Draw horizontal triangular ruler marks */
 		int[] xiPoints = {540+X+(40*x_i)+20+t/2, 540+X+(40*x_i)+28+20, 540+X+(40*x_i)+20+t/2};
-		int[] yiPoints = {1048-Y+2*t, 1048-Y+2*t, 1000-Y+2*t};
-		g2D.setColor(B2); g2D.fillPolygon(xiPoints, yiPoints, 3);
-		g2D.setColor(Color.BLUE); g2D.drawPolygon(xiPoints, yiPoints, 3);
+		int[] yiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
+		g2D.setColor(Color.BLUE); g2D.fillPolygon(xiPoints, yiPoints, 3);
+		g2D.setColor(B2); g2D.drawPolygon(xiPoints, yiPoints, 3);
 	}
 	
 	
@@ -438,11 +429,6 @@ public class DesignSpaceUI {
 	
 	
 	public void drawRuler(int x_i, int x_j){
-		
-//		screenToXij(x_screen, y_screen);
-//        
-//		int x_i = getXi();
-//		int x_j = getXj();
 		
 		setXi(x_i); setXj(x_j);
 		
@@ -567,26 +553,7 @@ public class DesignSpaceUI {
 		g2D.drawString( String.format("%3d",pBB), 1700, 350);
 		
 	}
-		
 	
-	
-	
-//	/* Draw colorbar triangular marks */
-//	private void drawColorbarMark(){
-//		
-//		int[] xcPoints = {1540 + X,1588 + X,1588 + X};
-//		
-//		int cA = getPA()[0]/5;
-//		int[] ycPointsA = {920-Y-(40*cA)+20,920-Y-(40*cA)+20,920-Y-(40*cA)-28+20};
-//		g2D.setColor(Color.RED);
-//		g2D.fillPolygon(xcPoints, ycPointsA, 3);
-//		
-//		int cB = getPB()[0]/5;
-//		int[] ycPointsB = {920-Y-(40*cB)+20,920-Y-(40*cB)+20,920-Y-(40*cB)+28+20};
-//		g2D.setColor(Color.BLUE);
-//		g2D.fillPolygon(xcPoints, ycPointsB, 3);
-//		
-//	}
 	
 
 }

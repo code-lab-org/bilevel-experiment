@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +13,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -28,6 +30,12 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	public static final int X_SHIFT = -314;
 	public static final int Y_SHIFT =   50;
 	public static final int X_RANGE = 1624 + X_SHIFT;
+	
+	private final int xA0 = 1920/2 + X_SHIFT - 420;	
+	private final int xB0 = 1920/2 + X_SHIFT +  20;
+	
+	private final int yA0 = 1080/2 - Y_SHIFT -  20;
+	private final int yB0 = 1080/2 - Y_SHIFT + 420;
 	
 	/** Game file */
 	private String game;
@@ -61,11 +69,11 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	public int getXj() { return xj; }
 	public void setXj(int x_j) { this.xj = x_j; }
 	
-	private int xAj = 10;
+	private int xAj = -1;
 	public int getXAj() { return xAj; }
 	public void setXAj(int x_Aj) { this.xAj = x_Aj; }
 
-	private int xBj = -1;
+	private int xBj = 10;
 	public int getXBj() { return xBj; }
 	public void setXBj(int x_Bj) { this.xBj = x_Bj; }
 	
@@ -111,6 +119,11 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		 */
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		/* Set Icon */
+//		ImageIcon icon = new ImageIcon("src/main/java/resources/CoDe.png");
+//		frame.setIconImage(icon.getImage());
+		main_frame.loadIcons(frame);
+		
 		/* Initialize JFrame in maximized mode: */
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
@@ -155,52 +168,67 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		
 		/* JPanel preferred size */
 		this.setPreferredSize(new Dimension(1920,1080));
-//		this.setPreferredSize(new Dimension(800,600));
-//		this.setPreferredSize(getMaximumSize());
 		this.setBackground(Color.BLACK);
 		
-//		designPanel = new JPanel();
-//		designPanel.setSize(X_RANGE, 1080);
-//		designPanel.setBackground(Color.BLACK);
-//		designPanel.setLocation(0, 0);
-//		designPanel.setVisible(true);
-//		
-//		strategyPanel = new JPanel();
-//		strategyPanel.setSize(1920-X_RANGE, 1080);
-//		strategyPanel.setBackground(Color.WHITE);
-//		strategyPanel.setLocation(X_RANGE, 0);
-//		strategyPanel.setVisible(true);
+	}
+	
+	private void loadIcons(JFrame j_frame) {
+		
+		ArrayList<Image> icons = new ArrayList<Image>();
+		icons.add(new ImageIcon("src/main/java/resources/icon__16.png").getImage());
+		icons.add(new ImageIcon("src/main/java/resources/icon__32.png").getImage());
+		icons.add(new ImageIcon("src/main/java/resources/icon__48.png").getImage());
+		icons.add(new ImageIcon("src/main/java/resources/icon__64.png").getImage());
+		icons.add(new ImageIcon("src/main/java/resources/icon_128.png").getImage());
+		icons.add(new ImageIcon("src/main/java/resources/icon_256.png").getImage());
+		j_frame.setIconImages(icons);
 		
 	}
 
 	
+	/* Transform (X,Y) screen coordinates to (xi,xj) design space coordinates */
 	private void screenToXij(int x_screen, int y_screen){
 		
-		int xA0 = 1920/2 + X_SHIFT - 420;
-		int xAn = 1920/2 + X_SHIFT -  20;
-		
-		int xB0 = 1920/2 + X_SHIFT +  20;
-		int xBn = 1920/2 + X_SHIFT + 420;
-		
-		int yS0 = 1080/2 - Y_SHIFT + 420;
-//		int yn = 1080/2 - Y_SHIFT - 420;
-		
-		if (x_screen >= xA0 && x_screen < xBn && y_screen > yS0 - 840 && y_screen <= yS0){
+		if (x_screen >= xA0 && x_screen < xB0 + 400 && y_screen <= yB0 && y_screen > yA0 - 400){
 			setXi( (int) Math.floor((x_screen - xA0)/40.) );
-			setXj( (int) Math.floor((yS0 - y_screen)/40.) );
+			setXj( (int) Math.floor((yB0 - y_screen)/40.) );
 		}
 				
-		if (x_screen >= xA0 && x_screen < xAn){
+		if (x_screen >= xA0 && x_screen < xA0 + 400){
 			setXAi( (int) Math.floor((x_screen - xA0)/40.) );
-			setXAj( (int) Math.floor((yS0 - y_screen)/40.) );
 		}
 		
-		if (x_screen >= xB0 && x_screen < xBn){
+		if (x_screen >= xB0 && x_screen < xB0 + 400){
 			setXBi( (int) Math.floor((x_screen - xB0)/40.) );
-			setXBj( (int) Math.floor((yS0 - y_screen)/40.) );
+		}
+		
+		if (y_screen <= yA0 && y_screen > yA0 - 400){
+			setXAj( (int) Math.floor((yA0 - y_screen)/40.) );
+		}
+		
+		if (y_screen <= yB0 && y_screen > yB0 - 400){
+			setXBj( (int) Math.floor((yB0 - y_screen)/40.) );
 		}
 		
 	}
+	
+	/* Transform (xi,xj) design space coordinates to (X,Y) screen coordinates */
+	private void switchXijToScreen(int xi, int xj){
+				
+		if (xi >= 0 && xi <= 10){
+			setXscreen( 40*getXBi() + xB0 + 20 );
+		} else if (xi >= 11 && xi <= 20){
+			setXscreen( 40*getXAi() + xA0 + 20 );
+		}
+		
+		if (xj >= 0 && xj <= 10){
+			setYscreen( yB0 - 40*getXBj() - 20 );
+		} else if (xj >= 11 && xj <= 20){
+			setYscreen( yA0 - 40*getXAj() - 20 );
+		}
+		
+	}
+	
 	
 	/* All the painting of the frame is done next. */
 	@Override
@@ -226,41 +254,18 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		/* Draw Design Space */
 		DS.drawDesignSpace();
 		
-		screenToXij( getXscreen(), getYscreen() );		
-//		DS.drawRuler( getXAi(), getXAj() );
+		screenToXij( getXscreen(), getYscreen() );
 		DS.drawRulerA( getXAi(), getXAj() );
 		DS.drawRulerB( getXBi(), getXBj() );
 		
 		DS.selectCell( getXi(), getXj() );
 		DS.drawNormalForm( getPAA(), getPAB(), getPBA(), getPBB() );
 		
+		
+//		int[] arr = { getXi(), getXj(), 6699, getXAi(), getXBi(), 6699, getXAj(), getXBj()};		
+//		System.out.println(Arrays.toString(arr));
+		
 	}
-	
-//	/* Draw normal form of the game */
-//	public void drawNormalForm(Graphics g){
-//		
-//		paintComponent(g);
-//		
-//		Graphics2D g2D = (Graphics2D) g;
-//		
-//		g2D.setFont(DesignSpaceUI.MONO2);
-//		g2D.setColor(Color.BLACK);
-//		
-////		g2D.drawString( String.format("%3d",getPA()[0]), 1560, 290);
-////		g2D.drawString( String.format("%3d",getPA()[1]), 1560, 350);
-////
-////		g2D.drawString( String.format("%3d",getPB()[1]), 1700, 290);
-////		g2D.drawString( String.format("%3d",getPB()[0]), 1700, 350);
-//		
-//		g2D.drawString( String.format("%3d",2), 1560, 290);
-//		g2D.drawString( String.format("%3d",3), 1560, 350);
-//
-//		g2D.drawString( String.format("%3d",4), 1700, 290);
-//		g2D.drawString( String.format("%3d",5), 1700, 350);
-//		
-//		repaint();
-//		
-//	}
 	
 	/* Using the arrow keys */
 	@Override
@@ -278,17 +283,20 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	    if (code == KeyEvent.VK_DOWN) {
 	        setYscreen(getYscreen()+40);
 	    }
-	    
-	    if (getXscreen() > 1920/2 + X_SHIFT + 20 + 400) {
-	    	setXscreen(1920/2 + X_SHIFT + 400);
-	    } else if (getXscreen() < 1920/2 + X_SHIFT - 20 - 400) {
-	    	setXscreen(1920/2 + X_SHIFT - 400);
+	    if (code == KeyEvent.VK_SPACE) {
+	    	switchXijToScreen(getXi(), getXj());
 	    }
 	    
-	    if (getYscreen() < 1080/2 - Y_SHIFT - 20 - 400) {
-	    	setYscreen(1080/2 - Y_SHIFT - 400);
-	    } else if (getYscreen() > 1080/2 - Y_SHIFT + 20 + 400) {
-	    	setYscreen(1080/2 - Y_SHIFT + 400);
+	    if (getXscreen() > xB0 + 400) {
+	    	setXscreen(xB0 + 400 - 20);
+	    } else if (getXscreen() < xA0) {
+	    	setXscreen(xA0 + 20);
+	    }
+	    
+	    if (getYscreen() < yA0 - 400) {
+	    	setYscreen(yA0 - 400 + 20);
+	    } else if (getYscreen() > yB0) {
+	    	setYscreen(yB0 - 20);
 	    }
 	    
 	    repaint();

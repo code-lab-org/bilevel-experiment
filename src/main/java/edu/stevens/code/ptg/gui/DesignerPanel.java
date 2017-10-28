@@ -1,6 +1,5 @@
 package edu.stevens.code.ptg.gui;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -8,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -21,12 +21,11 @@ import edu.stevens.code.ptg.Designer;
 public class DesignerPanel extends JPanel {
 	private static final long serialVersionUID = 2488259187981650893L;
 	
-	private JRadioButton[] strategies = new JRadioButton[Designer.NUM_STRATEGIES];
-	private JSlider[] designs = new JSlider[Designer.NUM_STRATEGIES];
-	private JToggleButton share = new JToggleButton("Share");
+	private JRadioButton[] strategyRadios = new JRadioButton[Designer.NUM_STRATEGIES];
+	private JSlider[] designSliders = new JSlider[Designer.NUM_STRATEGIES];
+	private JToggleButton shareButton;
 	
 	public DesignerPanel() {
-		this.setPreferredSize(new Dimension(400,300));
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -35,59 +34,73 @@ public class DesignerPanel extends JPanel {
 		ButtonGroup radios = new ButtonGroup();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			JRadioButton radio = new JRadioButton("Design " + i);
+			radio.setEnabled(false);
 			radios.add(radio);
-			strategies[i] = radio;
+			strategyRadios[i] = radio;
 			this.add(radio, c);
 			c.gridx++;
 			c.fill = GridBagConstraints.HORIZONTAL;
 			JSlider slider = new JSlider();
+			slider.setEnabled(false);
 			slider.setMinimum(Designer.MIN_DESIGN_VALUE);
 			slider.setMaximum(Designer.MAX_DESIGN_VALUE);
-			designs[i] = slider;
+			designSliders[i] = slider;
 			this.add(slider, c);
 			c.fill = GridBagConstraints.NONE;
 			c.gridy++;
 			c.gridx = 0;
 		}
-		this.add(share, c);
+		shareButton = new JToggleButton("Share");
+		shareButton.setEnabled(false);
+		this.add(shareButton, c);
 	}
 	
 	public void observe(Designer designer) {
+		this.setBorder(BorderFactory.createTitledBorder(designer.toString()));
+		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			strategyRadios[i].setSelected(designer.getStrategy()==i);
+			designSliders[i].setValue(designer.getDesign(i));
+		}
+		shareButton.setSelected(designer.isReadyToShare());
 		designer.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
 				for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-					strategies[i].setSelected(designer.getStrategy()==i);
-					designs[i].setValue(designer.getDesign(i));
+					strategyRadios[i].setSelected(designer.getStrategy()==i);
+					designSliders[i].setValue(designer.getDesign(i));
 				}
-				share.setSelected(designer.isReadyToShare());
+				shareButton.setSelected(designer.isReadyToShare());
 			}
 		});
 	}
 	
-	public void bindTo(Designer designer) {		
+	public void bindTo(Designer designer) {
+		this.setBorder(BorderFactory.createTitledBorder(designer.toString()));
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			final int strategyIndex = i;
-			strategies[i].setSelected(designer.getStrategy()==i);
-			strategies[i].addActionListener(new ActionListener() {
+			strategyRadios[i].setEnabled(true);
+			strategyRadios[i].setSelected(designer.getStrategy()==i);
+			strategyRadios[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					designer.setStrategy(strategyIndex);
 				}
 			});
-			designs[i].setValue(designer.getDesign(i));
-			designs[i].addChangeListener(new ChangeListener() {
+			designSliders[i].setEnabled(true);
+			designSliders[i].setValue(designer.getDesign(i));
+			designSliders[i].addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					designer.setDesign(strategyIndex, designs[strategyIndex].getValue());
+					designer.setDesign(strategyIndex, designSliders[strategyIndex].getValue());
 				}
 			});
 		}
-		share.setSelected(designer.isReadyToShare());
-		share.addActionListener(new ActionListener() {
+		shareButton.setEnabled(true);
+		shareButton.setSelected(designer.isReadyToShare());
+		shareButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				designer.setReadyToShare(share.isSelected());
+				designer.setReadyToShare(shareButton.isSelected());
 			}
 		});
 	}

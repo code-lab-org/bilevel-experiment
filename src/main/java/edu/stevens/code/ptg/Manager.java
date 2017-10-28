@@ -14,17 +14,17 @@ public class Manager extends Observable {
 	public static final int NUM_DESIGNERS = 4;
 	public static final int NUM_TASKS = 2;
 	
-	private String roundName;
-	private int timeRemaining;
-	private Task[] tasks;
+	private String roundName = "Initializing";
+	private int timeRemaining = -1;
+	private final Task[] tasks = new Task[NUM_TASKS];
 	
 	/**
 	 * Instantiates a new manager.
 	 */
 	public Manager() {
-		this.roundName = "Initializing";
-		this.timeRemaining = -1;
-		this.tasks = new Task[NUM_TASKS];
+		for(int i = 0; i < NUM_TASKS; i++) {
+			this.tasks[i] = new Task();
+		}
 	}
 	
 	/**
@@ -102,7 +102,6 @@ public class Manager extends Observable {
 	 *
 	 * @param index the index
 	 * @param task the task
-	 */
 	public void setTask(int index, Task task) {
 		if(index < 0 || index >= NUM_TASKS) {
 			throw new IllegalArgumentException("invalid task index");
@@ -120,7 +119,6 @@ public class Manager extends Observable {
 	 * Sets the tasks.
 	 *
 	 * @param tasks the new tasks
-	 */
 	public void setTasks(Task[] tasks) {
 		if(tasks.length != NUM_TASKS) {
 			throw new IllegalArgumentException("invalid number of tasks");
@@ -133,6 +131,7 @@ public class Manager extends Observable {
 		}
 		this.notifyObservers(PROPERTY_TASKS);
 	}
+	 */
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

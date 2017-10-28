@@ -42,6 +42,14 @@ public class Main {
 	    			.build()
     			);
     	options.addOption(
+    			Option.builder("t")
+	    			.longOpt("test")
+    				.hasArg()
+    				.argName("experiment")
+	    			.desc("launch a test interface with an experiment")
+	    			.build()
+    			);
+    	options.addOption(
     			Option.builder("f")
 	    			.longOpt("federation")
     				.hasArg()
@@ -54,20 +62,23 @@ public class Main {
 			CommandLine cmd = parser.parse(options, args);
 			
 			String federationName = cmd.getOptionValue("f", "code");
-			
-			if(cmd.hasOption("h") || (!cmd.hasOption("d") && !cmd.hasOption("m"))) {
+			if(cmd.hasOption("d")) {
+				int id = Integer.parseInt(cmd.getOptionValue("d"));
+				
+				new DesignerApp(id).init(federationName);
+			} else if(cmd.hasOption("m")) {
+				new ManagerApp().init(federationName);
+			} else if(cmd.hasOption("t")) {
+				new ManagerApp().init(federationName);
+				new DesignerApp(0).init(federationName);
+				new DesignerApp(1).init(federationName);
+				new DesignerApp(2).init(federationName);
+				new DesignerApp(3).init(federationName);
+			} else {
 				// print the help menu and quit
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("CoDE", options);
 				System.exit(0);
-			}
-			if(cmd.hasOption("d")) {
-				int id = Integer.parseInt(cmd.getOptionValue("d"));
-				
-				new DesignerApp().init(id, federationName);
-			}
-			if(cmd.hasOption("m")) {
-				new ManagerApp().init(federationName);
 			}
 		} catch (ParseException e) {
 			logger.error("Unexpected exception: " + e.getMessage());

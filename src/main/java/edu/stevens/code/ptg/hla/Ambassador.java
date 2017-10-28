@@ -1,45 +1,39 @@
 package edu.stevens.code.ptg.hla;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.stevens.code.ptg.App;
 import edu.stevens.code.ptg.Designer;
+import edu.stevens.code.ptg.DesignerApp;
 import edu.stevens.code.ptg.Manager;
+import edu.stevens.code.ptg.ManagerApp;
 import edu.stevens.code.ptg.Task;
-import hla.rti1516e.AttributeHandle;
 import hla.rti1516e.AttributeHandleSet;
 import hla.rti1516e.AttributeHandleValueMap;
 import hla.rti1516e.CallbackModel;
-import hla.rti1516e.FederateAmbassador;
-import hla.rti1516e.FederateHandle;
-import hla.rti1516e.FederateHandleSaveStatusPair;
-import hla.rti1516e.FederateHandleSet;
-import hla.rti1516e.FederateRestoreStatus;
-import hla.rti1516e.FederationExecutionInformationSet;
-import hla.rti1516e.InteractionClassHandle;
-import hla.rti1516e.LogicalTime;
-import hla.rti1516e.MessageRetractionHandle;
+import hla.rti1516e.NullFederateAmbassador;
 import hla.rti1516e.ObjectClassHandle;
 import hla.rti1516e.ObjectInstanceHandle;
 import hla.rti1516e.OrderType;
-import hla.rti1516e.ParameterHandleValueMap;
 import hla.rti1516e.RTIambassador;
 import hla.rti1516e.ResignAction;
-import hla.rti1516e.RestoreFailureReason;
 import hla.rti1516e.RtiFactory;
 import hla.rti1516e.RtiFactoryFactory;
-import hla.rti1516e.SaveFailureReason;
-import hla.rti1516e.SynchronizationPointFailureReason;
 import hla.rti1516e.TransportationTypeHandle;
 import hla.rti1516e.encoding.DataElementFactory;
+import hla.rti1516e.encoding.DecoderException;
 import hla.rti1516e.encoding.EncoderFactory;
+import hla.rti1516e.encoding.HLAboolean;
+import hla.rti1516e.encoding.HLAfixedArray;
 import hla.rti1516e.encoding.HLAfixedRecord;
 import hla.rti1516e.encoding.HLAinteger32BE;
+import hla.rti1516e.encoding.HLAunicodeString;
 import hla.rti1516e.exceptions.AlreadyConnected;
 import hla.rti1516e.exceptions.FederateAlreadyExecutionMember;
 import hla.rti1516e.exceptions.FederateInternalError;
@@ -50,7 +44,9 @@ import hla.rti1516e.exceptions.FederationExecutionDoesNotExist;
 import hla.rti1516e.exceptions.NotConnected;
 import hla.rti1516e.exceptions.RTIexception;
 
-public class Ambassador implements FederateAmbassador {
+public class Ambassador extends NullFederateAmbassador {
+	private static Logger logger = LogManager.getLogger(Ambassador.class);
+	
 	private static final String FEDERATE_TYPE_DESIGNER = "designer";
 	private static final String FEDERATE_TYPE_MANAGER = "manager";
 	private static final String FOM_PATH = "code.xml";
@@ -75,12 +71,14 @@ public class Ambassador implements FederateAmbassador {
 			ATTRIBUTE_NAME_MANAGER_TASKS
 		};
 	
-	private static Logger logger = LogManager.getLogger(Ambassador.class);
-	
 	protected final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
 	private String federationName = null;
-	private final Map<Object, ObjectInstanceHandle> instanceHandles = new HashMap<Object, ObjectInstanceHandle>();
+	private App app = null;
+	private final Map<Object, ObjectInstanceHandle> registeredInstances = 
+			Collections.synchronizedMap(new HashMap<Object, ObjectInstanceHandle>());
+	private final Map<ObjectInstanceHandle, Object> discoveredInstances = 
+			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, Object>());
 	
 	public Ambassador() throws RTIexception {
 		RtiFactory rtiFactory = RtiFactoryFactory.getRtiFactory();
@@ -171,8 +169,10 @@ public class Ambassador implements FederateAmbassador {
 		logger.info("Subscribed manager class attributes.");
 	}
 	
-	public void connectManager(Manager manager, String federationName) throws RTIexception {
-		this.connect(federationName, manager.toString(), FEDERATE_TYPE_MANAGER);
+	public void connectManager(ManagerApp managerApp, String federationName) throws RTIexception {
+		this.app = managerApp;
+		
+		this.connect(federationName, managerApp.getSelf().toString(), FEDERATE_TYPE_MANAGER);
 		publishManagerAttributes();
 		subscribeManagerAttributes();
 		subscribeDesignerAttributes();
@@ -180,14 +180,16 @@ public class Ambassador implements FederateAmbassador {
 		logger.debug("Registering this manager object.");
 		ObjectInstanceHandle instance = rtiAmbassador.registerObjectInstance(
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER));
-		instanceHandles.put(manager,  instance);
+		registeredInstances.put(managerApp.getSelf(), instance);
 		logger.debug("Registered this manager object.");
 		
-		updateManager(manager);
+		updateManager(managerApp.getSelf());
 	}
 	
-	public void connectDesigner(Designer designer, String federationName) throws RTIexception {
-		this.connect(federationName, designer.toString(), FEDERATE_TYPE_DESIGNER);
+	public void connectDesigner(DesignerApp designerApp, String federationName) throws RTIexception {
+		this.app = designerApp;
+		
+		this.connect(federationName, designerApp.getSelf().toString(), FEDERATE_TYPE_DESIGNER);
 		publishDesignerAttributes();
 		subscribeDesignerAttributes();
 		subscribeManagerAttributes();
@@ -195,27 +197,26 @@ public class Ambassador implements FederateAmbassador {
 		logger.debug("Registering this designer object.");
 		ObjectInstanceHandle instance = rtiAmbassador.registerObjectInstance(
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER));
-		instanceHandles.put(designer,  instance);
+		registeredInstances.put(designerApp.getSelf(),  instance);
 		logger.debug("Registered this designer object.");
-		
-		updateDesigner(designer);
+
+		updateDesigner(designerApp.getSelf());
 	}
 	
 	public void updateManager(Manager manager) throws RTIexception {
-		if(instanceHandles.containsKey(manager)) {
+		if(registeredInstances.containsKey(manager)) {
 			logger.info("Updating manager attribute values.");
 			AttributeHandleValueMap attributes = 
 					rtiAmbassador.getAttributeHandleValueMapFactory().create(0);
-			
-			byte[] id = encoderFactory.createHLAunicodeString(manager.getRoundName()).toByteArray();
+			HLAunicodeString round = encoderFactory.createHLAunicodeString(manager.getRoundName());
 			attributes.put(rtiAmbassador.getAttributeHandle(
 					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
-					ATTRIBUTE_NAME_MANAGER_ROUND), id);
-			byte[] designs = encoderFactory.createHLAinteger32BE(manager.getTimeRemaining()).toByteArray();
+					ATTRIBUTE_NAME_MANAGER_ROUND), round.toByteArray());
+			HLAinteger32BE time = encoderFactory.createHLAinteger32BE(manager.getTimeRemaining());
 			attributes.put(rtiAmbassador.getAttributeHandle(
 					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
-					ATTRIBUTE_NAME_MANAGER_TIME), designs);
-			byte[] tasks = encoderFactory.createHLAfixedArray(new DataElementFactory<HLAfixedRecord>(){
+					ATTRIBUTE_NAME_MANAGER_TIME), time.toByteArray());
+			HLAfixedArray<HLAfixedRecord> tasks = encoderFactory.createHLAfixedArray(new DataElementFactory<HLAfixedRecord>(){
 				@Override
 				public HLAfixedRecord createElement(int taskId) {
 					HLAfixedRecord task = encoderFactory.createHLAfixedRecord();
@@ -228,11 +229,11 @@ public class Ambassador implements FederateAmbassador {
 					}, Task.NUM_DESIGNERS));
 					return task;
 				}
-			}, Task.NUM_DESIGNERS).toByteArray();
+			}, Task.NUM_DESIGNERS);
 			attributes.put(rtiAmbassador.getAttributeHandle(
 					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
-					ATTRIBUTE_NAME_MANAGER_TASKS), tasks);
-			rtiAmbassador.updateAttributeValues(instanceHandles.get(manager), attributes, new byte[0]);
+					ATTRIBUTE_NAME_MANAGER_TASKS), tasks.toByteArray());
+			rtiAmbassador.updateAttributeValues(registeredInstances.get(manager), attributes, new byte[0]);
 			logger.debug("Updated manager attribute values.");
 		} else {
 			logger.warn("Manager not registered as object instance.");
@@ -240,7 +241,7 @@ public class Ambassador implements FederateAmbassador {
 	}
 	
 	public void updateDesigner(Designer designer) throws RTIexception {
-		if(instanceHandles.containsKey(designer)) {
+		if(registeredInstances.containsKey(designer)) {
 			logger.info("Updating designer attribute values.");
 			AttributeHandleValueMap attributes = 
 					rtiAmbassador.getAttributeHandleValueMapFactory().create(0);
@@ -262,7 +263,7 @@ public class Ambassador implements FederateAmbassador {
 			attributes.put(rtiAmbassador.getAttributeHandle(
 					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
 					ATTRIBUTE_NAME_DESIGNER_SHARE), share);
-			rtiAmbassador.updateAttributeValues(instanceHandles.get(designer), attributes, new byte[0]);
+			rtiAmbassador.updateAttributeValues(registeredInstances.get(designer), attributes, new byte[0]);
 			logger.debug("Updated designer attribute values.");
 		} else {
 			logger.warn("Designer not registered as object instance.");
@@ -300,408 +301,141 @@ public class Ambassador implements FederateAmbassador {
 	}
 
 	@Override
-	public void connectionLost(String faultDescription) throws FederateInternalError {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void reportFederationExecutions(FederationExecutionInformationSet theFederationExecutionInformationSet)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void synchronizationPointRegistrationSucceeded(String synchronizationPointLabel)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void synchronizationPointRegistrationFailed(String synchronizationPointLabel,
-			SynchronizationPointFailureReason reason) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void announceSynchronizationPoint(String synchronizationPointLabel, byte[] userSuppliedTag)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void federationSynchronized(String synchronizationPointLabel, FederateHandleSet failedToSyncSet)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void initiateFederateSave(String label) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void initiateFederateSave(String label, LogicalTime time) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void federationSaved() throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void federationNotSaved(SaveFailureReason reason) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void federationSaveStatusResponse(FederateHandleSaveStatusPair[] response) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void requestFederationRestoreSucceeded(String label) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void requestFederationRestoreFailed(String label) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void federationRestoreBegun() throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void initiateFederateRestore(String label, String federateName, FederateHandle federateHandle)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void federationRestored() throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void federationNotRestored(RestoreFailureReason reason) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void federationRestoreStatusResponse(FederateRestoreStatus[] response) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void startRegistrationForObjectClass(ObjectClassHandle theClass) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void stopRegistrationForObjectClass(ObjectClassHandle theClass) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void turnInteractionsOn(InteractionClassHandle theHandle) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void turnInteractionsOff(InteractionClassHandle theHandle) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void objectInstanceNameReservationSucceeded(String objectName) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void objectInstanceNameReservationFailed(String objectName) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void multipleObjectInstanceNameReservationSucceeded(Set<String> objectNames) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void multipleObjectInstanceNameReservationFailed(Set<String> objectNames) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void discoverObjectInstance(ObjectInstanceHandle theObject, ObjectClassHandle theObjectClass,
 			String objectName) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void discoverObjectInstance(ObjectInstanceHandle theObject, ObjectClassHandle theObjectClass,
-			String objectName, FederateHandle producingFederate) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
+		logger.info("Discovering object instance " + objectName);
+		try {
+			if(rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER).equals(theObjectClass)) {
+				// don't record the discovered designer yet... don't know the id
+				logger.debug("Discovered designer instance.");
+			} else if(rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER).equals(theObjectClass)) {
+				// record the discovered manager
+				discoveredInstances.put(theObject, app.getManager());
+				logger.debug("Discovered manager instance.");
+			} else {
+				logger.warn("Could not determine object class.");
+			}
+		} catch (RTIexception e) {
+			logger.error(e);
+		}
 	}
 
 	@Override
 	public void reflectAttributeValues(ObjectInstanceHandle theObject, AttributeHandleValueMap theAttributes,
 			byte[] userSuppliedTag, OrderType sentOrdering, TransportationTypeHandle theTransport,
 			SupplementalReflectInfo reflectInfo) throws FederateInternalError {
-		// TODO Auto-generated method stub
+		logger.info("Reflecting attibute values.");
 		
-	}
-
-	@Override
-	public void reflectAttributeValues(ObjectInstanceHandle theObject, AttributeHandleValueMap theAttributes,
-			byte[] userSuppliedTag, OrderType sentOrdering, TransportationTypeHandle theTransport, LogicalTime theTime,
-			OrderType receivedOrdering, SupplementalReflectInfo reflectInfo) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void reflectAttributeValues(ObjectInstanceHandle theObject, AttributeHandleValueMap theAttributes,
-			byte[] userSuppliedTag, OrderType sentOrdering, TransportationTypeHandle theTransport, LogicalTime theTime,
-			OrderType receivedOrdering, MessageRetractionHandle retractionHandle, SupplementalReflectInfo reflectInfo)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void receiveInteraction(InteractionClassHandle interactionClass, ParameterHandleValueMap theParameters,
-			byte[] userSuppliedTag, OrderType sentOrdering, TransportationTypeHandle theTransport,
-			SupplementalReceiveInfo receiveInfo) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void receiveInteraction(InteractionClassHandle interactionClass, ParameterHandleValueMap theParameters,
-			byte[] userSuppliedTag, OrderType sentOrdering, TransportationTypeHandle theTransport, LogicalTime theTime,
-			OrderType receivedOrdering, SupplementalReceiveInfo receiveInfo) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void receiveInteraction(InteractionClassHandle interactionClass, ParameterHandleValueMap theParameters,
-			byte[] userSuppliedTag, OrderType sentOrdering, TransportationTypeHandle theTransport, LogicalTime theTime,
-			OrderType receivedOrdering, MessageRetractionHandle retractionHandle, SupplementalReceiveInfo receiveInfo)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
+		try {
+			byte[] idData = theAttributes.get(rtiAmbassador.getAttributeHandle(
+					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+					ATTRIBUTE_NAME_DESIGNER_ID));
+			if(idData != null) {
+				HLAinteger32BE id = encoderFactory.createHLAinteger32BE();
+				id.decode(idData);
+				discoveredInstances.put(theObject, app.getDesigner(id.getValue()));
+			}
+			if(discoveredInstances.containsKey(theObject)) {
+				if(discoveredInstances.get(theObject) instanceof Designer) {
+					Designer designer = (Designer) discoveredInstances.get(theObject);
+					byte[] designsData = theAttributes.get(rtiAmbassador.getAttributeHandle(
+							rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+							ATTRIBUTE_NAME_DESIGNER_DESIGN));
+					if(designsData != null) {
+						HLAfixedArray<HLAinteger32BE> designs = encoderFactory.createHLAfixedArray(
+								encoderFactory.createHLAinteger32BE(),
+								encoderFactory.createHLAinteger32BE());
+						designs.decode(designsData);
+						for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+							designer.setDesign(i, designs.get(i).getValue());
+						}
+					}
+					byte[] strategyData = theAttributes.get(rtiAmbassador.getAttributeHandle(
+							rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+							ATTRIBUTE_NAME_DESIGNER_STRATEGY));
+					if(strategyData != null) {
+						HLAinteger32BE strategy = encoderFactory.createHLAinteger32BE();
+						strategy.decode(strategyData);
+						designer.setStrategy(strategy.getValue());
+					}
+					byte[] shareData = theAttributes.get(rtiAmbassador.getAttributeHandle(
+							rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+							ATTRIBUTE_NAME_DESIGNER_SHARE));
+					if(shareData != null) {
+						HLAboolean share = encoderFactory.createHLAboolean();
+						share.decode(shareData);
+						designer.setReadyToShare(share.getValue());
+					}
+					logger.debug("Reflected designer attibute values.");
+				} else if(discoveredInstances.get(theObject) instanceof Manager) {
+					Manager manager = (Manager) discoveredInstances.get(theObject);
+					byte[] roundData = theAttributes.get(rtiAmbassador.getAttributeHandle(
+							rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+							ATTRIBUTE_NAME_MANAGER_ROUND));
+					if(roundData != null) {
+						HLAunicodeString round = encoderFactory.createHLAunicodeString();
+						round.decode(roundData);
+						manager.setRoundName(round.getValue());
+					}
+					byte[] timeData = theAttributes.get(rtiAmbassador.getAttributeHandle(
+							rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+							ATTRIBUTE_NAME_MANAGER_TIME));
+					if(timeData != null) {
+						HLAinteger32BE time = encoderFactory.createHLAinteger32BE();
+						time.decode(timeData);
+						manager.setTimeRemaining(time.getValue());
+					}
+					byte[] taskData = theAttributes.get(rtiAmbassador.getAttributeHandle(
+							rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+							ATTRIBUTE_NAME_MANAGER_TASKS));
+					if(taskData != null) {
+						HLAfixedArray<HLAfixedRecord> tasks = encoderFactory.createHLAfixedArray(new DataElementFactory<HLAfixedRecord>(){
+							@Override
+							public HLAfixedRecord createElement(int taskId) {
+								HLAfixedRecord task = encoderFactory.createHLAfixedRecord();
+								task.add(encoderFactory.createHLAunicodeString());
+								task.add(encoderFactory.createHLAfixedArray(new DataElementFactory<HLAinteger32BE>(){
+									@Override
+									public HLAinteger32BE createElement(int designerId) {
+										return encoderFactory.createHLAinteger32BE();
+									}
+								}, Task.NUM_DESIGNERS));
+								return task;
+							}
+						}, Task.NUM_DESIGNERS);
+						tasks.decode(taskData);
+						for(int i = 0; i < Manager.NUM_TASKS; i++) {
+							if(tasks.get(i).get(0) instanceof HLAunicodeString) {
+								manager.getTask(i).setName(((HLAunicodeString)tasks.get(i).get(0)).getValue());
+							}
+							for(int j = 0; j < Task.NUM_DESIGNERS; j++) {
+								if(tasks.get(i).get(1) instanceof HLAfixedArray<?> 
+									&& ((HLAfixedArray<?>)tasks.get(i).get(1)).get(j) instanceof HLAinteger32BE) {
+									manager.getTask(i).setDesignerId(j, 
+											((HLAinteger32BE)((HLAfixedArray<?>)tasks.get(i).get(1)).get(j)).getValue());
+								}
+							}
+						}
+					}
+					logger.debug("Reflected manager attibute values.");
+				}
+			} else {
+				logger.warn("Object instance not discovered.");
+			}
+		} catch(RTIexception | DecoderException e) {
+			logger.error(e);
+		}
 	}
 
 	@Override
 	public void removeObjectInstance(ObjectInstanceHandle theObject, byte[] userSuppliedTag, OrderType sentOrdering,
 			SupplementalRemoveInfo removeInfo) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
+		logger.info("Removing object instance.");
+		if(discoveredInstances.containsKey(theObject)) {
+			discoveredInstances.remove(theObject);
+			logger.info("Removed object instance.");
+		} else {
+			logger.warn("Object instance not discovered.");
+		}
 	}
-
-	@Override
-	public void removeObjectInstance(ObjectInstanceHandle theObject, byte[] userSuppliedTag, OrderType sentOrdering,
-			LogicalTime theTime, OrderType receivedOrdering, SupplementalRemoveInfo removeInfo)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void removeObjectInstance(ObjectInstanceHandle theObject, byte[] userSuppliedTag, OrderType sentOrdering,
-			LogicalTime theTime, OrderType receivedOrdering, MessageRetractionHandle retractionHandle,
-			SupplementalRemoveInfo removeInfo) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void attributesInScope(ObjectInstanceHandle theObject, AttributeHandleSet theAttributes)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void attributesOutOfScope(ObjectInstanceHandle theObject, AttributeHandleSet theAttributes)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void provideAttributeValueUpdate(ObjectInstanceHandle theObject, AttributeHandleSet theAttributes,
-			byte[] userSuppliedTag) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void turnUpdatesOnForObjectInstance(ObjectInstanceHandle theObject, AttributeHandleSet theAttributes)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void turnUpdatesOnForObjectInstance(ObjectInstanceHandle theObject, AttributeHandleSet theAttributes,
-			String updateRateDesignator) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void turnUpdatesOffForObjectInstance(ObjectInstanceHandle theObject, AttributeHandleSet theAttributes)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void confirmAttributeTransportationTypeChange(ObjectInstanceHandle theObject,
-			AttributeHandleSet theAttributes, TransportationTypeHandle theTransportation) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void reportAttributeTransportationType(ObjectInstanceHandle theObject, AttributeHandle theAttribute,
-			TransportationTypeHandle theTransportation) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void confirmInteractionTransportationTypeChange(InteractionClassHandle theInteraction,
-			TransportationTypeHandle theTransportation) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void reportInteractionTransportationType(FederateHandle theFederate, InteractionClassHandle theInteraction,
-			TransportationTypeHandle theTransportation) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void requestAttributeOwnershipAssumption(ObjectInstanceHandle theObject,
-			AttributeHandleSet offeredAttributes, byte[] userSuppliedTag) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void requestDivestitureConfirmation(ObjectInstanceHandle theObject, AttributeHandleSet offeredAttributes)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void attributeOwnershipAcquisitionNotification(ObjectInstanceHandle theObject,
-			AttributeHandleSet securedAttributes, byte[] userSuppliedTag) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void attributeOwnershipUnavailable(ObjectInstanceHandle theObject, AttributeHandleSet theAttributes)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void requestAttributeOwnershipRelease(ObjectInstanceHandle theObject, AttributeHandleSet candidateAttributes,
-			byte[] userSuppliedTag) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void confirmAttributeOwnershipAcquisitionCancellation(ObjectInstanceHandle theObject,
-			AttributeHandleSet theAttributes) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void informAttributeOwnership(ObjectInstanceHandle theObject, AttributeHandle theAttribute,
-			FederateHandle theOwner) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void attributeIsNotOwned(ObjectInstanceHandle theObject, AttributeHandle theAttribute)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void attributeIsOwnedByRTI(ObjectInstanceHandle theObject, AttributeHandle theAttribute)
-			throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void timeRegulationEnabled(LogicalTime time) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void timeConstrainedEnabled(LogicalTime time) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void timeAdvanceGrant(LogicalTime theTime) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void requestRetraction(MessageRetractionHandle theHandle) throws FederateInternalError {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

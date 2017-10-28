@@ -11,16 +11,8 @@ public class Task extends Observable {
 	public static final Object PROPERTY_DESIGNER_IDS = new Object();
 	public static final int NUM_DESIGNERS = 2;
 	
-	private String name;
-	private int[] designerIds;
-	
-	/**
-	 * Instantiates a new task.
-	 */
-	public Task() {
-		name = "Initializing";
-		designerIds = new int[Manager.NUM_DESIGNERS];
-	}
+	private String name = "Initializing";
+	private int[] designerIds = new int[Manager.NUM_DESIGNERS];
 	
 	/**
 	 * Gets the name.

@@ -19,13 +19,19 @@ import edu.stevens.code.ptg.gui.ManagerPanel;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
+/**
+ * The Class ManagerApp.
+ */
 public class ManagerApp implements App {
     private static final Logger logger = LogManager.getLogger(ManagerApp.class);
-	
+    
 	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
 	private Manager self = new Manager();
 	private Ambassador ambassador = null;
 	
+	/**
+	 * Instantiates a new manager app.
+	 */
 	public ManagerApp() {
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			Designer d = new Designer();
@@ -34,6 +40,9 @@ public class ManagerApp implements App {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#init(java.lang.String)
+	 */
 	@Override
 	public void init(String federationName) {
 		if(ambassador == null) {
@@ -90,6 +99,9 @@ public class ManagerApp implements App {
         });
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#kill()
+	 */
 	@Override
 	public void kill() {
 		try {
@@ -100,11 +112,17 @@ public class ManagerApp implements App {
 		System.exit(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#getSelf()
+	 */
 	@Override
 	public Manager getSelf() {
 		return self;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#getDesigner(int)
+	 */
 	@Override
 	public Designer getDesigner(int index) {
 		if(index < 0 || index >= Manager.NUM_DESIGNERS) {
@@ -113,11 +131,17 @@ public class ManagerApp implements App {
 		return designers[index];
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#getDesigners()
+	 */
 	@Override
 	public Designer[] getDesigners() {
 		return Arrays.copyOf(designers, Manager.NUM_DESIGNERS);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#getManager()
+	 */
 	@Override
 	public Manager getManager() {
 		return self;

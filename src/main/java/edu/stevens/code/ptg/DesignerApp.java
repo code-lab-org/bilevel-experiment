@@ -19,14 +19,22 @@ import edu.stevens.code.ptg.gui.ManagerPanel;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
+/**
+ * The Class DesignerApp.
+ */
 public class DesignerApp implements App {
     private static final Logger logger = LogManager.getLogger(DesignerApp.class);
-	
+
 	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
 	private Designer self = null;
 	private Manager manager = new Manager();
 	private Ambassador ambassador = null;
 	
+	/**
+	 * Instantiates a new designer app.
+	 *
+	 * @param id the id
+	 */
 	public DesignerApp(int id) {
 		if(id < 0 || id >= Manager.NUM_DESIGNERS) {
 			throw new IllegalArgumentException("invalid designer id");
@@ -39,6 +47,9 @@ public class DesignerApp implements App {
 		self = designers[id];
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#init(java.lang.String)
+	 */
 	@Override
 	public void init(String federationName) {
 		if(ambassador == null) {
@@ -99,6 +110,9 @@ public class DesignerApp implements App {
         });
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#kill()
+	 */
 	@Override
 	public void kill() {
 		try {
@@ -109,11 +123,17 @@ public class DesignerApp implements App {
 		System.exit(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#getSelf()
+	 */
 	@Override
 	public Designer getSelf() {
 		return self;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#getDesigner(int)
+	 */
 	@Override
 	public Designer getDesigner(int index) {
 		if(index < 0 || index >= Manager.NUM_DESIGNERS) {
@@ -122,11 +142,17 @@ public class DesignerApp implements App {
 		return designers[index];
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#getDesigners()
+	 */
 	@Override
 	public Designer[] getDesigners() {
 		return Arrays.copyOf(designers, Manager.NUM_DESIGNERS);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#getManager()
+	 */
 	@Override
 	public Manager getManager() {
 		return manager;

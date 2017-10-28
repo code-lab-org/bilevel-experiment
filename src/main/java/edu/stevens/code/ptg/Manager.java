@@ -2,6 +2,7 @@ package edu.stevens.code.ptg;
 
 import java.util.Arrays;
 import java.util.Observable;
+import java.util.Observer;
 
 /**
  * The Class Manager.
@@ -24,6 +25,13 @@ public class Manager extends Observable {
 	public Manager() {
 		for(int i = 0; i < NUM_TASKS; i++) {
 			this.tasks[i] = new Task();
+			this.tasks[i].addObserver(new Observer() {
+				@Override
+				public void update(Observable o, Object arg) {
+					setChanged();
+					notifyObservers(PROPERTY_TASKS);
+				}
+			});
 		}
 	}
 	

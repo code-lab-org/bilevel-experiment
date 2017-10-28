@@ -53,8 +53,7 @@ public class ManagerPanel extends JPanel {
 		this.add(advanceTime, c);
 		c.gridx = 0;
 		c.gridy++;
-		this.add(new JLabel("Tasks: "), c);
-		c.gridx++;
+		c.gridwidth = 2;
 		c.fill = GridBagConstraints.BOTH;
 		for(int i = 0; i < Manager.NUM_TASKS; i++) {
 			TaskPanel panel = new TaskPanel();
@@ -75,6 +74,9 @@ public class ManagerPanel extends JPanel {
 				timeText.setValue(manager.getTimeRemaining());
 			}
 		});
+		for(int i = 0; i < Manager.NUM_TASKS; i++) {
+			taskPanels[i].observe(manager.getTask(i));
+		}
 	}
 	
 	public void bindTo(Manager manager) {

@@ -7,9 +7,14 @@ import java.util.Observable;
  * The Class Designer.
  */
 public class Designer extends Observable {
-	private static final int NUM_STRATEGIES = 2;
-	private static final int MIN_DESIGN_VALUE = 0;
-	private static final int MAX_DESIGN_VALUE = 9;
+	public static final Object PROPERTY_ID = new Object();
+	public static final Object PROPERTY_DESIGNS = new Object();
+	public static final Object PROPERTY_STRATEGY = new Object();
+	public static final Object PROPERTY_SHARE = new Object();
+	
+	public static final int NUM_STRATEGIES = 2;
+	public static final int MIN_DESIGN_VALUE = 0;
+	public static final int MAX_DESIGN_VALUE = 9;
 	
 	private int id = -1;
 	private int[] designs = new int[NUM_STRATEGIES];
@@ -37,10 +42,10 @@ public class Designer extends Observable {
 		synchronized(this) {
 			if(this.id != id) {
 				this.id = id;
+				this.setChanged();
 			}
-			this.setChanged();
 		}
-		this.notifyObservers();
+		this.notifyObservers(PROPERTY_ID);
 	}
 	
 	/**
@@ -91,10 +96,33 @@ public class Designer extends Observable {
 		synchronized(this) {
 			if(this.designs[index] != value) {
 				this.designs[index] = value;
+				this.setChanged();
 			}
-			this.setChanged();
 		}
-		this.notifyObservers();
+		this.notifyObservers(PROPERTY_DESIGNS);
+	}
+	
+	/**
+	 * Sets the designs.
+	 *
+	 * @param value the values
+	 */
+	public void setDesigns(int[] values) {
+		if(values.length != NUM_STRATEGIES) {
+			throw new IllegalArgumentException("invalid number of designs");
+		}
+		for(int value : values) {
+			if(value < MIN_DESIGN_VALUE || value > MAX_DESIGN_VALUE) {
+				throw new IllegalArgumentException("invalid design value");
+			}
+		}
+		synchronized(this) {
+			if(!Arrays.equals(this.designs, values)) {
+				this.designs = Arrays.copyOf(values, NUM_STRATEGIES);
+				this.setChanged();
+			}
+		}
+		this.notifyObservers(PROPERTY_DESIGNS);
 	}
 	
 	/**
@@ -112,16 +140,16 @@ public class Designer extends Observable {
 	 * @param value the new strategy
 	 */
 	public void setStrategy(int value) {
-		if(value < 0 || value > NUM_STRATEGIES) {
+		if(value < 0 || value >= NUM_STRATEGIES) {
 			throw new IllegalArgumentException("invalid strategy value");
 		}
 		synchronized(this) {
 			if(this.strategy != value) {
 				this.strategy = value;
+				this.setChanged();
 			}
-			this.setChanged();
 		}
-		this.notifyObservers();
+		this.notifyObservers(PROPERTY_STRATEGY);
 	}
 	
 	/**
@@ -142,10 +170,10 @@ public class Designer extends Observable {
 		synchronized(this) {
 			if(this.readyToShare != isReady) {
 				this.readyToShare = isReady;
+				this.setChanged();
 			}
-			this.setChanged();
 		}
-		this.notifyObservers();
+		this.notifyObservers(PROPERTY_SHARE);
 	}
 	
 	/* (non-Javadoc)

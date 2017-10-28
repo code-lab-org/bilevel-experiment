@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.stevens.code.ptg.Designer;
+import edu.stevens.code.ptg.Manager;
+import edu.stevens.code.ptg.Task;
 import hla.rti1516e.AttributeHandle;
 import hla.rti1516e.AttributeHandleSet;
 import hla.rti1516e.AttributeHandleValueMap;
@@ -34,7 +36,10 @@ import hla.rti1516e.RtiFactoryFactory;
 import hla.rti1516e.SaveFailureReason;
 import hla.rti1516e.SynchronizationPointFailureReason;
 import hla.rti1516e.TransportationTypeHandle;
+import hla.rti1516e.encoding.DataElementFactory;
 import hla.rti1516e.encoding.EncoderFactory;
+import hla.rti1516e.encoding.HLAfixedRecord;
+import hla.rti1516e.encoding.HLAinteger32BE;
 import hla.rti1516e.exceptions.AlreadyConnected;
 import hla.rti1516e.exceptions.FederateAlreadyExecutionMember;
 import hla.rti1516e.exceptions.FederateInternalError;
@@ -110,10 +115,8 @@ public class Ambassador implements FederateAmbassador {
 		}
 	}
 	
-	public void connectDesigner(String federationName, Designer designer) throws RTIexception {
-		this.connect(federationName, designer.toString(), FEDERATE_TYPE_DESIGNER);
-		
-		logger.debug("Publishing and subscribing designer class attributes.");
+	private void publishDesignerAttributes() throws RTIexception {
+		logger.debug("Publishing designer class attributes.");
 		AttributeHandleSet designerHandles = 
 				rtiAmbassador.getAttributeHandleSetFactory().create();
 		for(String attribute : ATTRIBUTE_NAMES_DESIGNER) {
@@ -124,10 +127,37 @@ public class Ambassador implements FederateAmbassador {
 		rtiAmbassador.publishObjectClassAttributes(
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), designerHandles);
 		logger.info("Published designer class attributes.");
+	}
+	
+	private void subscribeDesignerAttributes() throws RTIexception {
+		logger.debug("Subscribing designer class attributes.");
+		AttributeHandleSet designerHandles = 
+				rtiAmbassador.getAttributeHandleSetFactory().create();
+		for(String attribute : ATTRIBUTE_NAMES_DESIGNER) {
+			designerHandles.add(rtiAmbassador.getAttributeHandle(
+					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+					attribute));
+		}
 		rtiAmbassador.subscribeObjectClassAttributes(
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), designerHandles);
 		logger.info("Subscribed designer class attributes.");
-		
+	}
+	
+	private void publishManagerAttributes() throws RTIexception {
+		logger.debug("Publishing manager class attributes.");
+		AttributeHandleSet managerHandles = 
+				rtiAmbassador.getAttributeHandleSetFactory().create();
+		for(String attribute : ATTRIBUTE_NAMES_MANAGER) {
+			managerHandles.add(rtiAmbassador.getAttributeHandle(
+					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+					attribute));
+		}
+		rtiAmbassador.publishObjectClassAttributes(
+				rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), managerHandles);
+		logger.info("Published manager class attributes.");
+	}
+	
+	private void subscribeManagerAttributes() throws RTIexception {
 		logger.debug("Subscribing manager class attributes.");
 		AttributeHandleSet managerHandles = 
 				rtiAmbassador.getAttributeHandleSetFactory().create();
@@ -139,7 +169,28 @@ public class Ambassador implements FederateAmbassador {
 		rtiAmbassador.subscribeObjectClassAttributes(
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), managerHandles);
 		logger.info("Subscribed manager class attributes.");
+	}
+	
+	public void connectManager(Manager manager, String federationName) throws RTIexception {
+		this.connect(federationName, manager.toString(), FEDERATE_TYPE_MANAGER);
+		publishManagerAttributes();
+		subscribeManagerAttributes();
+		subscribeDesignerAttributes();
+
+		logger.debug("Registering this manager object.");
+		ObjectInstanceHandle instance = rtiAmbassador.registerObjectInstance(
+				rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER));
+		instanceHandles.put(manager,  instance);
+		logger.debug("Registered this manager object.");
 		
+		updateManager(manager);
+	}
+	
+	public void connectDesigner(Designer designer, String federationName) throws RTIexception {
+		this.connect(federationName, designer.toString(), FEDERATE_TYPE_DESIGNER);
+		publishDesignerAttributes();
+		subscribeDesignerAttributes();
+		subscribeManagerAttributes();
 
 		logger.debug("Registering this designer object.");
 		ObjectInstanceHandle instance = rtiAmbassador.registerObjectInstance(
@@ -148,6 +199,44 @@ public class Ambassador implements FederateAmbassador {
 		logger.debug("Registered this designer object.");
 		
 		updateDesigner(designer);
+	}
+	
+	public void updateManager(Manager manager) throws RTIexception {
+		if(instanceHandles.containsKey(manager)) {
+			logger.info("Updating manager attribute values.");
+			AttributeHandleValueMap attributes = 
+					rtiAmbassador.getAttributeHandleValueMapFactory().create(0);
+			
+			byte[] id = encoderFactory.createHLAunicodeString(manager.getRoundName()).toByteArray();
+			attributes.put(rtiAmbassador.getAttributeHandle(
+					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+					ATTRIBUTE_NAME_MANAGER_ROUND), id);
+			byte[] designs = encoderFactory.createHLAinteger32BE(manager.getTimeRemaining()).toByteArray();
+			attributes.put(rtiAmbassador.getAttributeHandle(
+					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+					ATTRIBUTE_NAME_MANAGER_TIME), designs);
+			byte[] tasks = encoderFactory.createHLAfixedArray(new DataElementFactory<HLAfixedRecord>(){
+				@Override
+				public HLAfixedRecord createElement(int taskId) {
+					HLAfixedRecord task = encoderFactory.createHLAfixedRecord();
+					task.add(encoderFactory.createHLAunicodeString(manager.getTask(taskId).getName()));
+					task.add(encoderFactory.createHLAfixedArray(new DataElementFactory<HLAinteger32BE>(){
+						@Override
+						public HLAinteger32BE createElement(int designerId) {
+							return encoderFactory.createHLAinteger32BE(manager.getTask(taskId).getDesignerId(designerId));
+						}
+					}, Task.NUM_DESIGNERS));
+					return task;
+				}
+			}, Task.NUM_DESIGNERS).toByteArray();
+			attributes.put(rtiAmbassador.getAttributeHandle(
+					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+					ATTRIBUTE_NAME_MANAGER_TASKS), tasks);
+			rtiAmbassador.updateAttributeValues(instanceHandles.get(manager), attributes, new byte[0]);
+			logger.debug("Updated manager attribute values.");
+		} else {
+			logger.warn("Manager not registered as object instance.");
+		}
 	}
 	
 	public void updateDesigner(Designer designer) throws RTIexception {

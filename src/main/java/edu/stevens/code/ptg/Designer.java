@@ -74,7 +74,7 @@ public class Designer extends Observable {
 	 * @return the design
 	 */
 	public synchronized int getDesign(int index) {
-		if(index < 0 || index > NUM_STRATEGIES) {
+		if(index < 0 || index >= NUM_STRATEGIES) {
 			throw new IllegalArgumentException("invalid design index");
 		}
 		return this.designs[index];
@@ -87,7 +87,7 @@ public class Designer extends Observable {
 	 * @param value the value
 	 */
 	public void setDesign(int index, int value) {
-		if(index < 0 || index > NUM_STRATEGIES) {
+		if(index < 0 || index >= NUM_STRATEGIES) {
 			throw new IllegalArgumentException("invalid design index");
 		}
 		if(value < MIN_DESIGN_VALUE || value > MAX_DESIGN_VALUE) {

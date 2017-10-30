@@ -174,7 +174,6 @@ public class Ambassador extends NullFederateAmbassador {
 		
 		this.connect(federationName, managerApp.getSelf().toString(), FEDERATE_TYPE_MANAGER);
 		publishManagerAttributes();
-		subscribeManagerAttributes();
 		subscribeDesignerAttributes();
 
 		logger.debug("Registering this manager object.");

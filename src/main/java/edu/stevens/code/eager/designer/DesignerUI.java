@@ -14,9 +14,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 import edu.stevens.code.eager.ui.DesignSpaceUI;
 
@@ -26,9 +28,10 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	 * This is the Main file for execution of the user interface
 	 */
 	private static final long serialVersionUID = 1L;
+	private JToggleButton shareButton;
 	
 	public static final int X_SHIFT = -314;
-	public static final int Y_SHIFT =   50;
+	public static final int Y_SHIFT =   60;
 	public static final int X_RANGE = 1624 + X_SHIFT;
 	
 	private final int xA0 = 1920/2 + X_SHIFT - 420;	
@@ -122,7 +125,7 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		/* Set Icon */
 //		ImageIcon icon = new ImageIcon("src/main/java/resources/CoDe.png");
 //		frame.setIconImage(icon.getImage());
-		main_frame.loadIcons(frame);
+		loadIcons(frame);
 		
 		/* Initialize JFrame in maximized mode: */
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -169,10 +172,22 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		/* JPanel preferred size */
 		this.setPreferredSize(new Dimension(1920,1080));
 		this.setBackground(Color.BLACK);
+		this.setLayout(null);
+		
+		ImageIcon share_off = new ImageIcon("src/main/java/resources/share_k__40.png");
+		ImageIcon share_on  = new ImageIcon("src/main/java/resources/share_c__40.png");
+		
+		shareButton = new JToggleButton(share_off);
+		shareButton.setSelectedIcon(share_on);
+		shareButton.setEnabled(true);
+				
+		shareButton.setBounds(1920/2+X_SHIFT-25, 1080-Y_SHIFT, 50, 50);
+		
+		this.add(shareButton);
 		
 	}
 	
-	private void loadIcons(JFrame j_frame) {
+	public static void loadIcons(JFrame j_frame) {
 		
 		ArrayList<Image> icons = new ArrayList<Image>();
 		icons.add(new ImageIcon("src/main/java/resources/icon__16.png").getImage());

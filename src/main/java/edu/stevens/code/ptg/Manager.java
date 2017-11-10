@@ -105,6 +105,25 @@ public class Manager extends Observable {
 		return Arrays.copyOf(this.tasks, NUM_TASKS);
 	}
 	
+	public int getDesignPartner(int designerId) {
+		if(designerId < 0 || designerId >= NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		for(Task task : tasks) {
+			// hard code only two designers per task
+			if(Task.NUM_DESIGNERS != 2) {
+				throw new RuntimeException("assumption violated!!!!!");
+			}
+			if(task.getDesignerId(0)==designerId) {
+				return task.getDesignerId(1);
+			}
+			if(task.getDesignerId(1)==designerId) {
+				return task.getDesignerId(0);
+			}
+		}
+		return -1;
+	}
+	
 	/**
 	 * Sets the task.
 	 *

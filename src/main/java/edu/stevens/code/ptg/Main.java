@@ -66,7 +66,8 @@ public class Main {
 				int id = Integer.parseInt(cmd.getOptionValue("d"));
 				
 				new DesignerApp(id).init(federationName);
-			} else if(cmd.hasOption("m")) {
+			}
+			if(cmd.hasOption("m")) {
 				/* AMVRO: Added game file "SH01" */
 				new ManagerApp("SH01").init(federationName);
 			} else if(cmd.hasOption("t")) {

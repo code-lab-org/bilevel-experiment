@@ -33,11 +33,6 @@ public class DesignerApp implements App {
 	private Manager manager = new Manager();
 	private Ambassador ambassador = null;
 	
-	/** AMVRO: Test to create a DesignerUI panel
-	 * from PTG's DesignerApp class. 
-	 */
-	private DesignerUI dUI;
-	
 	/**
 	 * Instantiates a new designer app.
 	 *
@@ -53,11 +48,6 @@ public class DesignerApp implements App {
 			designers[i] = d;
 		}
 		self = designers[id];
-		
-		/* AMVRO: Creating the dUI object. */
-		dUI = new DesignerUI(id);
-//		dUI.setGame("PB01");
-//		dUI.setDefaultUI();
 	}
 
 	/* (non-Javadoc)
@@ -102,10 +92,33 @@ public class DesignerApp implements App {
 				 * 
 				 */
 				JFrame fUI = new JFrame();
-				dUI.setJFrameUI(fUI);
-				dUI.setGame("SH01");
-				dUI.setDefaultUI();
+				/* AMVRO: Creating the dUI object. */
+				DesignerUI dUI = new DesignerUI();
 				
+				fUI.setContentPane(dUI);
+				
+				/* Here I tell Java to remove the title bar */
+				fUI.setUndecorated(true);
+				
+				/* Because there is no title bar (see previous comment),
+				 * the interface needs to be closed using Alt+F4.
+				 */
+				fUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				
+				/* Set Icon */
+//				DesignerUI.loadIcons(fUI);
+				
+				/* Initialize JFrame in maximized mode: */
+				fUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
+				
+				/* This is the JFrame is packed */
+				fUI.pack();
+				fUI.setLocationRelativeTo(null);
+				fUI.setVisible(true);
+				
+				dUI.useMouse(fUI);
+				
+				dUI.observe(manager, designers);
 				
 				for(Designer designer : designers) {
 					DesignerPanel dPanel = new DesignerPanel();
@@ -115,6 +128,11 @@ public class DesignerApp implements App {
 						dPanel.bindTo(self);
 					}
 					p.add(dPanel);
+					
+					if(designer.equals(self)) {
+						dUI.bindTo(self);
+					}
+					dUI.setGame("SH01");
 				}
 				ManagerPanel mPanel = new ManagerPanel();
 				mPanel.observe(getManager());

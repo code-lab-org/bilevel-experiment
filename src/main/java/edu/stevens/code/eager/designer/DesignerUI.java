@@ -16,6 +16,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -23,11 +25,10 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import edu.stevens.code.eager.ui.DesignSpaceUI;
-import edu.stevens.code.ptg.App;
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.Manager;
 
-public class DesignerUI extends JPanel implements App, ActionListener, KeyListener{
+public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	
 	/**
 	 * This is the Main file for execution of the user interface
@@ -102,21 +103,6 @@ public class DesignerUI extends JPanel implements App, ActionListener, KeyListen
 	public int getPBB() { return pBB; }
 	public void setPBB(int p_BB) { this.pBB = p_BB; }
 	
-	/**
-	 * Variables from PTG package
-	 */
-	/* From DesignerApp: */
-	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
-	private Designer self = null;
-
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getSelf()
-	 */
-	@Override
-	public Designer getSelf() {
-		return self;
-	}
-	
 	
 	/* Main */
 	public static void main(String[] args) {
@@ -129,7 +115,6 @@ public class DesignerUI extends JPanel implements App, ActionListener, KeyListen
 		/* Create the aforementioned "main_frame" object of class MainUI. */
 		final DesignerUI main_frame = new DesignerUI();
 		main_frame.setGame("PB01");
-		main_frame.setDefaultUI();
 		
 		
 		main_frame.setJFrameUI(frame);
@@ -141,38 +126,6 @@ public class DesignerUI extends JPanel implements App, ActionListener, KeyListen
 			
 	/** Default MainUI constructor */
 	public DesignerUI() {
-	}
-	
-	/** MainUI constructor assigning designer ID.
-	 * Syntax borrowed from PTG's DesignerApp class
-	 * @param id
-	 */
-	public DesignerUI(int id) {
-		this.setDefaultUI();
-		
-		if(id < 0 || id >= Manager.NUM_DESIGNERS) {
-			throw new IllegalArgumentException("invalid designer id");
-		}
-		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
-			Designer d = new Designer();
-			d.setId(i);
-			designers[i] = d;
-		}
-		self = designers[id];
-		
-	}
-	
-	/** MainUI constructor specifying game
-	 * (.csv file in "resources" package)
-	 */
-	public DesignerUI(String game_file) {
-		this.setGame(game_file);
-		this.setDefaultUI();
-	}
-	
-	/** Set the default appearance of the UI */
-	public void setDefaultUI() {
-		
 		/* JPanel preferred size */
 		this.setPreferredSize(new Dimension(1920,1080));
 		this.setBackground(Color.BLACK);
@@ -198,9 +151,14 @@ public class DesignerUI extends JPanel implements App, ActionListener, KeyListen
 		});
 		
 		this.add(shareButton);
-		
-		
-		
+	}
+	
+	/** MainUI constructor specifying game
+	 * (.csv file in "resources" package)
+	 */
+	public DesignerUI(String game_file) {
+		this();
+		this.setGame(game_file);
 	}
 	
 	
@@ -406,34 +364,37 @@ public class DesignerUI extends JPanel implements App, ActionListener, KeyListen
 		
 	}
 	
+	private Manager manager = null;
 	
-	/** Methods implemented in
-	 * App class from PTG packages 
-	 */
-	@Override
-	public Designer[] getDesigners() {
-		// TODO Auto-generated method stub
-		return null;
+	public void observe(Manager manager, Designer[] designers) {
+		this.manager = manager;
+		for(Designer d : designers) {
+			d.addObserver(new Observer() {
+				@Override
+				public void update(Observable arg0, Object arg1) {
+					if(manager != null && self != null 
+							&& d.getId() == manager.getDesignPartner(self.getId())) {
+						setXAj(d.getDesign(0));
+						setXBj(d.getDesign(1));
+						System.out.println(getXAj());
+						System.out.println(getXBj());
+						
+						repaint();
+					}
+				}
+			});
+		}
 	}
-	@Override
-	public Designer getDesigner(int index) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	private Designer self = null;
+	
+	public void bindTo(Designer designer) {
+		this.self = designer;
+		shareButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				designer.setReadyToShare(shareButton.isSelected());
+			}
+		});
 	}
-	@Override
-	public Manager getManager() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void init(String federationName) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void kill() {
-		// TODO Auto-generated method stub
-		
-	}
-		
 }

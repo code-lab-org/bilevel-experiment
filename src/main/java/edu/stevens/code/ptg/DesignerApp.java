@@ -103,7 +103,7 @@ public class DesignerApp implements App {
 				 */
 				JFrame fUI = new JFrame();
 				dUI.setJFrameUI(fUI);
-//				dUI.setGame("SH01");
+				dUI.setGame("SH01");
 				dUI.setDefaultUI();
 				
 				

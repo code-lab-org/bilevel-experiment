@@ -335,7 +335,7 @@ public class DesignSpaceUI {
 	}
 	
 	/* Ruler Ai */
-	public void drawRulerA(int x_i, int x_j){
+	public void drawRulerAi(int x_i){
 		
 		g2D.setFont(SANS1);
 		
@@ -355,7 +355,49 @@ public class DesignSpaceUI {
 	}
 	
 	/* Ruler Bi */
-	public void drawRulerB(int x_i, int x_j){
+	public void drawRulerBi(int x_i){
+		
+		x_i = x_i + 11;
+		
+		g2D.setFont(SANS1);
+		
+		/* Draw ruler, thickness = t */
+		int t = 6;
+		g2D.setStroke(new BasicStroke(t));
+		g2D.setColor(new Color(147, 93, 116));
+		
+		/* Ruler moving along horizontal axis (vertical box) */
+		g2D.drawRect(540+X+(40*x_i)-t/2, 80-Y-3*t/2, 40+t, 920+3*t);
+		
+		/* Draw horizontal triangular ruler marks */
+		int[] xiPoints = {540+X+(40*x_i)+20+t/2, 540+X+(40*x_i)+28+20, 540+X+(40*x_i)+20+t/2};
+		int[] yiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
+		g2D.setColor(Color.BLUE); g2D.fillPolygon(xiPoints, yiPoints, 3);
+		g2D.setColor(B2); g2D.drawPolygon(xiPoints, yiPoints, 3);
+	}
+	
+	/* Ruler Ai */
+	public void drawRulerAj(int x_i, int x_j){
+		
+		g2D.setFont(SANS1);
+		
+		/* Draw ruler, thickness = t */
+		int t = 6;
+		g2D.setStroke(new BasicStroke(t));
+		g2D.setColor(new Color(147, 93, 116));
+		
+		/* Ruler moving along horizontal axis (vertical box) */
+		g2D.drawRect(540+X+(40*x_i)-t/2, 80-Y-3*t/2, 40+t, 920+3*t);
+		
+		/* Draw horizontal triangular ruler marks */
+		int[] xiPoints = {540+X+(40*x_i)-28+20, 540+X+(40*x_i)+20-t/2, 540+X+(40*x_i)+20-t/2};
+		int[] yiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
+		g2D.setColor(Color.RED); g2D.fillPolygon(xiPoints, yiPoints, 3);
+		g2D.setColor(R2); g2D.drawPolygon(xiPoints, yiPoints, 3);
+	}
+	
+	/* Ruler Bi */
+	public void drawRulerBj(int x_i, int x_j){
 		
 		x_i = x_i + 11;
 		

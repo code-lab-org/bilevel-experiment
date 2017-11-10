@@ -8,6 +8,8 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -129,43 +131,11 @@ public class DesignerUI extends JPanel implements App, ActionListener, KeyListen
 		main_frame.setGame("PB01");
 		main_frame.setDefaultUI();
 		
-//		/* Now, object "main_frame" becomes the content source
-//		 * of the JFrame object "frame" defined previously.
-//		 */
-//		frame.setContentPane(main_frame);
-//		
-//		/* Here I tell Java to remove the title bar */
-//		frame.setUndecorated(true);
-//		
-//		/* Because there is no title bar (see previous comment),
-//		 * the interface needs to be closed using Alt+F4.
-//		 */
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		
-//		/* Set Icon */
-////		ImageIcon icon = new ImageIcon("src/main/java/resources/CoDe.png");
-////		frame.setIconImage(icon.getImage());
-//		loadIcons(frame);
-//		
-//		/* Initialize JFrame in maximized mode: */
-//		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//		
-//		/* This is the JFrame is packed */
-//		frame.pack();
-//		frame.setLocationRelativeTo(null);
-//		frame.setVisible(true);
-//		
-////		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-////		System.out.println(screenSize);
-//		
-//		/* The next block makes it possible to click on every cell
-//		 * and update the position of the ruler.
-//		 */
-//		
-//		main_frame.useMouse(frame);
 		
 		main_frame.setJFrameUI(frame);
         frame.addKeyListener(main_frame);
+        
+        
 				
 	}
 			
@@ -217,7 +187,19 @@ public class DesignerUI extends JPanel implements App, ActionListener, KeyListen
 				
 		this.shareButton.setBounds(1920/2+X_SHIFT-25, 1080-Y_SHIFT, 50, 50);
 		
+		shareButton.addItemListener(new ItemListener() {
+		   public void itemStateChanged(ItemEvent ev) {
+		      if(ev.getStateChange()==ItemEvent.SELECTED){
+		    	  setBackground(Color.WHITE);
+		      } else if(ev.getStateChange()==ItemEvent.DESELECTED){
+		    	  setBackground(Color.BLACK);
+		      }
+		   }
+		});
+		
 		this.add(shareButton);
+		
+		
 		
 	}
 	
@@ -305,8 +287,10 @@ public class DesignerUI extends JPanel implements App, ActionListener, KeyListen
 		DS.drawDesignSpace();
 		
 		screenToXij( getXscreen(), getYscreen() );
-		DS.drawRulerA( getXAi(), getXAj() );
-		DS.drawRulerB( getXBi(), getXBj() );
+		DS.drawRulerAi( getXAi() );
+		DS.drawRulerBi( getXBi() );
+		
+		
 		
 		DS.selectCell( getXi(), getXj() );
 		DS.drawNormalForm( getPAA(), getPAB(), getPBA(), getPBB() );

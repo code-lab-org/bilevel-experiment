@@ -12,7 +12,7 @@ public class Manager extends Observable {
 	public static final Object PROPERTY_TIME = new Object();
 	public static final Object PROPERTY_TASKS = new Object();
 	public static final int MAX_TASK_TIME = 300;
-	public static final int NUM_DESIGNERS = 4; /* AMVRO: It should be 4; check Main 77-78 in PTG package */
+	public static final int NUM_DESIGNERS = 2; /* AMVRO: It should be 4; check Main 77-78 in PTG package */
 	public static final int NUM_TASKS = 2;
 	
 	private String roundName = "Initializing";

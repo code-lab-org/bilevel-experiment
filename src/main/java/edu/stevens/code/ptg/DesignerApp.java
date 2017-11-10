@@ -1,6 +1,8 @@
 package edu.stevens.code.ptg;
 
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
@@ -14,6 +16,7 @@ import javax.swing.SwingUtilities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import edu.stevens.code.eager.designer.DesignerUI;
 import edu.stevens.code.ptg.gui.DesignerPanel;
 import edu.stevens.code.ptg.gui.ManagerPanel;
 import edu.stevens.code.ptg.hla.Ambassador;
@@ -30,6 +33,11 @@ public class DesignerApp implements App {
 	private Manager manager = new Manager();
 	private Ambassador ambassador = null;
 	
+	/** AMVRO: Test to create a DesignerUI panel
+	 * from PTG's DesignerApp class. 
+	 */
+	private DesignerUI dUI;
+	
 	/**
 	 * Instantiates a new designer app.
 	 *
@@ -45,6 +53,11 @@ public class DesignerApp implements App {
 			designers[i] = d;
 		}
 		self = designers[id];
+		
+		/* AMVRO: Creating the dUI object. */
+		dUI = new DesignerUI(id);
+//		dUI.setGame("PB01");
+//		dUI.setDefaultUI();
 	}
 
 	/* (non-Javadoc)
@@ -83,6 +96,17 @@ public class DesignerApp implements App {
 				JFrame f = new JFrame();
 				JPanel p = new JPanel();
 				p.setLayout(new FlowLayout());
+				
+				/** AMVRO: Test to create a DesignerUI panel
+				 * from PTG's DesignerApp class. 
+				 * 
+				 */
+				JFrame fUI = new JFrame();
+				dUI.setJFrameUI(fUI);
+//				dUI.setGame("SH01");
+				dUI.setDefaultUI();
+				
+				
 				for(Designer designer : designers) {
 					DesignerPanel dPanel = new DesignerPanel();
 					if(!designer.equals(self)) {
@@ -109,6 +133,34 @@ public class DesignerApp implements App {
 			}
         });
 	}
+	
+	/** AMVRO: Method originally from DesignerUI class
+	 * 
+	 * @param j_frame
+	 * @param dUI
+	 */
+	public void useMouse(JFrame j_frame, DesignerUI dUI){
+		
+		j_frame.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				
+				/* The next two lines take the (x,y) position of the MouseEvent "me"
+				 * and assign it to xAi and xAj.
+				 * I might use main_frame.setXAi(int) and main_frame.setXAj(int)
+				 * instead of main_frame.xAi = int and main_frame.xAj = int,
+				 * respectively; that could be a better practice. IDK!
+				 */
+				
+				dUI.setXscreen(me.getX());
+				dUI.setYscreen(me.getY());
+				
+				/* Here it is where I repaint the contents in the "main_frame". */
+				dUI.repaint();
+				}
+        });
+		
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see edu.stevens.code.ptg.App#kill()

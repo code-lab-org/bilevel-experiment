@@ -21,8 +21,11 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import edu.stevens.code.eager.ui.DesignSpaceUI;
+import edu.stevens.code.ptg.App;
+import edu.stevens.code.ptg.Designer;
+import edu.stevens.code.ptg.Manager;
 
-public class DesignerUI extends JPanel implements ActionListener, KeyListener{
+public class DesignerUI extends JPanel implements App, ActionListener, KeyListener{
 	
 	/**
 	 * This is the Main file for execution of the user interface
@@ -41,7 +44,7 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	private final int yB0 = 1080/2 - Y_SHIFT + 420;
 	
 	/** Game file */
-	private String game;
+	private String game = "PB01"; /* Default game */
 	public String getGame() { return game; }
 	public void setGame(String game_file) { this.game = game_file; }
 	
@@ -97,6 +100,21 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	public int getPBB() { return pBB; }
 	public void setPBB(int p_BB) { this.pBB = p_BB; }
 	
+	/**
+	 * Variables from PTG package
+	 */
+	/* From DesignerApp: */
+	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
+	private Designer self = null;
+
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.App#getSelf()
+	 */
+	@Override
+	public Designer getSelf() {
+		return self;
+	}
+	
 	
 	/* Main */
 	public static void main(String[] args) {
@@ -107,67 +125,83 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		JFrame frame = new JFrame("Collective Design Laboratory");
 		
 		/* Create the aforementioned "main_frame" object of class MainUI. */
-		final DesignerUI main_frame = new DesignerUI("PB01");
+		final DesignerUI main_frame = new DesignerUI();
+		main_frame.setGame("PB01");
+		main_frame.setDefaultUI();
 		
-		/* Now, object "main_frome" becomes the content source
-		 * of the JFrame object "frame" defined previously.
-		 */
-		frame.setContentPane(main_frame);
+//		/* Now, object "main_frame" becomes the content source
+//		 * of the JFrame object "frame" defined previously.
+//		 */
+//		frame.setContentPane(main_frame);
+//		
+//		/* Here I tell Java to remove the title bar */
+//		frame.setUndecorated(true);
+//		
+//		/* Because there is no title bar (see previous comment),
+//		 * the interface needs to be closed using Alt+F4.
+//		 */
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		
+//		/* Set Icon */
+////		ImageIcon icon = new ImageIcon("src/main/java/resources/CoDe.png");
+////		frame.setIconImage(icon.getImage());
+//		loadIcons(frame);
+//		
+//		/* Initialize JFrame in maximized mode: */
+//		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//		
+//		/* This is the JFrame is packed */
+//		frame.pack();
+//		frame.setLocationRelativeTo(null);
+//		frame.setVisible(true);
+//		
+////		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+////		System.out.println(screenSize);
+//		
+//		/* The next block makes it possible to click on every cell
+//		 * and update the position of the ruler.
+//		 */
+//		
+//		main_frame.useMouse(frame);
 		
-		/* Here I tell Java to remove the title bar */
-		frame.setUndecorated(true);
-		
-		/* Because there is no title bar (see previous comment),
-		 * the interface needs to be closed using Alt+F4.
-		 */
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		/* Set Icon */
-//		ImageIcon icon = new ImageIcon("src/main/java/resources/CoDe.png");
-//		frame.setIconImage(icon.getImage());
-		loadIcons(frame);
-		
-		/* Initialize JFrame in maximized mode: */
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		
-		/* This is the JFrame is packed */
-		frame.pack();
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-		
-//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//		System.out.println(screenSize);
-		
-		/* The next block makes it possible to click on every cell
-		 * and update the position of the ruler.
-		 */
-		frame.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent me) {
-				
-				/* The next two lines take the (x,y) position of the MouseEvent "me"
-				 * and assign it to xAi and xAj.
-				 * I might use main_frame.setXAi(int) and main_frame.setXAj(int)
-				 * instead of main_frame.xAi = int and main_frame.xAj = int,
-				 * respectively; that could be a better practice. IDK!
-				 */
-				
-				main_frame.setXscreen(me.getX());
-				main_frame.setYscreen(me.getY());
-				
-				/* Here it is where I repaint the contents in the "main_frame". */
-				main_frame.repaint();
-				}
-        });
-		
+		main_frame.setJFrameUI(frame);
         frame.addKeyListener(main_frame);
-		
 				
 	}
 			
-	/* MainUI method */
-	public DesignerUI(String game_file) {
+	/** Default MainUI constructor */
+	public DesignerUI() {
+	}
+	
+	/** MainUI constructor assigning designer ID.
+	 * Syntax borrowed from PTG's DesignerApp class
+	 * @param id
+	 */
+	public DesignerUI(int id) {
+		this.setDefaultUI();
 		
-		setGame(game_file);
+		if(id < 0 || id >= Manager.NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
+			Designer d = new Designer();
+			d.setId(i);
+			designers[i] = d;
+		}
+		self = designers[id];
+		
+	}
+	
+	/** MainUI constructor specifying game
+	 * (.csv file in "resources" package)
+	 */
+	public DesignerUI(String game_file) {
+		this.setGame(game_file);
+		this.setDefaultUI();
+	}
+	
+	/** Set the default appearance of the UI */
+	public void setDefaultUI() {
 		
 		/* JPanel preferred size */
 		this.setPreferredSize(new Dimension(1920,1080));
@@ -177,15 +211,16 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		ImageIcon share_off = new ImageIcon("src/main/java/resources/share_k__40.png");
 		ImageIcon share_on  = new ImageIcon("src/main/java/resources/share_c__40.png");
 		
-		shareButton = new JToggleButton(share_off);
-		shareButton.setSelectedIcon(share_on);
-		shareButton.setEnabled(true);
+		this.shareButton = new JToggleButton(share_off);
+		this.shareButton.setSelectedIcon(share_on);
+		this.shareButton.setEnabled(true);
 				
-		shareButton.setBounds(1920/2+X_SHIFT-25, 1080-Y_SHIFT, 50, 50);
+		this.shareButton.setBounds(1920/2+X_SHIFT-25, 1080-Y_SHIFT, 50, 50);
 		
 		this.add(shareButton);
 		
 	}
+	
 	
 	public static void loadIcons(JFrame j_frame) {
 		
@@ -282,6 +317,60 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		
 	}
 	
+	/* Using the mouse */
+	public void useMouse(JFrame j_frame){
+		
+		j_frame.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent me) {
+				
+				/* The next two lines take the (x,y) position of the MouseEvent "me"
+				 * and assign it to xAi and xAj.
+				 * I might use main_frame.setXAi(int) and main_frame.setXAj(int)
+				 * instead of main_frame.xAi = int and main_frame.xAj = int,
+				 * respectively; that could be a better practice. IDK!
+				 */
+				
+				setXscreen(me.getX());
+				setYscreen(me.getY());
+				
+				/* Here it is where I repaint the contents in the "main_frame". */
+				repaint();
+				}
+        });
+		
+	}
+	
+	/* Get JFrame ready */
+	public void setJFrameUI(JFrame j_frame) {
+		/* Now, object "main_frame" becomes the content source
+		 * of the JFrame object "frame" defined previously.
+		 */
+		j_frame.setContentPane(this);
+		
+		/* Here I tell Java to remove the title bar */
+		j_frame.setUndecorated(true);
+		
+		/* Because there is no title bar (see previous comment),
+		 * the interface needs to be closed using Alt+F4.
+		 */
+		j_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		/* Set Icon */
+		loadIcons(j_frame);
+		
+		/* Initialize JFrame in maximized mode: */
+		j_frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		
+		/* This is the JFrame is packed */
+		j_frame.pack();
+		j_frame.setLocationRelativeTo(null);
+		j_frame.setVisible(true);
+		
+		this.useMouse(j_frame);
+	}
+	
+	
+	
 	/* Using the arrow keys */
 	@Override
 	public void keyPressed(KeyEvent e){
@@ -329,6 +418,36 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	/** Methods implemented in
+	 * App class from PTG packages 
+	 */
+	@Override
+	public Designer[] getDesigners() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Designer getDesigner(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Manager getManager() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void init(String federationName) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void kill() {
 		// TODO Auto-generated method stub
 		
 	}

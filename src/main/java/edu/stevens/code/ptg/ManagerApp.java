@@ -29,10 +29,17 @@ public class ManagerApp implements App {
 	private Manager self = new Manager();
 	private Ambassador ambassador = null;
 	
+	/** AMVRO: Game file */
+	private String game;
+	public String getGame() { return game; }
+	public void setGame(String game_file) { this.game = game_file; }
+	
+	
 	/**
 	 * Instantiates a new manager app.
+	 * AMVRO: Added "game_file" (.csv file path) as an argument
 	 */
-	public ManagerApp() {
+	public ManagerApp(String game_file) {
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			Designer d = new Designer();
 			d.setId(i);

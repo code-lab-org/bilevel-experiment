@@ -67,13 +67,15 @@ public class Main {
 				
 				new DesignerApp(id).init(federationName);
 			} else if(cmd.hasOption("m")) {
-				new ManagerApp().init(federationName);
+				/* AMVRO: Added game file "SH01" */
+				new ManagerApp("SH01").init(federationName);
 			} else if(cmd.hasOption("t")) {
-				new ManagerApp().init(federationName);
+				 /* AMVRO: Added game file "SH01" */
+				new ManagerApp("SH01").init(federationName);
 				new DesignerApp(0).init(federationName);
 				new DesignerApp(1).init(federationName);
-				new DesignerApp(2).init(federationName);
-				new DesignerApp(3).init(federationName);
+//				new DesignerApp(2).init(federationName);
+//				new DesignerApp(3).init(federationName);
 			} else {
 				// print the help menu and quit
 				HelpFormatter formatter = new HelpFormatter();

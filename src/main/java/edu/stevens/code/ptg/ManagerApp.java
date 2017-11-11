@@ -81,6 +81,9 @@ public class ManagerApp implements App {
 			@Override
 			public void run() {
 				JFrame f = new JFrame();
+				
+				f.setIconImages(DesignerApp.ICONS); /* ADDED BY AMVRO */
+				
 				JPanel p = new JPanel();
 				p.setLayout(new FlowLayout());
 				ManagerPanel mPanel = new ManagerPanel();

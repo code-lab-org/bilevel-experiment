@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
 import edu.stevens.code.eager.designer.DesignerUI;
+import edu.stevens.code.ptg.DesignerApp;
 
 public class Main extends JFrame implements KeyListener {
 	
@@ -31,7 +32,7 @@ public class Main extends JFrame implements KeyListener {
 		setContentPane(panel);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		DesignerUI.loadIcons(this);
+		this.setIconImages(DesignerApp.ICONS);;
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		pack();

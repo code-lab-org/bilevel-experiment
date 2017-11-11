@@ -1,24 +1,30 @@
 package edu.stevens.code.ptg;
 
-import java.awt.FlowLayout;
+import java.awt.Image;
+//import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+//import java.awt.event.WindowAdapter;
+//import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+//import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.stevens.code.eager.designer.DesignerUI;
-import edu.stevens.code.ptg.gui.DesignerPanel;
-import edu.stevens.code.ptg.gui.ManagerPanel;
+//import edu.stevens.code.ptg.gui.DesignerPanel;
+//import edu.stevens.code.ptg.gui.ManagerPanel;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
@@ -32,6 +38,14 @@ public class DesignerApp implements App {
 	private Designer self = null;
 	private Manager manager = new Manager();
 	private Ambassador ambassador = null;
+	
+	public final static ArrayList<Image> ICONS = new ArrayList<Image>(Arrays.asList(
+			new ImageIcon("src/main/java/resources/icon__16.png").getImage(),
+			new ImageIcon("src/main/java/resources/icon__32.png").getImage(),
+			new ImageIcon("src/main/java/resources/icon__48.png").getImage(),
+			new ImageIcon("src/main/java/resources/icon__64.png").getImage(),
+			new ImageIcon("src/main/java/resources/icon_128.png").getImage(),
+			new ImageIcon("src/main/java/resources/icon_256.png").getImage()));
 	
 	/**
 	 * Instantiates a new designer app.
@@ -83,22 +97,24 @@ public class DesignerApp implements App {
         SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				JFrame f = new JFrame();
-				JPanel p = new JPanel();
-				p.setLayout(new FlowLayout());
+//				JFrame f = new JFrame();
+//				JPanel p = new JPanel();
+//				p.setLayout(new FlowLayout());
 				
 				/** AMVRO: Test to create a DesignerUI panel
 				 * from PTG's DesignerApp class. 
 				 * 
 				 */
-				JFrame fUI = new JFrame();
+				JFrame fUI = new JFrame("Designer " + String.valueOf(self.getId()));
+				
 				/* AMVRO: Creating the dUI object. */
 				DesignerUI dUI = new DesignerUI();
 				
 				fUI.setContentPane(dUI);
 				
 				/* Here I tell Java to remove the title bar */
-				fUI.setUndecorated(true);
+//				fUI.setUndecorated(true);
+				
 				
 				/* Because there is no title bar (see previous comment),
 				 * the interface needs to be closed using Alt+F4.
@@ -116,38 +132,58 @@ public class DesignerApp implements App {
 				fUI.setLocationRelativeTo(null);
 				fUI.setVisible(true);
 				
+				fUI.setIconImages(ICONS);
+				
+
+				final JToggleButton max_button = new JToggleButton();
+				max_button.setBounds(1920-50, 0, 50, 50);
+				max_button.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						fUI.dispose();
+						if (max_button.isSelected()) {
+							fUI.setUndecorated(true);
+						} else {
+							fUI.setUndecorated(false);
+						}
+						fUI.setVisible(true);
+					}
+				});
+				dUI.add(max_button);
+				
 				dUI.useMouse(fUI);
+				dUI.setLayout(null);
 				
 				dUI.observe(manager, designers);
 				
 				for(Designer designer : designers) {
-					DesignerPanel dPanel = new DesignerPanel();
-					if(!designer.equals(self)) {
-						dPanel.observe(designer);
-					} else {
-						dPanel.bindTo(self);
-					}
-					p.add(dPanel);
+//					DesignerPanel dPanel = new DesignerPanel();
+//					if(!designer.equals(self)) {
+//						dPanel.observe(designer);
+//					} else {
+//						dPanel.bindTo(self);
+//					}
+//					p.add(dPanel);
 					
 					if(designer.equals(self)) {
 						dUI.bindTo(self);
 					}
 					dUI.setGame("SH01");
 				}
-				ManagerPanel mPanel = new ManagerPanel();
-				mPanel.observe(getManager());
-				p.add(mPanel);
-				f.setContentPane(p);
-				f.setTitle(self.toString());
-				f.setVisible(true);
-		        f.pack();
-		        f.setLocationRelativeTo(null);
-		        f.addWindowListener(new WindowAdapter() {
-					@Override
-					public void windowClosing(WindowEvent e) {
-						kill();
-					}
-		        });
+//				ManagerPanel mPanel = new ManagerPanel();
+//				mPanel.observe(getManager());
+//				p.add(mPanel);
+//				f.setContentPane(p);
+//				f.setTitle(self.toString());
+//				f.setVisible(true);
+//		        f.pack();
+//		        f.setLocationRelativeTo(null);
+//		        f.addWindowListener(new WindowAdapter() {
+//					@Override
+//					public void windowClosing(WindowEvent e) {
+//						kill();
+//					}
+//		        });
 			}
         });
 	}

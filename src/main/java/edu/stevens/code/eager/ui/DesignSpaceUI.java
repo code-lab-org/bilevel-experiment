@@ -21,8 +21,9 @@ public class DesignSpaceUI {
 	private static final int X = DesignerUI.X_SHIFT;
 	private static final int Y = DesignerUI.Y_SHIFT;
 	
-	public static final Font MONO1 = new Font("Consolas", Font.BOLD, 28);
-	public static final Font MONO2 = new Font("Consolas", Font.BOLD, 48);
+	public static final Font MONO1 = new Font("Consolas", Font.BOLD, 20);
+	public static final Font MONO2 = new Font("Consolas", Font.BOLD, 28);
+	public static final Font MONO3 = new Font("Consolas", Font.BOLD, 48);
 	public static final Font SANS1 = new Font("Arial", Font.BOLD, 32);
 	
 	/* Set of colors for the ruler marks */
@@ -160,9 +161,9 @@ public class DesignSpaceUI {
 		}
 		
 		/* The color scale */
-		g2D_object.setFont(MONO1);
-		int fs = MONO1.getSize();
-		FontMetrics fm = g2D_object.getFontMetrics(g2D_object.getFont());
+		g2D_object.setFont(MONO2);
+		int fs = MONO2.getSize();
+		FontMetrics fm = g2D_object.getFontMetrics(MONO2);
 		int fh = 20 + (5*fs/2)/7;
 		
 		for (int v = 0; v < 3; v++){
@@ -185,8 +186,8 @@ public class DesignSpaceUI {
 	/* The (xi,xj) axis, 0 <= xi,xj <= 9 */
 	public static void addAxis(Graphics2D g2D_object){
 		
-		g2D_object.setFont(MONO1);
-		int fs = MONO1.getSize();
+		g2D_object.setFont(MONO2);
+		int fs = MONO2.getSize();
 		
 		g2D_object.setColor(Color.WHITE);
 		
@@ -278,19 +279,19 @@ public class DesignSpaceUI {
 	
 	
 	/* Draws each cell on each of the quadrants of the design space */
-	protected void drawCell(String SS, int xi, int xj, int payoff){
+	protected void drawCell(String strategy, int xi, int xj, int payoff){
 		
 		int dx;
 		int dy;
 		
-		switch (SS){
+		switch (strategy){
 			case "AA": dx = 540 + X; dy = 480 - Y; break;
 			case "AB": dx = 540 + X; dy = 920 - Y; break;
 			case "BA": dx = 980 + X; dy = 480 - Y; break;
 			case "BB": dx = 980 + X; dy = 920 - Y; break;
 			
 			default:
-				throw new IllegalArgumentException("Invalid strategy: " + SS);
+				throw new IllegalArgumentException("Invalid strategy: " + strategy);
 		}
 		
 		g2D.setColor(Color.decode( colors.get(payoff/5) ));
@@ -313,21 +314,53 @@ public class DesignSpaceUI {
 		
 	}
 	
+	/* Query payoff of selected cell */
+	public void queryPayoff(int x_Si, int x_Sj){
+		
+		String SS = "";
+		
+		if      (x_Si > -1 && x_Si < 10) { SS = SS+"A";}
+		else if (x_Si > 10 && x_Si < 21) { SS = SS+"B"; x_Si = x_Si - 11;}
+		else { SS = SS+"N"; x_Si = 10; }
+				
+		if      (x_Sj > -1 && x_Sj < 10) { SS = SS+"B";}
+		else if (x_Sj > 10 && x_Sj < 21) { SS = SS+"A"; x_Sj = x_Sj - 11;}
+		else { SS = SS+"N"; x_Sj = 10; }
+		
+		switch (SS){
+			case "AA": setPayoff( getAA(x_Si,x_Sj) ); break;
+			case "AB": setPayoff( getAB(x_Si,x_Sj) ); break;
+			case "BA": setPayoff( getBA(x_Si,x_Sj) ); break;
+			case "BB": setPayoff( getBB(x_Si,x_Sj) ); break;
+			
+			default:
+				SS = "NN"; setPayoff(-5); break;
+		}
+		
+		setXi(x_Si); setXj(x_Sj);
+		setStrategy(SS);
+				
+	}
+
 	
-	/* Compute payoff of selected cell */
-	public void computePayoff(String SS, int xi, int xj){
+	/* Compute normal form (payoff structure) */
+	public void computeNormalForm(int x_Ai, int x_Aj, int x_Bi, int x_Bj, boolean is_sharing){
 		
 		int[] p_A = new int[2];
 		int[] p_B = new int[2];
 		
-		switch (SS){
-			case "AA": p_A[0] = getAA(xi,xj); setPayoff(p_A[0]); break;
-			case "AB": p_A[1] = getAB(xi,xj); setPayoff(p_A[1]); break;
-			case "BA": p_B[1] = getBA(xi,xj); setPayoff(p_B[1]); break;
-			case "BB": p_B[0] = getBB(xi,xj); setPayoff(p_B[0]); break;
-			
-			default:
-				SS = "NN"; setPayoff(-5); break;
+		if (x_Aj >= 0 && x_Aj < 10 && x_Bj >= 0 && x_Bj < 10 && is_sharing == true) {
+		
+			p_A[0] = getAA(x_Ai,x_Aj);
+			p_A[1] = getAB(x_Ai,x_Bj);
+			p_B[1] = getBA(x_Bi,x_Aj);
+			p_B[0] = getBB(x_Bi,x_Bj);
+		
+			displayCellValue("AA",x_Ai,x_Aj);
+			displayCellValue("AB",x_Ai,x_Bj);
+			displayCellValue("BA",x_Bi,x_Aj);
+			displayCellValue("BB",x_Bi,x_Bj);
+		
 		}
 		
 		setPA(p_A); setPB(p_B);
@@ -335,25 +368,7 @@ public class DesignSpaceUI {
 	}
 	
 	/* Ruler Ai */
-	public void drawRulerAi(int x_Ai){
-		
-		/* Draw ruler, thickness = t */
-		int t = 6;
-		g2D.setStroke(new BasicStroke(t));
-		g2D.setColor(new Color(147, 93, 116));
-		
-		/* Ruler moving along horizontal axis (vertical box) */
-		g2D.drawRect(540+X+(40*x_Ai)-t/2, 80-Y-3*t/2, 40+t, 920+3*t);
-		
-		/* Draw horizontal triangular ruler marks */
-		int[] xiPoints = {540+X+(40*x_Ai)-28+20, 540+X+(40*x_Ai)+20-t/2, 540+X+(40*x_Ai)+20-t/2};
-		int[] yiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
-		g2D.setColor(Color.RED); g2D.fillPolygon(xiPoints, yiPoints, 3);
-		g2D.setColor(R2); g2D.drawPolygon(xiPoints, yiPoints, 3);
-	}
-	
-	/* Ruler Bi */
-	public void drawRulerBi(int x_Bi){
+	public void drawRulersXi(int x_Ai, int x_Bi){
 		
 		x_Bi = x_Bi + 11;
 		
@@ -362,14 +377,23 @@ public class DesignSpaceUI {
 		g2D.setStroke(new BasicStroke(t));
 		g2D.setColor(new Color(147, 93, 116));
 		
-		/* Ruler moving along horizontal axis (vertical box) */
-		g2D.drawRect(540+X+(40*x_Bi)-t/2, 80-Y-3*t/2, 40+t, 920+3*t);
+		/* Rulers moving along horizontal axis (vertical box) */
+		g2D.drawRect(540+X+(40*x_Ai)-t/2, 80-Y-3*t/2, 40+t, 920+3*t); /* A */
+		g2D.drawRect(540+X+(40*x_Bi)-t/2, 80-Y-3*t/2, 40+t, 920+3*t); /* B */
 		
-		/* Draw horizontal triangular ruler marks */
-		int[] xiPoints = {540+X+(40*x_Bi)+20+t/2, 540+X+(40*x_Bi)+28+20, 540+X+(40*x_Bi)+20+t/2};
-		int[] yiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
-		g2D.setColor(Color.BLUE); g2D.fillPolygon(xiPoints, yiPoints, 3);
-		g2D.setColor(B2); g2D.drawPolygon(xiPoints, yiPoints, 3);
+		/* Draw horizontal triangular ruler marks, strategy A */
+		int[] xAiPoints = {540+X+(40*x_Ai)-28+20, 540+X+(40*x_Ai)+20-t/2, 540+X+(40*x_Ai)+20-t/2};
+		int[] yAiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
+		g2D.setColor(Color.RED); g2D.fillPolygon(xAiPoints, yAiPoints, 3);
+		g2D.setColor(R2); g2D.drawPolygon(xAiPoints, yAiPoints, 3);
+		
+		/* Draw horizontal triangular ruler marks, strategy B */
+		int[] xBiPoints = {540+X+(40*x_Bi)+20+t/2, 540+X+(40*x_Bi)+28+20, 540+X+(40*x_Bi)+20+t/2};
+		int[] yBiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
+		g2D.setColor(Color.BLUE); g2D.fillPolygon(xBiPoints, yBiPoints, 3);
+		g2D.setColor(B2); g2D.drawPolygon(xBiPoints, yBiPoints, 3);
+		
+		
 	}
 	
 	/* Rulers Xj */
@@ -384,9 +408,9 @@ public class DesignSpaceUI {
 			g2D.setStroke(new BasicStroke(t));
 			g2D.setColor(new Color(147, 93, 116));
 			
-			/* Ruler moving along horizontal axis (vertical box) */
-			g2D.drawRect(540+X-40-3*t/2,   920-Y-(40*x_Aj)-t/2, 920+3*t,    40+t);
-			g2D.drawRect(540+X-40-3*t/2,   920-Y-(40*x_Bj)-t/2, 920+3*t,    40+t);
+			/* Rulers moving along horizontal axis (vertical box) */
+			g2D.drawRect(540+X-40-3*t/2,   920-Y-(40*x_Aj)-t/2, 920+3*t,    40+t); /* A */
+			g2D.drawRect(540+X-40-3*t/2,   920-Y-(40*x_Bj)-t/2, 920+3*t,    40+t); /* B */
 			
 			/* Draw vertical triangular ruler mark at A */
 			int[] xAjPoints = {452-4*t + X, 452-4*t + X,500-4*t + X};
@@ -404,39 +428,30 @@ public class DesignSpaceUI {
 	}	
 	
 	/* Selected cell */
-	public void selectCell(int x_i, int x_j){
+	public void selectedCell(int x_Si, int x_Sj){
 		
-		String SS = new String("");
 		int t = 8;
 		
+		g2D.setFont(DesignSpaceUI.MONO2);
 		g2D.setStroke(new BasicStroke(t));
 		g2D.setColor(Color.MAGENTA);
-		g2D.drawRect(540+X+(40*x_i)-t/2,920-Y-(40*x_j)-t/2, 40+t, 40+t);
+		g2D.drawRect(540+X+(40*x_Si)-t/2,920-Y-(40*x_Sj)-t/2, 40+t, 40+t);
 		
-		/* Which strategy? Compute payoff */
-		setXi(x_i); setXj(x_j);
-		
-		if      (x_i > -1 && x_i < 10) { SS = SS+"A";}
-		else if (x_i > 10 && x_i < 21) { SS = SS+"B"; setXi(x_i - 11);}
-		else { SS = SS+"N"; setXi(10); }
-				
-		if      (x_j > -1 && x_j < 10) { SS = SS+"B";}
-		else if (x_j > 10 && x_j < 21) { SS = SS+"A"; setXj(x_j - 11);}
-		else { SS = SS+"N"; setXj(10); }
-		
-		computePayoff(SS, getXi(), getXj());
+		/* Which strategy? Query payoff and update current strategy. */
+		queryPayoff(x_Si, x_Sj);
 		
 		/* Test string on screen */
 		g2D.setColor(Color.BLACK);
-		String output = SS+"  ("+String.format("%2d",getXi())+","+
-                String.format("%2d",getXj())+") "+
-                String.format("%3d",getPayoff());
-		g2D.drawString( output,  1680, 40);
+		String output = getStrategy()+"  ("+String.format("%2d",getXi())+","+
+                		 					  String.format("%2d",getXj())+") "+
+                		 					  String.format("%3d",getPayoff());
+		
+		g2D.drawString( output, 1580, 40);
 				
 		/* Draw triangular colorbar mark */
 		t = 6;
 		int ci = getPayoff()/5;
-		int[] xcPoints = {1540+t/2 + X,1588+t/2 + X,1588+t/2 + X};
+		int[] xcPoints = {1540+t + X,1588+t + X,1588+t + X};
 		int[] ycPoints = {920-Y-(40*ci)+20,920-Y-(40*ci)-28+20,920-Y-(40*ci)+28+20};
 		
 		if (ci > -1) {
@@ -449,133 +464,76 @@ public class DesignSpaceUI {
 		g2D.setStroke(new BasicStroke(t));
 		g2D.setColor(Color.MAGENTA);
 		g2D.drawPolygon(xcPoints, ycPoints, 3);
+		
+		displayCellValue(getStrategy(),getXi(),getXj());
 				
-	}
-	
-	
-	public void drawRuler(int x_i, int x_j){
+		/* Display the current cell value on the colorbar */
+		g2D.setFont(MONO2);
+		int fs = MONO2.getSize();
+		FontMetrics fm = g2D.getFontMetrics(MONO2);
+		int fh = 20 + (5*fs/2)/7;
+		String val = String.valueOf(getPayoff());
+		int fw = fm.stringWidth(val);
 		
-		setXi(x_i); setXj(x_j);
-		
-		/* Internal variables */
-		String SS = new String("");
-		Color[] fill = new Color[2];
-		Color[] edge = new Color[2];
-				
-		
-		/* Check the given x values */
-		if      (x_i > -1 && x_i < 10) { SS = SS+"A";}
-		else if (x_i > 10 && x_i < 21) { SS = SS+"B"; setXi(x_i - 11);}
-		else { SS = SS+"N"; setXi(10); }
-				
-		if      (x_j > -1 && x_j < 10) { SS = SS+"B";}
-		else if (x_j > 10 && x_j < 21) { SS = SS+"A"; setXj(x_j - 11);}
-		else { SS = SS+"N"; setXj(10); }
-		
-		/* Change the drawing parameters according to the strategy selected */
-		switch (SS){
-			case "AA":
-			   fill[0] = R2; 		 fill[1] = R1;
-			   edge[0] = Color.RED; edge[1] = R2;
-			   break;
-			case "AB":
-			   fill[0] = R2; 		 fill[1] = B1;
-			   edge[0] = Color.RED; edge[1] = B2;
-			   break;
-			case "BA":
-			   fill[0] = B2; 		  fill[1] = R1;
-			   edge[0] = Color.BLUE; edge[1] = R2;
-			   break;
-			case "BB":
-			   fill[0] = B2; 		  fill[1] = B1;
-			   edge[0] = Color.BLUE; edge[1] = B2;
-			   break;
-			
-			default:
-				fill[0] = Color.WHITE; fill[0] = Color.WHITE;
-				edge[0] = Color.WHITE; fill[0] = Color.WHITE;
-				break;
-//				throw new IllegalArgumentException("Invalid strategy: " + SS);
-		}
-		
-		setStrategy(SS);
-		
-		g2D.setFont(SANS1);
-		
-		/* Draw ruler, thickness = t */
-		int t = 6;
-		g2D.setStroke(new BasicStroke(t));
-		g2D.setColor(new Color(147, 93, 116));
-		
-		if (x_i < 0){ x_i = -1;} else if (x_i > 20){ x_i = 21;}
-		if (x_j < 0){ x_j = -1;} else if (x_j > 20){ x_j = 21;}
-		
-		/* Ruler moving along horizontal axis (vertical box) */
-		g2D.drawRect(540+X+(40*x_i)-t/2,       80-Y-3*t/2,    40+t, 920+3*t);
-		/* Ruler moving along vertical axis (horizontal box) */
-		g2D.drawRect(540+X-40-3*t/2,   920-Y-(40*x_j)-t/2, 920+3*t,    40+t);
-		
-		/* Draw border of selected cell */
-		t = 8;
-		g2D.setColor(Color.MAGENTA);
-		g2D.drawRect(540+X+(40*x_i)-t/2,920-Y-(40*x_j)-t/2, 40+t, 40+t);
-		
-		/* Draw horizontal triangular ruler marks */
-		int[] xiPoints = {540+X+(40*x_i)-28+20, 540+X+(40*x_i)+28+20, 540+X+(40*x_i)+20};
-		int[] yiPoints = {1048-Y+2*t, 1048-Y+2*t, 1000-Y+2*t};
-		g2D.setColor(fill[0]); g2D.fillPolygon(xiPoints, yiPoints, 3);
-		g2D.setColor(edge[0]); g2D.drawPolygon(xiPoints, yiPoints, 3);
-		
-		g2D.setColor(fill[0]);
-		g2D.drawString("Your pick", xiPoints[2]-72, yiPoints[0]+40);
-				
-		/* Draw vertical triangular ruler mark */
-		int[] xjPoints = {452-2*t + X, 452-2*t + X,500-2*t + X};
-		int[] yjPoints = {920-Y-(40*x_j)-28+20,920-Y-(40*x_j)+28+20,920-Y-(40*x_j)+20};
-		g2D.setColor(fill[1]); g2D.fillPolygon(xjPoints, yjPoints, 3);
-		g2D.setColor(edge[1]); g2D.drawPolygon(xjPoints, yjPoints, 3);
-		
-		g2D.setColor(edge[1]);
-		g2D.drawString("Mia's", xjPoints[0]-95, yjPoints[2]+12);
-		
-		/* Print strategy, x values, and payoff on UI */
-		computePayoff(SS, getXi(), getXj());
-		g2D.setColor(Color.BLACK);
-		String output = SS+"  ("+String.format("%2d",getXi())+","+
-		                          String.format("%2d",getXj())+") "+
-				                  String.format("%3d",getPayoff());
-//		System.out.println(SS+","+String.valueOf(getXi())+","+String.valueOf(getXj())+","+String.valueOf(getPayoff()));
-		g2D.drawString( output,  1680, 40);
-		
-		/* Draw triangular colorbar mark */
-//		drawColorbarMark();		
-		int ci = getPayoff()/5;
-		int[] xcPoints = {1540+t/2 + X,1588+t/2 + X,1588+t/2 + X};
-		int[] ycPoints = {920-Y-(40*ci)+20,920-Y-(40*ci)-28+20,920-Y-(40*ci)+28+20};
-		
-		if (ci > -1) {
-			g2D.setColor(Color.decode(colors.get(ci)));
-		} else {
+		if (getPayoff() > 45){
+			g2D.setColor(Color.BLACK);
+			g2D.drawString( val, 1500-fw/2 + X, fh+920-Y-8*getPayoff());
+		} else if (getPayoff() > -1){
 			g2D.setColor(Color.WHITE);
+			g2D.drawString( val, 1500-fw/2 + X, fh+920-Y-8*getPayoff());
+		}
+				
+	}
+	
+	/* Display the current cell value on the design space */
+	public void displayCellValue(String strategy, int x_i, int x_j) {
+		
+		int dx = 0;
+		int dy = 0;
+		int p = 0;
+		
+		switch (strategy){
+			case "AA": dx = 540 + X; dy = 480 - Y; p = getAA(x_i,x_j); break;
+			case "AB": dx = 540 + X; dy = 920 - Y; p = getAB(x_i,x_j); break;
+			case "BA": dx = 980 + X; dy = 480 - Y; p = getBA(x_i,x_j); break;
+			case "BB": dx = 980 + X; dy = 920 - Y; p = getBB(x_i,x_j); break;
 		}
 		
-		g2D.fillPolygon(xcPoints, ycPoints, 3);
-		g2D.setColor(edge[0]);
-		g2D.drawPolygon(xcPoints, ycPoints, 3);
+		g2D.setFont(MONO1);
+		int fs = MONO1.getSize();
+		FontMetrics fm = g2D.getFontMetrics(MONO1);
+		int fh = 20 + (5*fs/2)/7;
+		String val = String.valueOf(p);
+		int fw = fm.stringWidth(val);
+		
+		if (p > 45){
+			g2D.setColor(Color.BLACK);
+			g2D.drawString( val, dx+(40*x_i)-fw/2+20, dy+fh-(40*x_j));
+		} else if (p > -1){
+			g2D.setColor(Color.WHITE);
+			g2D.drawString( val, dx+(40*x_i)-fw/2+20, dy+fh-(40*x_j));
+		}
+		
 		
 	}
+	
 	
 	/* Draw normal form of the game */
-	public void drawNormalForm(int pAA, int pAB, int pBA, int pBB){
-				
-		g2D.setFont(DesignSpaceUI.MONO2);
-		g2D.setColor(Color.BLACK);
+//	public void drawNormalForm(int pAA, int pAB, int pBA, int pBB, boolean is_sharing){
+	public void drawNormalForm(boolean is_sharing){
 		
-		g2D.drawString( String.format("%3d",pAA), 1560, 290);
-		g2D.drawString( String.format("%3d",pAB), 1560, 350);
-
-		g2D.drawString( String.format("%3d",pBA), 1700, 290);
-		g2D.drawString( String.format("%3d",pBB), 1700, 350);
+		if (is_sharing == true) {
+		
+			g2D.setFont(DesignSpaceUI.MONO3);
+			g2D.setColor(Color.BLACK);
+			
+			g2D.drawString( String.format("%3d",getPA()[0]), 1560, 290); /* AA */
+			g2D.drawString( String.format("%3d",getPA()[1]), 1560, 350); /* AB */
+	
+			g2D.drawString( String.format("%3d",getPB()[1]), 1700, 290); /* BA */
+			g2D.drawString( String.format("%3d",getPB()[0]), 1700, 350); /* BB */
+		
+		}
 		
 	}
 	

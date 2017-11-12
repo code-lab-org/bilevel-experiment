@@ -73,9 +73,9 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	public void setYscreen(int y_screen) { this.yScreen = y_screen; }
 	
 	/** Variables xAi and xBi, setters, and getters for player i (horizontal axis) */
-	private int xi = 10;
-	public int getXi() { return xi; }
-	public void setXi(int x_i) { this.xi = x_i; }
+	private int xSi = 10;
+	public int getXSi() { return xSi; }
+	public void setXi(int x_i) { this.xSi = x_i; }
 	
 	private int xAi = 10;
 	public int getXAi() { return xAi; }
@@ -86,9 +86,9 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	public void setXBi(int x_Bi) { this.xBi = x_Bi; }
 
 	/** Variables xAj and xBj, setters, and getters for player j (vertical axis) */
-	private int xj = 10;
-	public int getXj() { return xj; }
-	public void setXj(int x_j) { this.xj = x_j; }
+	private int xSj = 10;
+	public int getXSj() { return xSj; }
+	public void setXj(int x_j) { this.xSj = x_j; }
 	
 	private int xAj = -1;
 	public int getXAj() { return xAj; }
@@ -98,22 +98,22 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	public int getXBj() { return xBj; }
 	public void setXBj(int x_Bj) { this.xBj = x_Bj; }
 	
-	/** Payoffs for player i */
-	private int pAA/*i's payoff @ AA*/ = 0;
-	public int getPAA() { return pAA; }
-	public void setPAA(int p_AA) { this.pAA = p_AA; }
-	
-	private int pAB/*i's payoff @ AB*/ = 0;
-	public int getPAB() { return pAB; }
-	public void setPAB(int p_AB) { this.pAB = p_AB; }
-	
-	private int pBA/*i's payoff @ BA*/ = 0;
-	public int getPBA() { return pBA; }
-	public void setPBA(int p_BA) { this.pBA = p_BA; }
-	
-	private int pBB/*i's payoff @ BB*/ = 0;
-	public int getPBB() { return pBB; }
-	public void setPBB(int p_BB) { this.pBB = p_BB; }
+//	/** Payoffs for player i */
+//	private int pAA/*i's payoff @ AA*/ = 0;
+//	public int getPAA() { return pAA; }
+//	public void setPAA(int p_AA) { this.pAA = p_AA; }
+//	
+//	private int pAB/*i's payoff @ AB*/ = 0;
+//	public int getPAB() { return pAB; }
+//	public void setPAB(int p_AB) { this.pAB = p_AB; }
+//	
+//	private int pBA/*i's payoff @ BA*/ = 0;
+//	public int getPBA() { return pBA; }
+//	public void setPBA(int p_BA) { this.pBA = p_BA; }
+//	
+//	private int pBB/*i's payoff @ BB*/ = 0;
+//	public int getPBB() { return pBB; }
+//	public void setPBB(int p_BB) { this.pBB = p_BB; }
 	
 	
 	/* Main */
@@ -245,19 +245,13 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		DS.drawDesignSpace();
 		
 		screenToXij( getXscreen(), getYscreen() );
-		DS.drawRulerAi( getXAi() );
-		DS.drawRulerBi( getXBi() );
-		
+		DS.drawRulersXi( getXAi(), getXBi() );		
 		DS.drawRulersXj( getXAj(), getXBj(), areBothSharing() );
 		
-		
-		DS.selectCell( getXi(), getXj() );
-		DS.drawNormalForm( getPAA(), getPAB(), getPBA(), getPBB() );
-		
-		
-//		int[] arr = { getXi(), getXj(), 6699, getXAi(), getXBi(), 6699, getXAj(), getXBj()};		
-//		System.out.println(Arrays.toString(arr));
-		
+		DS.computeNormalForm(getXAi(), getXAj(), getXBi(), getXBj(), areBothSharing() );
+		DS.drawNormalForm( areBothSharing() );
+		DS.selectedCell( getXSi(), getXSj() );
+				
 	}
 	
 	/* Using the mouse */
@@ -328,7 +322,7 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 	        setYscreen(getYscreen()+40);
 	    }
 	    if (code == KeyEvent.VK_SPACE) {
-	    	switchXijToScreen(getXi(), getXj());
+	    	switchXijToScreen(getXSi(), getXSj());
 	    }
 	    
 	    if (getXscreen() > xB0 + 400) {

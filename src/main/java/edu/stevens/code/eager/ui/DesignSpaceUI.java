@@ -23,7 +23,7 @@ public class DesignSpaceUI {
 	
 	public static final Font MONO1 = new Font("Consolas", Font.BOLD, 20);
 	public static final Font MONO2 = new Font("Consolas", Font.BOLD, 28);
-	public static final Font MONO3 = new Font("Consolas", Font.BOLD, 48);
+	public static final Font MONO3 = new Font("Consolas", Font.BOLD, 60);
 	public static final Font SANS1 = new Font("Arial", Font.BOLD, 32);
 	
 	/* Set of colors for the ruler marks */
@@ -107,10 +107,12 @@ public class DesignSpaceUI {
 		g2D_object.fillRect(DesignerUI.X_RANGE, 0, 1920-DesignerUI.X_RANGE/* width = 610 */, 1080);
 		
 		setDesignSpace(game_file);
-
-//        System.out.println(Arrays.deepToString(gameBA));
-        
 		
+		drawColorbar(g2D_object);
+		drawBorder(g2D_object);
+		addAxis(g2D_object);
+		drawNormalForm(g2D_object);
+        
 	}
 	
 	/* The 21 colors from the Parula colormap */
@@ -180,6 +182,25 @@ public class DesignSpaceUI {
 			g2D_object.drawString( val, 1500-fw/2 + X, fh+120-Y+160*v);
 		}
 		
+	}
+	
+	/* Draw strategy space (normal form space)  */
+	public static void drawNormalForm(Graphics2D g2D_object){
+		
+		FontMetrics fm = g2D_object.getFontMetrics(MONO3);
+		int fw = fm.stringWidth("000");
+		int w = 140;
+		int h =  60;
+		
+		g2D_object.setColor(Color.RED);
+		g2D_object.fillRect(1560-w/2+fw/2,     302+w, w, w);
+		g2D_object.setColor(R2);
+		g2D_object.fillRect(1560-w/2+fw/2 - w, 302-w, w, w);
+		g2D_object.setColor(Color.BLUE);
+		g2D_object.fillRect(1560-w/2+fw/2 + w, 302+w, w, w);
+		g2D_object.setColor(B2);
+		g2D_object.fillRect(1560-w/2+fw/2 - w, 302,   w, w);
+				
 	}
 	
 	
@@ -349,7 +370,8 @@ public class DesignSpaceUI {
 		int[] p_A = new int[2];
 		int[] p_B = new int[2];
 		
-		if (x_Aj >= 0 && x_Aj < 10 && x_Bj >= 0 && x_Bj < 10 && is_sharing == true) {
+		if (x_Ai >= 0 && x_Ai < 10 && x_Bi >= 0 && x_Bi < 10 && 
+			x_Aj >= 0 && x_Aj < 10 && x_Bj >= 0 && x_Bj < 10 && is_sharing == true) {
 		
 			p_A[0] = getAA(x_Ai,x_Aj);
 			p_A[1] = getAB(x_Ai,x_Bj);
@@ -506,37 +528,58 @@ public class DesignSpaceUI {
 		String val = String.valueOf(p);
 		int fw = fm.stringWidth(val);
 		
-		if (p > 45){
-			g2D.setColor(Color.BLACK);
-			g2D.drawString( val, dx+(40*x_i)-fw/2+20, dy+fh-(40*x_j));
-		} else if (p > -1){
-			g2D.setColor(Color.WHITE);
-			g2D.drawString( val, dx+(40*x_i)-fw/2+20, dy+fh-(40*x_j));
-		}
-		
+		g2D.setColor(payoffFontColor(p));
+		g2D.drawString( val, dx+(40*x_i)-fw/2+20, dy+fh-(40*x_j));		
 		
 	}
 	
 	
-	/* Draw normal form of the game */
-//	public void drawNormalForm(int pAA, int pAB, int pBA, int pBB, boolean is_sharing){
-	public void drawNormalForm(boolean is_sharing){
+	/* Display normal form of the game */
+	public void displayNormalForm(boolean is_sharing){
+		
+		g2D.setFont(DesignSpaceUI.MONO3);
+		
+		FontMetrics fm = g2D.getFontMetrics(MONO3);
+		int fw = fm.stringWidth("000");
+		int w = 140;
+		int h =  60;
 		
 		if (is_sharing == true) {
-		
-			g2D.setFont(DesignSpaceUI.MONO3);
-			g2D.setColor(Color.BLACK);
 			
+			g2D.setColor(Color.decode(colors.get(getPA()[0]/5)));
+			g2D.fillRect(1560-w/2+fw/2,     302-w, w, w);
+			g2D.setColor(payoffFontColor(getPA()[0]));
 			g2D.drawString( String.format("%3d",getPA()[0]), 1560, 290); /* AA */
+			
+			g2D.setColor(Color.decode(colors.get(getPA()[1]/5)));
+			g2D.fillRect(1560-w/2+fw/2,     302,   w, w);
+			g2D.setColor(payoffFontColor(getPA()[1]));
 			g2D.drawString( String.format("%3d",getPA()[1]), 1560, 350); /* AB */
 	
+			g2D.setColor(Color.decode(colors.get(getPB()[1]/5)));
+			g2D.fillRect(1560-w/2+fw/2 + w, 302-w, w, w);
+			g2D.setColor(payoffFontColor(getPB()[1]));
 			g2D.drawString( String.format("%3d",getPB()[1]), 1700, 290); /* BA */
+			
+			g2D.setColor(Color.decode(colors.get(getPB()[0]/5)));
+			g2D.fillRect(1560-w/2+fw/2 + w, 302,   w, w);
+			g2D.setColor(payoffFontColor(getPB()[0]));
 			g2D.drawString( String.format("%3d",getPB()[0]), 1700, 350); /* BB */
 		
 		}
 		
 	}
 	
-	
+	public Color payoffFontColor(int payoff) {
+		
+		Color font_color = null;
+		
+		if (payoff > 45){
+			font_color = Color.BLACK;
+		} else if (payoff > -1){
+			font_color = Color.WHITE;
+		}		
+		return font_color;
+	}	
 
 }

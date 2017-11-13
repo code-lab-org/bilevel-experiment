@@ -229,10 +229,6 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		Graphics2D g2D = (Graphics2D) g;
 		g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		DesignSpaceUI.drawColorbar(g2D);
-		DesignSpaceUI.drawBorder(g2D);
-		DesignSpaceUI.addAxis(g2D);
-		
 		DesignSpaceUI DS = null;
 		try {
 			DS = new DesignSpaceUI( g2D,getGame() );
@@ -249,7 +245,7 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		DS.drawRulersXj( getXAj(), getXBj(), areBothSharing() );
 		
 		DS.computeNormalForm(getXAi(), getXAj(), getXBi(), getXBj(), areBothSharing() );
-		DS.drawNormalForm( areBothSharing() );
+		DS.displayNormalForm( areBothSharing() );
 		DS.selectedCell( getXSi(), getXSj() );
 				
 	}

@@ -1,21 +1,21 @@
 package edu.stevens.code.ptg;
 
 import java.awt.Image;
-//import java.awt.FlowLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-//import java.awt.event.WindowAdapter;
-//import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-//import javax.swing.JPanel;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
@@ -23,8 +23,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.stevens.code.eager.designer.DesignerUI;
-//import edu.stevens.code.ptg.gui.DesignerPanel;
-//import edu.stevens.code.ptg.gui.ManagerPanel;
+import edu.stevens.code.ptg.gui.DesignerPanel;
+import edu.stevens.code.ptg.gui.ManagerPanel;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
@@ -97,9 +97,9 @@ public class DesignerApp implements App {
         SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-//				JFrame f = new JFrame();
-//				JPanel p = new JPanel();
-//				p.setLayout(new FlowLayout());
+				JFrame f = new JFrame();
+				JPanel p = new JPanel();
+				p.setLayout(new FlowLayout());
 				
 				/** AMVRO: Test to create a DesignerUI panel
 				 * from PTG's DesignerApp class. 
@@ -157,33 +157,33 @@ public class DesignerApp implements App {
 				dUI.observe(manager, designers);
 				
 				for(Designer designer : designers) {
-//					DesignerPanel dPanel = new DesignerPanel();
-//					if(!designer.equals(self)) {
-//						dPanel.observe(designer);
-//					} else {
-//						dPanel.bindTo(self);
-//					}
-//					p.add(dPanel);
+					DesignerPanel dPanel = new DesignerPanel();
+					if(!designer.equals(self)) {
+						dPanel.observe(designer);
+					} else {
+						dPanel.bindTo(self);
+					}
+					p.add(dPanel);
 					
 					if(designer.equals(self)) {
 						dUI.bindTo(self);
 					}
 					dUI.setGame("SH01");
 				}
-//				ManagerPanel mPanel = new ManagerPanel();
-//				mPanel.observe(getManager());
-//				p.add(mPanel);
-//				f.setContentPane(p);
-//				f.setTitle(self.toString());
-//				f.setVisible(true);
-//		        f.pack();
-//		        f.setLocationRelativeTo(null);
-//		        f.addWindowListener(new WindowAdapter() {
-//					@Override
-//					public void windowClosing(WindowEvent e) {
-//						kill();
-//					}
-//		        });
+				ManagerPanel mPanel = new ManagerPanel();
+				mPanel.observe(getManager());
+				p.add(mPanel);
+				f.setContentPane(p);
+				f.setTitle(self.toString());
+				f.setVisible(true);
+		        f.pack();
+		        f.setLocationRelativeTo(null);
+		        f.addWindowListener(new WindowAdapter() {
+					@Override
+					public void windowClosing(WindowEvent e) {
+						kill();
+					}
+		        });
 			}
         });
 	}

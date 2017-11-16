@@ -1,6 +1,7 @@
 package edu.stevens.code.ptg;
 
 import java.awt.Image;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +16,9 @@ import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
@@ -106,14 +109,20 @@ public class DesignerApp implements App {
 				 * 
 				 */
 				JFrame fUI = new JFrame("Designer " + String.valueOf(self.getId()));
+				JTabbedPane tUI = new JTabbedPane();
 				
 				/* AMVRO: Creating the dUI object. */
-				DesignerUI dUI = new DesignerUI();
+				DesignerUI dUI = new DesignerUI("DS");
 				
-				fUI.setContentPane(dUI);
+				tUI.add("Design Space",dUI);
 				
-				/* Here I tell Java to remove the title bar */
-//				fUI.setUndecorated(true);
+				JLabel designSpaceLabel = new JLabel("Design Space");
+				designSpaceLabel.setPreferredSize(new Dimension(200, 30));
+				tUI.setTabComponentAt(0, designSpaceLabel);
+				
+				fUI.add(tUI);
+				
+//				fUI.setContentPane(dUI);
 				
 				
 				/* Because there is no title bar (see previous comment),

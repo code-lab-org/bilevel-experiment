@@ -244,9 +244,11 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		DS.drawRulersXi( getXAi(), getXBi() );		
 		DS.drawRulersXj( getXAj(), getXBj(), areBothSharing() );
 		
-		DS.computeNormalForm(getXAi(), getXAj(), getXBi(), getXBj(), areBothSharing() );
+		DS.updateNormalForm(getXAi(), getXAj(), getXBi(), getXBj(), areBothSharing() );
 		DS.displayNormalForm( areBothSharing() );
 		DS.selectedCell( getXSi(), getXSj() );
+		
+//		System.out.println( getYscreen() );
 				
 	}
 	
@@ -265,6 +267,10 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 				
 				setXscreen(me.getX());
 				setYscreen(me.getY());
+				
+//				int[] arr = {getXscreen(),getYscreen()};
+//				
+//				System.out.println( Arrays.toString( arr ) );
 				
 				/* Here it is where I repaint the contents in the "main_frame". */
 				repaint();
@@ -298,9 +304,7 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		
 		this.useMouse(j_frame);
 	}
-	
-	
-	
+			
 	/* Using the arrow keys */
 	@Override
 	public void keyPressed(KeyEvent e){

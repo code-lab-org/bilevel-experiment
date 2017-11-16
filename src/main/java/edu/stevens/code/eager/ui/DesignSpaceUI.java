@@ -2,7 +2,6 @@ package edu.stevens.code.eager.ui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.io.BufferedReader;
@@ -10,27 +9,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import edu.stevens.code.eager.designer.DesignerUI;
 
 
-public class DesignSpaceUI {
-	
-	private static final int X = DesignerUI.X_SHIFT;
-	private static final int Y = DesignerUI.Y_SHIFT;
-	
-	public static final Font MONO1 = new Font("Consolas", Font.BOLD, 20);
-	public static final Font MONO2 = new Font("Consolas", Font.BOLD, 28);
-	public static final Font MONO3 = new Font("Consolas", Font.BOLD, 60);
-	public static final Font SANS1 = new Font("Arial", Font.BOLD, 32);
-	
-	/* Set of colors for the ruler marks */
-	private static final Color R1 = new Color(255, 230, 230);
-	private static final Color R2 = new Color(255, 127, 127);
-	private static final Color B1 = new Color(230, 230, 255);
-	private static final Color B2 = new Color(127, 127, 255);
+public class DesignSpaceUI extends UI {
 	
 	/* Graphics2D object */
 	private Graphics2D g2D;	
@@ -115,14 +99,6 @@ public class DesignSpaceUI {
         
 	}
 	
-	/* The 21 colors from the Parula colormap */
-	protected static ArrayList<String> colors = new ArrayList<String>(
-			Arrays.asList("#352a87", "#353eaf", "#1b55d7", "#026ae1", "#0f77db",
-						  "#1484d4", "#0d93d2", "#06a0cd", "#07aac1", "#18b1b2",
-					      "#33b8a1",
-					      "#55bd8e", "#7abf7c", "#9bbf6f", "#b8bd63", "#d3bb58",
-					      "#ecb94c", "#ffc13a", "#fad12b", "#f5e31e", "#f9fb0e"));
-	
 	
 	/* Public method to draw the borders of the design spaces */ 
 	public static void drawBorder(Graphics2D g2D_object){
@@ -152,45 +128,13 @@ public class DesignSpaceUI {
 				
 	}
 	
-	/* Public method to draw the Parula color bar */
-	public static void drawColorbar(Graphics2D g2D_object){
-		
-		/* A cell for each color */
-		for (int j = 0; j < 21; j++) {
-			g2D_object.setColor(Color.decode( colors.get( 20-j ) ));
-			g2D_object.setStroke(new BasicStroke(0));
-			g2D_object.fillRect(1460 + X, 120-Y+40*j, 80, 40);
-		}
-		
-		/* The color scale */
-		g2D_object.setFont(MONO2);
-		int fs = MONO2.getSize();
-		FontMetrics fm = g2D_object.getFontMetrics(MONO2);
-		int fh = 20 + (5*fs/2)/7;
-		
-		for (int v = 0; v < 3; v++){
-			g2D_object.setColor(Color.BLACK);
-			String val = String.valueOf(100-v*20);
-			int fw = fm.stringWidth(val);
-			g2D_object.drawString( val, 1500-fw/2 + X, fh+120-Y+160*v);
-		}
-		
-		for (int v = 3; v < 6; v++){
-			g2D_object.setColor(Color.WHITE);
-			String val = String.valueOf(100-v*20);
-			int fw = fm.stringWidth(val);
-			g2D_object.drawString( val, 1500-fw/2 + X, fh+120-Y+160*v);
-		}
-		
-	}
-	
 	/* Draw strategy space (normal form space)  */
 	public static void drawNormalForm(Graphics2D g2D_object){
 		
 		FontMetrics fm = g2D_object.getFontMetrics(MONO3);
 		int fw = fm.stringWidth("000");
 		int w = 140;
-		int h =  60;
+//		int h =  60;
 		
 		g2D_object.setColor(Color.RED);
 		g2D_object.fillRect(1560-w/2+fw/2,     302+w, w, w);
@@ -315,7 +259,7 @@ public class DesignSpaceUI {
 				throw new IllegalArgumentException("Invalid strategy: " + strategy);
 		}
 		
-		g2D.setColor(Color.decode( colors.get(payoff/5) ));
+		g2D.setColor(payoffColor(payoff));
 		g2D.fillRect((40*xi)+dx, dy-(40*xj), 40, 40);
 		
 	}
@@ -362,10 +306,9 @@ public class DesignSpaceUI {
 		setStrategy(SS);
 				
 	}
-
 	
 	/* Compute normal form (payoff structure) */
-	public void computeNormalForm(int x_Ai, int x_Aj, int x_Bi, int x_Bj, boolean is_sharing){
+	public void updateNormalForm(int x_Ai, int x_Aj, int x_Bi, int x_Bj, boolean is_sharing){
 		
 		int[] p_A = new int[2];
 		int[] p_B = new int[2];
@@ -477,7 +420,7 @@ public class DesignSpaceUI {
 		int[] ycPoints = {920-Y-(40*ci)+20,920-Y-(40*ci)-28+20,920-Y-(40*ci)+28+20};
 		
 		if (ci > -1) {
-			g2D.setColor(Color.decode(colors.get(ci)));
+			g2D.setColor(payoffColor(getPayoff()));
 		} else {
 			g2D.setColor(Color.BLACK);
 		}
@@ -542,26 +485,26 @@ public class DesignSpaceUI {
 		FontMetrics fm = g2D.getFontMetrics(MONO3);
 		int fw = fm.stringWidth("000");
 		int w = 140;
-		int h =  60;
+//		int h =  60;
 		
 		if (is_sharing == true) {
 			
-			g2D.setColor(Color.decode(colors.get(getPA()[0]/5)));
+			g2D.setColor(payoffColor(getPA()[0]));
 			g2D.fillRect(1560-w/2+fw/2,     302-w, w, w);
 			g2D.setColor(payoffFontColor(getPA()[0]));
 			g2D.drawString( String.format("%3d",getPA()[0]), 1560, 290); /* AA */
 			
-			g2D.setColor(Color.decode(colors.get(getPA()[1]/5)));
+			g2D.setColor(payoffColor(getPA()[1]));
 			g2D.fillRect(1560-w/2+fw/2,     302,   w, w);
 			g2D.setColor(payoffFontColor(getPA()[1]));
 			g2D.drawString( String.format("%3d",getPA()[1]), 1560, 350); /* AB */
 	
-			g2D.setColor(Color.decode(colors.get(getPB()[1]/5)));
+			g2D.setColor(payoffColor(getPB()[1]));
 			g2D.fillRect(1560-w/2+fw/2 + w, 302-w, w, w);
 			g2D.setColor(payoffFontColor(getPB()[1]));
 			g2D.drawString( String.format("%3d",getPB()[1]), 1700, 290); /* BA */
 			
-			g2D.setColor(Color.decode(colors.get(getPB()[0]/5)));
+			g2D.setColor(payoffColor(getPB()[0]));
 			g2D.fillRect(1560-w/2+fw/2 + w, 302,   w, w);
 			g2D.setColor(payoffFontColor(getPB()[0]));
 			g2D.drawString( String.format("%3d",getPB()[0]), 1700, 350); /* BB */
@@ -569,17 +512,5 @@ public class DesignSpaceUI {
 		}
 		
 	}
-	
-	public Color payoffFontColor(int payoff) {
-		
-		Color font_color = null;
-		
-		if (payoff > 45){
-			font_color = Color.BLACK;
-		} else if (payoff > -1){
-			font_color = Color.WHITE;
-		}		
-		return font_color;
-	}	
 
 }

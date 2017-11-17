@@ -133,9 +133,7 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 		frame.setIconImages(DesignerApp.ICONS);
 		
         frame.addKeyListener(main_frame);
-        
-        
-				
+        				
 	}
 			
 	/** Default MainUI constructor */
@@ -368,10 +366,10 @@ public class DesignerUI extends JPanel implements ActionListener, KeyListener{
 					if(manager != null && self != null 
 							&& d.getId() == manager.getDesignPartner(self.getId())) {
 						
-						setXAj(d.getDesign(0));
-						setXBj(d.getDesign(1));
+						setXAj( d.getDesign(0) );
+						setXBj( d.getDesign(1) );
 						
-						setPartnerStatus(d.isReadyToShare());
+						setPartnerStatus( d.isReadyToShare() );
 						setSharingStatus( isSelfSharing(), isPartnerSharing() );
 						
 						repaint();

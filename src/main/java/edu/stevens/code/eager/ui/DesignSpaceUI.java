@@ -4,12 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import edu.stevens.code.eager.designer.DesignerUI;
 
@@ -17,28 +12,8 @@ import edu.stevens.code.eager.designer.DesignerUI;
 public class DesignSpaceUI extends UI {
 	
 	/* Graphics2D object */
-	private Graphics2D g2D;	
-	
-	
-	/* Payoff structure (2D int arrays), getters and setters */
-	
-	private int[][] AA;
-	public int getAA(int i, int j) { return AA[i][j]; }
-	public void setAA(int[][] aA) { AA = aA; }
-	
-	private int[][] AB;
-	public int getAB(int i, int j) { return AB[i][j]; }
-	public void setAB(int[][] aB) { AB = aB; }
-	
-	private int[][] BA;
-	public int getBA(int i, int j) { return BA[i][j]; }
-	public void setBA(int[][] bA) { BA = bA; }
-	
-	private int[][] BB;
-	public int getBB(int i, int j) { return BB[i][j]; }
-	public void setBB(int[][] bB) { BB = bB; }
-
-	
+	private Graphics2D g2D;
+		
 	/* Variables xi and xj, setters, and getters */
 	private int xi;
 	public int getXi() { return xi; }
@@ -47,26 +22,22 @@ public class DesignSpaceUI extends UI {
 	private int xj;
 	public int getXj() { return xj; }
 	public void setXj(int xj) { this.xj = xj; }
-	
-	
+		
 	/* Payoff */
 	private int payoff;
 	public int getPayoff() { return payoff; }
 	public void setPayoff(int new_payoff) { payoff = new_payoff; }
 	
-	
 	/* Payoff at A */
 	private int[] pA = new int[2];
 	public int[] getPA() { return pA; }
 	public void setPA(int[] new_pA) { pA = new_pA; }
-	
-	
+		
 	/* Payoff at B*/
 	private int[] pB = new int[2];
 	public int[] getPB() { return pB; }
 	public void setPB(int[] new_pB) { pB = new_pB; }
-	
-	
+		
 	/* Strategy */
 	private String strategy = "NN";
 	public String getStrategy() { return strategy; }
@@ -99,7 +70,6 @@ public class DesignSpaceUI extends UI {
         
 	}
 	
-	
 	/* Public method to draw the borders of the design spaces */ 
 	public static void drawBorder(Graphics2D g2D_object){
 		
@@ -125,7 +95,7 @@ public class DesignSpaceUI extends UI {
 		g2D_object.fillRect(980 + X, 960-Y, 400, 40);
 		g2D_object.drawRect(980-t/2 + X,  80-Y+t/2, 400, 440);
 		g2D_object.drawRect(980-t/2 + X, 560-Y-t/2, 400, 440);
-				
+		
 	}
 	
 	/* Draw strategy space (normal form space)  */
@@ -144,7 +114,7 @@ public class DesignSpaceUI extends UI {
 		g2D_object.fillRect(1560-w/2+fw/2 + w, 302+w, w, w);
 		g2D_object.setColor(B2);
 		g2D_object.fillRect(1560-w/2+fw/2 - w, 302,   w, w);
-				
+		
 	}
 	
 	
@@ -178,70 +148,7 @@ public class DesignSpaceUI extends UI {
 		}
 		
 		
-	}
-	
-	/* Set design space */
-	protected void setDesignSpace(String game_file) throws NumberFormatException, IOException{
-		/** This is how I call the "game_file" stored in package "games";
-		 * To switch between games more easily, a drop-down list containing
-		 * the names of all the game (.csv) files in "games" should be added,
-		 * and picking a new game from that list should automatically
-		 * update the design space of the interface.
-		 */
-		BufferedReader br = new BufferedReader(new FileReader(new File("src/test/java/games/"+game_file+".csv")));
-        
-		/** The next String "line" will get every line from the the game (.csv) file.
-		 * Them, every value between commas in this line will be added to
-		 * the Integer list "values".
-		 */
-        String line;
-        List<Integer> values = new ArrayList<Integer> ();
-        
-        
-        while((line = br.readLine())!= null){
-        	/* Create a String array "r" from every line
-        	 * by splitting it after every comma */     
-        	String[] r = line.split(",");
-        	
-        	/* Now, take every element in "r"  and add it
-        	 * as an Integer to the "values" list.
-        	 */
-        	for(int i = 0; i < r.length; i++){
-        		int val = Integer.parseInt(r[i]);
-        		values.add((int) val);
-        	}
-        }
-        /* Close the game (.csv) file with safely */
-        br.close();
-		
-        /* Now, create the 2D int arrays that will store the
-         * values for every quadrant in the design space.
-         */
-		int[][] gameAA = new int[10][10];
-		int[][] gameAB = new int[10][10];
-		int[][] gameBA = new int[10][10];
-		int[][] gameBB = new int[10][10];
-		
-		/* Take the entries in the "values" list and assign them to
-		 * the appropriate 2D int array in the design space
-		 */
-        for (int i=0; i<10; i++) {
-            for (int j=0; j<10; j++) {
-            	gameAA[j][i] = values.get(    10*i+j);
-            	gameAB[j][i] = values.get(100+10*i+j);
-            	gameBA[j][i] = values.get(200+10*i+j);
-            	gameBB[j][i] = values.get(300+10*i+j);
-            }
-        }
-        
-        /* Now, update the private 2D int arrays */
-        setAA(gameAA);
-        setAB(gameAB);
-        setBA(gameBA);
-        setBB(gameBB);
-	}
-	
-	
+	}	
 	
 	/* Draws each cell on each of the quadrants of the design space */
 	protected void drawCell(String strategy, int xi, int xj, int payoff){
@@ -304,7 +211,7 @@ public class DesignSpaceUI extends UI {
 		
 		setXi(x_Si); setXj(x_Sj);
 		setStrategy(SS);
-				
+		
 	}
 	
 	/* Compute normal form (payoff structure) */
@@ -329,7 +236,7 @@ public class DesignSpaceUI extends UI {
 		}
 		
 		setPA(p_A); setPB(p_B);
-				
+		
 	}
 	
 	/* Ruler Ai */
@@ -357,7 +264,6 @@ public class DesignSpaceUI extends UI {
 		int[] yBiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
 		g2D.setColor(Color.BLUE); g2D.fillPolygon(xBiPoints, yBiPoints, 3);
 		g2D.setColor(B2); g2D.drawPolygon(xBiPoints, yBiPoints, 3);
-		
 		
 	}
 	
@@ -388,8 +294,8 @@ public class DesignSpaceUI extends UI {
 			int[] yBjPoints = {920-Y-(40*x_Bj)+28+20,920-Y-(40*x_Bj)+20+t/2,920-Y-(40*x_Bj)+20+t/2};
 			g2D.setColor(B1); g2D.fillPolygon(xBjPoints, yBjPoints, 3);
 			g2D.setColor(B2); g2D.drawPolygon(xBjPoints, yBjPoints, 3);
-			
-		}		
+		
+		}
 	}	
 	
 	/* Selected cell */
@@ -447,7 +353,7 @@ public class DesignSpaceUI extends UI {
 			g2D.setColor(Color.WHITE);
 			g2D.drawString( val, 1500-fw/2 + X, fh+920-Y-8*getPayoff());
 		}
-				
+		
 	}
 	
 	/* Display the current cell value on the design space */

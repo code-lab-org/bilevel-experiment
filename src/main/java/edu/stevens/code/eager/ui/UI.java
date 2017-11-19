@@ -13,9 +13,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import edu.stevens.code.eager.designer.DesignerUI;
 
-public class UI {
+public class UI extends JPanel {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4468797712241079872L;
 	
 	protected static final int X = DesignerUI.X_SHIFT;
 	protected static final int Y = DesignerUI.Y_SHIFT;
@@ -146,7 +153,7 @@ public class UI {
 	}
 		
 	/* Public method to draw the Parula color bar */
-	public static void drawColorbar(Graphics2D g2D_object){
+	protected static void drawColorbar(Graphics2D g2D_object){
 		
 		/* A cell for each color */
 		for (int j = 0; j < 21; j++) {

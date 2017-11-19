@@ -18,6 +18,7 @@ public class Designer extends Observable {
 	
 	private int id = -1;
 	private int[] designs = new int[NUM_STRATEGIES];
+	private int[] agreedDesigns = new int[NUM_STRATEGIES];
 	private int strategy = 0;
 	private boolean readyToShare = false;
 	
@@ -68,6 +69,15 @@ public class Designer extends Observable {
 	}
 	
 	/**
+	 * Gets the agreed designs.
+	 *
+	 * @return the agreed designs
+	 */
+	public synchronized int[] getAgreedDesigns() {
+		return Arrays.copyOf(agreedDesigns, agreedDesigns.length);
+	}
+	
+	/**
 	 * Gets the design.
 	 *
 	 * @param index the index
@@ -78,6 +88,19 @@ public class Designer extends Observable {
 			throw new IllegalArgumentException("invalid design index");
 		}
 		return this.designs[index];
+	}
+	
+	/**
+	 * Gets the agreed design.
+	 *
+	 * @param index the index
+	 * @return the agreed design
+	 */
+	public synchronized int getAgreedDesign(int index) {
+		if(index < 0 || index >= NUM_STRATEGIES) {
+			throw new IllegalArgumentException("invalid agreed design index");
+		}
+		return this.agreedDesigns[index];
 	}
 	
 	/**
@@ -103,6 +126,28 @@ public class Designer extends Observable {
 	}
 	
 	/**
+	 * Sets the agreed design.
+	 *
+	 * @param index the index
+	 * @param value the value
+	 */
+	public void setAgreedDesign(int index, int value) {
+		if(index < 0 || index >= NUM_STRATEGIES) {
+			throw new IllegalArgumentException("invalid design index");
+		}
+		if(value < MIN_DESIGN_VALUE || value > MAX_DESIGN_VALUE) {
+			throw new IllegalArgumentException("invalid design value");
+		}
+		synchronized(this) {
+			if(this.agreedDesigns[index] != value) {
+				this.agreedDesigns[index] = value;
+				this.setChanged();
+			}
+		}
+		this.notifyObservers(PROPERTY_DESIGNS);
+	}
+	
+	/**
 	 * Sets the designs.
 	 *
 	 * @param value the values
@@ -119,6 +164,29 @@ public class Designer extends Observable {
 		synchronized(this) {
 			if(!Arrays.equals(this.designs, values)) {
 				this.designs = Arrays.copyOf(values, NUM_STRATEGIES);
+				this.setChanged();
+			}
+		}
+		this.notifyObservers(PROPERTY_DESIGNS);
+	}
+	
+	/**
+	 * Sets the agreed designs.
+	 *
+	 * @param value the values
+	 */
+	public void setAgreedDesigns(int[] values) {
+		if(values.length != NUM_STRATEGIES) {
+			throw new IllegalArgumentException("invalid number of agreed designs");
+		}
+		for(int value : values) {
+			if(value < MIN_DESIGN_VALUE || value > MAX_DESIGN_VALUE) {
+				throw new IllegalArgumentException("invalid design value");
+			}
+		}
+		synchronized(this) {
+			if(!Arrays.equals(this.agreedDesigns, values)) {
+				this.agreedDesigns = Arrays.copyOf(values, NUM_STRATEGIES);
 				this.setChanged();
 			}
 		}

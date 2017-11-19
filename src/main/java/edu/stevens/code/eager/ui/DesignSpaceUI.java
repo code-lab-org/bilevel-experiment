@@ -11,6 +11,11 @@ import edu.stevens.code.eager.designer.DesignerUI;
 
 public class DesignSpaceUI extends UI {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3088464550312347922L;
+
 	/* Graphics2D object */
 	private Graphics2D g2D;
 		

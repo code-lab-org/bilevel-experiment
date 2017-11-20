@@ -62,7 +62,6 @@ public class DesignSpacePainting extends PaintingMethods {
 		setDesignSpace(game_file);
 		
 		drawColorbar(g2D_object);
-		drawBorder(g2D_object);
 		addAxis(g2D_object);
 //		drawNormalForm(g2D_object);
         
@@ -76,30 +75,30 @@ public class DesignSpacePainting extends PaintingMethods {
 		
 		/* Border for Mia's strategy boxes */
 		g2D_object.setColor(R2);
-		g2D_object.fillRect( 500 + X, 120-Y,  40, 400);
-		g2D_object.fillRect(1380 + X, 120-Y, 40, 400);
+		g2D_object.fillRect( 500 + X_SHIFT, 120-Y_SHIFT,  40, 400);
+		g2D_object.fillRect(1380 + X_SHIFT, 120-Y_SHIFT, 40, 400);
 		g2D_object.setColor(B2);
-		g2D_object.fillRect( 500 + X, 560-Y,  40, 400);
-		g2D_object.fillRect(1380 + X, 560-Y, 40, 400);
+		g2D_object.fillRect( 500 + X_SHIFT, 560-Y_SHIFT,  40, 400);
+		g2D_object.fillRect(1380 + X_SHIFT, 560-Y_SHIFT, 40, 400);
 		
 		/* Border for current player's strategy boxes */
 		g2D_object.setColor(Color.RED);
-		g2D_object.fillRect(540 + X,  80-Y, 400, 40);
-		g2D_object.fillRect(540 + X, 960-Y, 400, 40);
-		g2D_object.drawRect(540+t/2 + X,  80-Y+t/2, 400, 440);
-		g2D_object.drawRect(540+t/2 + X, 560-Y-t/2, 400, 440);
+		g2D_object.fillRect(540 + X_SHIFT,  80-Y_SHIFT, 400, 40);
+		g2D_object.fillRect(540 + X_SHIFT, 960-Y_SHIFT, 400, 40);
+		g2D_object.drawRect(540+t/2 + X_SHIFT,  80-Y_SHIFT+t/2, 400, 440);
+		g2D_object.drawRect(540+t/2 + X_SHIFT, 560-Y_SHIFT-t/2, 400, 440);
 		g2D_object.setColor(Color.BLUE);
-		g2D_object.fillRect(980 + X,  80-Y, 400, 40);
-		g2D_object.fillRect(980 + X, 960-Y, 400, 40);
-		g2D_object.drawRect(980-t/2 + X,  80-Y+t/2, 400, 440);
-		g2D_object.drawRect(980-t/2 + X, 560-Y-t/2, 400, 440);
+		g2D_object.fillRect(980 + X_SHIFT,  80-Y_SHIFT, 400, 40);
+		g2D_object.fillRect(980 + X_SHIFT, 960-Y_SHIFT, 400, 40);
+		g2D_object.drawRect(980-t/2 + X_SHIFT,  80-Y_SHIFT+t/2, 400, 440);
+		g2D_object.drawRect(980-t/2 + X_SHIFT, 560-Y_SHIFT-t/2, 400, 440);
 		
 	}
 	
 	/* Draw strategy space (normal form space)  */
 	public static void drawNormalForm(Graphics2D g2D_object){
 		
-		FontMetrics fm = g2D_object.getFontMetrics(MONO3);
+		FontMetrics fm = g2D_object.getFontMetrics(MONO4);
 		int fw = fm.stringWidth("000");
 		int w = 140;
 //		int h =  60;
@@ -119,6 +118,8 @@ public class DesignSpacePainting extends PaintingMethods {
 	/* The (xi,xj) axis, 0 <= xi,xj <= 9 */
 	public static void addAxis(Graphics2D g2D_object){
 		
+		drawBorder(g2D_object);
+		
 		g2D_object.setFont(MONO2);
 		int fs = MONO2.getSize();
 		
@@ -131,22 +132,22 @@ public class DesignSpacePainting extends PaintingMethods {
 		for (int x = 0; x < 10; x++){
 			String xi = String.valueOf(x);
 			
-			g2D_object.drawString( xi,  560-fw/2+40*x + X, fh +  80-Y);
-			g2D_object.drawString( xi, 1000-fw/2+40*x + X, fh +  80-Y);
+			g2D_object.drawString( xi,  560-fw/2+40*x + X_SHIFT, fh +  80-Y_SHIFT);
+			g2D_object.drawString( xi, 1000-fw/2+40*x + X_SHIFT, fh +  80-Y_SHIFT);
 			
-			g2D_object.drawString( xi,  560-fw/2+40*x + X, fh + 960-Y);
-			g2D_object.drawString( xi, 1000-fw/2+40*x + X, fh + 960-Y);
+			g2D_object.drawString( xi,  560-fw/2+40*x + X_SHIFT, fh + 960-Y_SHIFT);
+			g2D_object.drawString( xi, 1000-fw/2+40*x + X_SHIFT, fh + 960-Y_SHIFT);
 			
-			g2D_object.drawString( xi,  520-fw/2 + X, fh + 480-Y-40*x);
-			g2D_object.drawString( xi,  520-fw/2 + X, fh + 920-Y-40*x);
+			g2D_object.drawString( xi,  520-fw/2 + X_SHIFT, fh + 480-Y_SHIFT-40*x);
+			g2D_object.drawString( xi,  520-fw/2 + X_SHIFT, fh + 920-Y_SHIFT-40*x);
 			
-			g2D_object.drawString( xi, 1400-fw/2 + X, fh + 480-Y-40*x);
-			g2D_object.drawString( xi, 1400-fw/2 + X, fh + 920-Y-40*x);
+			g2D_object.drawString( xi, 1400-fw/2 + X_SHIFT, fh + 480-Y_SHIFT-40*x);
+			g2D_object.drawString( xi, 1400-fw/2 + X_SHIFT, fh + 920-Y_SHIFT-40*x);
 			
 		}
 		
 		
-	}	
+	}
 	
 	/* Draws each cell on each of the quadrants of the design space */
 	protected void drawCell(String strategy, int xi, int xj, int payoff){
@@ -155,10 +156,10 @@ public class DesignSpacePainting extends PaintingMethods {
 		int dy;
 		
 		switch (strategy){
-			case "AA": dx = 540 + X; dy = 480 - Y; break;
-			case "AB": dx = 540 + X; dy = 920 - Y; break;
-			case "BA": dx = 980 + X; dy = 480 - Y; break;
-			case "BB": dx = 980 + X; dy = 920 - Y; break;
+			case "AA": dx = 540 + X_SHIFT; dy = 480 - Y_SHIFT; break;
+			case "AB": dx = 540 + X_SHIFT; dy = 920 - Y_SHIFT; break;
+			case "BA": dx = 980 + X_SHIFT; dy = 480 - Y_SHIFT; break;
+			case "BB": dx = 980 + X_SHIFT; dy = 920 - Y_SHIFT; break;
 			
 			default:
 				throw new IllegalArgumentException("Invalid strategy: " + strategy);
@@ -248,18 +249,18 @@ public class DesignSpacePainting extends PaintingMethods {
 		g2D.setColor(new Color(147, 93, 116));
 		
 		/* Rulers moving along horizontal axis (vertical box) */
-		g2D.drawRect(540+X+(40*x_Ai)-t/2, 80-Y-3*t/2, 40+t, 920+3*t); /* A */
-		g2D.drawRect(540+X+(40*x_Bi)-t/2, 80-Y-3*t/2, 40+t, 920+3*t); /* B */
+		g2D.drawRect(540+X_SHIFT+(40*x_Ai)-t/2, 80-Y_SHIFT-3*t/2, 40+t, 920+3*t); /* A */
+		g2D.drawRect(540+X_SHIFT+(40*x_Bi)-t/2, 80-Y_SHIFT-3*t/2, 40+t, 920+3*t); /* B */
 		
 		/* Draw horizontal triangular ruler marks, strategy A */
-		int[] xAiPoints = {540+X+(40*x_Ai)-28+20, 540+X+(40*x_Ai)+20-t/2, 540+X+(40*x_Ai)+20-t/2};
-		int[] yAiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
+		int[] xAiPoints = {540+X_SHIFT+(40*x_Ai)-28+20, 540+X_SHIFT+(40*x_Ai)+20-t/2, 540+X_SHIFT+(40*x_Ai)+20-t/2};
+		int[] yAiPoints = {1048-Y_SHIFT+4*t, 1048-Y_SHIFT+4*t, 1000-Y_SHIFT+4*t};
 		g2D.setColor(Color.RED); g2D.fillPolygon(xAiPoints, yAiPoints, 3);
 		g2D.setColor(R2); g2D.drawPolygon(xAiPoints, yAiPoints, 3);
 		
 		/* Draw horizontal triangular ruler marks, strategy B */
-		int[] xBiPoints = {540+X+(40*x_Bi)+20+t/2, 540+X+(40*x_Bi)+28+20, 540+X+(40*x_Bi)+20+t/2};
-		int[] yBiPoints = {1048-Y+4*t, 1048-Y+4*t, 1000-Y+4*t};
+		int[] xBiPoints = {540+X_SHIFT+(40*x_Bi)+20+t/2, 540+X_SHIFT+(40*x_Bi)+28+20, 540+X_SHIFT+(40*x_Bi)+20+t/2};
+		int[] yBiPoints = {1048-Y_SHIFT+4*t, 1048-Y_SHIFT+4*t, 1000-Y_SHIFT+4*t};
 		g2D.setColor(Color.BLUE); g2D.fillPolygon(xBiPoints, yBiPoints, 3);
 		g2D.setColor(B2); g2D.drawPolygon(xBiPoints, yBiPoints, 3);
 		
@@ -277,19 +278,19 @@ public class DesignSpacePainting extends PaintingMethods {
 			g2D.setStroke(new BasicStroke(t));
 			g2D.setColor(new Color(147, 93, 116));
 			
-			/* Rulers moving along horizontal axis (vertical box) */
-			g2D.drawRect(540+X-40-3*t/2,   920-Y-(40*x_Aj)-t/2, 920+3*t,    40+t); /* A */
-			g2D.drawRect(540+X-40-3*t/2,   920-Y-(40*x_Bj)-t/2, 920+3*t,    40+t); /* B */
+			/* Rulers moving along vertical axis (horizontal box) */
+			g2D.drawRect(540+X_SHIFT-40-3*t/2,   920-Y_SHIFT-(40*x_Aj)-t/2, 920+3*t,    40+t); /* A */
+			g2D.drawRect(540+X_SHIFT-40-3*t/2,   920-Y_SHIFT-(40*x_Bj)-t/2, 920+3*t,    40+t); /* B */
 			
 			/* Draw vertical triangular ruler mark at A */
-			int[] xAjPoints = {452-4*t + X, 452-4*t + X,500-4*t + X};
-			int[] yAjPoints = {920-Y-(40*x_Aj)-28+20,920-Y-(40*x_Aj)+20-t/2,920-Y-(40*x_Aj)+20-t/2};
+			int[] xAjPoints = {452-4*t + X_SHIFT, 452-4*t + X_SHIFT,500-4*t + X_SHIFT};
+			int[] yAjPoints = {920-Y_SHIFT-(40*x_Aj)-28+20,920-Y_SHIFT-(40*x_Aj)+20-t/2,920-Y_SHIFT-(40*x_Aj)+20-t/2};
 			g2D.setColor(R1); g2D.fillPolygon(xAjPoints, yAjPoints, 3);
 			g2D.setColor(R2); g2D.drawPolygon(xAjPoints, yAjPoints, 3);
 			
 			/* Draw vertical triangular ruler marks at B*/
-			int[] xBjPoints = {452-4*t + X, 452-4*t + X,500-4*t + X};
-			int[] yBjPoints = {920-Y-(40*x_Bj)+28+20,920-Y-(40*x_Bj)+20+t/2,920-Y-(40*x_Bj)+20+t/2};
+			int[] xBjPoints = {452-4*t + X_SHIFT, 452-4*t + X_SHIFT,500-4*t + X_SHIFT};
+			int[] yBjPoints = {920-Y_SHIFT-(40*x_Bj)+28+20,920-Y_SHIFT-(40*x_Bj)+20+t/2,920-Y_SHIFT-(40*x_Bj)+20+t/2};
 			g2D.setColor(B1); g2D.fillPolygon(xBjPoints, yBjPoints, 3);
 			g2D.setColor(B2); g2D.drawPolygon(xBjPoints, yBjPoints, 3);
 		
@@ -304,7 +305,7 @@ public class DesignSpacePainting extends PaintingMethods {
 		g2D.setFont(DesignSpacePainting.MONO2);
 		g2D.setStroke(new BasicStroke(t));
 		g2D.setColor(Color.MAGENTA);
-		g2D.drawRect(540+X+(40*x_Si)-t/2,920-Y-(40*x_Sj)-t/2, 40+t, 40+t);
+		g2D.drawRect(540+X_SHIFT+(40*x_Si)-t/2,920-Y_SHIFT-(40*x_Sj)-t/2, 40+t, 40+t);
 		
 		/* Which strategy? Query payoff and update current strategy. */
 		queryPayoff(x_Si, x_Sj);
@@ -320,8 +321,8 @@ public class DesignSpacePainting extends PaintingMethods {
 		/* Draw triangular colorbar mark */
 		t = 6;
 		int ci = getPayoff()/5;
-		int[] xcPoints = {1540+t + X,1588+t + X,1588+t + X};
-		int[] ycPoints = {920-Y-(40*ci)+20,920-Y-(40*ci)-28+20,920-Y-(40*ci)+28+20};
+		int[] xcPoints = {1540+t + X_SHIFT,1588+t + X_SHIFT,1588+t + X_SHIFT};
+		int[] ycPoints = {920-Y_SHIFT-(40*ci)+20,920-Y_SHIFT-(40*ci)-28+20,920-Y_SHIFT-(40*ci)+28+20};
 		
 		if (ci > -1) {
 			g2D.setColor(payoffColor(getPayoff()));
@@ -346,10 +347,10 @@ public class DesignSpacePainting extends PaintingMethods {
 		
 		if (getPayoff() > 45){
 			g2D.setColor(Color.BLACK);
-			g2D.drawString( val, 1500-fw/2 + X, fh+920-Y-8*getPayoff());
+			g2D.drawString( val, 1500-fw/2 + X_SHIFT, fh+920-Y_SHIFT-8*getPayoff());
 		} else if (getPayoff() > -1){
 			g2D.setColor(Color.WHITE);
-			g2D.drawString( val, 1500-fw/2 + X, fh+920-Y-8*getPayoff());
+			g2D.drawString( val, 1500-fw/2 + X_SHIFT, fh+920-Y_SHIFT-8*getPayoff());
 		}
 		
 	}
@@ -362,10 +363,10 @@ public class DesignSpacePainting extends PaintingMethods {
 		int p = 0;
 		
 		switch (strategy){
-			case "AA": dx = 540 + X; dy = 480 - Y; p = getAA(x_i,x_j); break;
-			case "AB": dx = 540 + X; dy = 920 - Y; p = getAB(x_i,x_j); break;
-			case "BA": dx = 980 + X; dy = 480 - Y; p = getBA(x_i,x_j); break;
-			case "BB": dx = 980 + X; dy = 920 - Y; p = getBB(x_i,x_j); break;
+			case "AA": dx = 540 + X_SHIFT; dy = 480 - Y_SHIFT; p = getAA(x_i,x_j); break;
+			case "AB": dx = 540 + X_SHIFT; dy = 920 - Y_SHIFT; p = getAB(x_i,x_j); break;
+			case "BA": dx = 980 + X_SHIFT; dy = 480 - Y_SHIFT; p = getBA(x_i,x_j); break;
+			case "BB": dx = 980 + X_SHIFT; dy = 920 - Y_SHIFT; p = getBB(x_i,x_j); break;
 		}
 		
 		g2D.setFont(MONO1);
@@ -384,9 +385,9 @@ public class DesignSpacePainting extends PaintingMethods {
 	/* Display normal form of the game */
 	public void displayNormalForm(boolean is_sharing){
 		
-		g2D.setFont(DesignSpacePainting.MONO3);
+		g2D.setFont(DesignSpacePainting.MONO4);
 		
-		FontMetrics fm = g2D.getFontMetrics(MONO3);
+		FontMetrics fm = g2D.getFontMetrics(MONO4);
 		int fw = fm.stringWidth("000");
 		int w = 140;
 //		int h =  60;

@@ -21,7 +21,7 @@ import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
 import edu.stevens.code.ptg.Manager;
 
-public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener{
+public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener {
 	
 	/**
 	 * This is the Main file for execution of the user interface
@@ -30,15 +30,15 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 	
 //	private JToggleButton shareButton;
 	
-	public static final int X_SHIFT =    0; /* -314 */
-	public static final int Y_SHIFT =   55; /*   60 */
-	public static final int X_RANGE = 1624 + X_SHIFT;
+	public static final int X = PaintingMethods.X_SHIFT;
+	public static final int Y = PaintingMethods.Y_SHIFT;
+	public static final int X_RANGE = 1624 + X;
 	
-	private final int xA0 = 1920/2 + X_SHIFT - 420;	
-	private final int xB0 = 1920/2 + X_SHIFT +  20;
+	private final int xA0 = 1920/2 + X - 420;	
+	private final int xB0 = 1920/2 + X +  20;
 	
-	private final int yA0 = 1080/2 - Y_SHIFT -  20;
-	private final int yB0 = 1080/2 - Y_SHIFT + 420;
+	private final int yA0 = 1080/2 - Y -  20;
+	private final int yB0 = 1080/2 - Y + 420;
 	
 	/** Game file */
 	private String game = "PB01"; /* Default game */
@@ -62,11 +62,11 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 	
 	
 	/** Variables xScreen and yScreen, setters, and getters */
-	private int xScreen = 1920/2 + X_SHIFT;
+	private int xScreen = 1920/2 + X;
 	public int getXscreen() { return xScreen; }
 	public void setXscreen(int x_screen) { this.xScreen = x_screen; }
 	
-	private int yScreen = 1080/2 - Y_SHIFT;
+	private int yScreen = 1080/2 - Y;
 	public int getYscreen() { return yScreen; }
 	public void setYscreen(int y_screen) { this.yScreen = y_screen; }
 	

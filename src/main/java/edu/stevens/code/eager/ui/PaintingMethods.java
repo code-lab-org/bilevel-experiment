@@ -15,12 +15,13 @@ import java.util.List;
 
 public class PaintingMethods {
 	
-	protected static final int X = DesignSpaceUI.X_SHIFT;
-	protected static final int Y = DesignSpaceUI.Y_SHIFT;
+	public static final int X_SHIFT =    0; /* -314 */
+	public static final int Y_SHIFT =   55; /*   60 */
 	
 	public static final Font MONO1 = new Font("Consolas", Font.BOLD, 20);
 	public static final Font MONO2 = new Font("Consolas", Font.BOLD, 28);
-	public static final Font MONO3 = new Font("Consolas", Font.BOLD, 60);
+	public static final Font MONO3 = new Font("Consolas", Font.BOLD, 36);
+	public static final Font MONO4 = new Font("Consolas", Font.BOLD, 60);
 	public static final Font SANS1 = new Font("Arial", Font.BOLD, 32);
 	
 	/* Set of colors for the ruler marks */
@@ -151,7 +152,7 @@ public class PaintingMethods {
 			
 			g2D_object.setColor(payoffColor( 5*(20-j) ));
 			g2D_object.setStroke(new BasicStroke(0));
-			g2D_object.fillRect(1460 + X, 120-Y+40*j, 80, 40);
+			g2D_object.fillRect(1460 + X_SHIFT, 120-Y_SHIFT+40*j, 80, 40);
 		}
 		
 		/* The color scale */
@@ -164,14 +165,14 @@ public class PaintingMethods {
 			g2D_object.setColor(Color.BLACK);
 			String val = String.valueOf(100-v*20);
 			int fw = fm.stringWidth(val);
-			g2D_object.drawString( val, 1500-fw/2 + X, fh+120-Y+160*v);
+			g2D_object.drawString( val, 1500-fw/2 + X_SHIFT, fh+120-Y_SHIFT+160*v);
 		}
 		
 		for (int v = 3; v < 6; v++){
 			g2D_object.setColor(Color.WHITE);
 			String val = String.valueOf(100-v*20);
 			int fw = fm.stringWidth(val);
-			g2D_object.drawString( val, 1500-fw/2 + X, fh+120-Y+160*v);
+			g2D_object.drawString( val, 1500-fw/2 + X_SHIFT, fh+120-Y_SHIFT+160*v);
 		}
 		
 	}

@@ -21,42 +21,42 @@ public class DesignerUI extends JTabbedPane {
 	
 	/** Contents of the JTabbedPane */
 	public final JPanel instructionsPanel = new JPanel();
-	public final DesignUI[] designsUI = new DesignUI[2];
+	public final DesignUI[] designUI = new DesignUI[2];
 	public final DesignSpaceUI designSpace;
 	public final NormalFormUI normalForm = new NormalFormUI();
 	
 	/** Constructor */
 	public DesignerUI(String game_file) {
 		
-		designsUI[0] = new DesignUI(game_file, 0);
-		designsUI[1] = new DesignUI(game_file, 1);
+		designUI[0] = new DesignUI(game_file, 0);
+		designUI[1] = new DesignUI(game_file, 1);
 		designSpace = new DesignSpaceUI(game_file);
 		
-		int nTabs = 5;
+		int nTabs = 4;
 		Dimension dim = new Dimension(1920/nTabs - 23, 30);
 		
 		this.addTab("Instructions", instructionsPanel);
-		this.add("Red", designsUI[0]);
-		this.add("Blue", designsUI[1]);
+		this.add("Red", designUI[0]);
+		this.add("Blue", designUI[1]);
 		this.add("Design Space", designSpace);
-		this.add("Final Decision", normalForm);
+//		this.add("Final Decision", normalForm);
 
 		JLabel tab0 = new JLabel("Instructions");
 		JLabel tab1 = new JLabel("Red");
 		JLabel tab2 = new JLabel("Blue");
 		JLabel tab3 = new JLabel("Design Space");
-		JLabel tab4 = new JLabel("Final Decision");
+//		JLabel tab4 = new JLabel("Final Decision");
 		tab0.setPreferredSize(dim);
 		tab1.setPreferredSize(dim);
 		tab2.setPreferredSize(dim);
 		tab3.setPreferredSize(dim);
-		tab4.setPreferredSize(dim);
+//		tab4.setPreferredSize(dim);
 		
 		this.setTabComponentAt(0,tab0);
 		this.setTabComponentAt(1,tab1);
 		this.setTabComponentAt(2,tab2);
 		this.setTabComponentAt(3,tab3);
-		this.setTabComponentAt(4,tab4);
+//		this.setTabComponentAt(4,tab4);
 		
 		
 	}

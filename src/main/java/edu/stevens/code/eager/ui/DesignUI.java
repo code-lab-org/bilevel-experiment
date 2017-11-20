@@ -8,6 +8,7 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -28,10 +29,12 @@ public class DesignUI extends JPanel {
 	public String getGame() { return game; }
 	public void setGame(String game_file) { this.game = game_file; }
 	
+	public static final int X = PaintingMethods.X_SHIFT;
+	public static final int Y = PaintingMethods.Y_SHIFT;
 	
 	/** Origin */
-	private final int xS0 = 1920/2 - 420;
-	private final int yS0 = 1080/2 + 420;
+	private final int xS0 = 1920/2 + X - 400;
+	private final int yS0 = 1080/2 - Y + 400;
 	
 	
 	/** Current strategy */
@@ -61,10 +64,10 @@ public class DesignUI extends JPanel {
 		if (strategy == 0 || strategy == 1) { this.xSi[strategy] = x_Si; }
 	}
 	
-	private int[] xSj = {10,10};
+	private int[] xSj = {-1,-1};
 	public int getXSj(int strategy) {
 		if (strategy == 0 || strategy == 1) { return xSj[strategy]; }
-		else { return 10; }
+		else { return -1; }
 	}
 	public void setXSj(int strategy, int x_Sj) {
 		if (strategy == 0 || strategy == 1) { this.xSj[strategy] = x_Sj; }
@@ -92,9 +95,12 @@ public class DesignUI extends JPanel {
 	/* Transform (X,Y) screen coordinates to (xi,xj) design space coordinates */
 	private void screenToXij(int strategy, int x_screen, int y_screen){
 		
-		if (x_screen >= xS0 && x_screen < xS0 + 400 && y_screen <= yS0 && y_screen > yS0 - 400){
-			setXSi( strategy, (int) Math.floor((x_screen - xS0)/40.) );
-			setXSj( strategy, (int) Math.floor((yS0 - y_screen)/40.) );
+		if (x_screen >= xS0 && x_screen < xS0 + 800 && y_screen <= yS0 && y_screen > yS0 - 800){
+			setXSi( strategy, (int) Math.floor((x_screen - xS0)/80.) );
+			setXSj( strategy, (int) Math.floor((yS0 - y_screen)/80.) );
+		
+			int[] arr = { strategy, getXSi(strategy), getXSj(strategy) };		
+			System.out.println( Arrays.toString( arr ) );
 		}
 		
 	}
@@ -110,7 +116,7 @@ public class DesignUI extends JPanel {
 		
 		DesignPainting DP = null;
 		try {
-			DP = new DesignPainting( g2D,getGame() );
+			DP = new DesignPainting( g2D, getGame(), getStrategy() );
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -118,6 +124,7 @@ public class DesignUI extends JPanel {
 				
 		/* Draw Design Space */
 		DP.drawDesign( getStrategy() );
+		DP.drawRulers( getXSi(getStrategy()), getXSj(getStrategy()) );
 		
 //		screenToXij( getXscreen(), getYscreen() );
 //		DP.drawRulersXi( getXSi(), getXSi() );		
@@ -164,10 +171,14 @@ public class DesignUI extends JPanel {
 				
 				setXscreen(me.getX());
 				setYscreen(me.getY());
+				
+//				int[] arr = { me.getX(), me.getY() };
+//				System.out.println(Arrays.toString(arr));
+				
 				screenToXij( getStrategy(), getXscreen(), getYscreen() );
 				
 				if ( getXSi( getStrategy() ) != 10 ) {
-					designer.setDesign( getStrategy(), getXSi( getStrategy() ) );
+					designer.setAgreedDesign( getStrategy(), getXSi( getStrategy() ) );
 				}
 				
 				/* Here it is where I repaint the contents in the "main_frame". */

@@ -1,7 +1,6 @@
 package edu.stevens.code.ptg;
 
 import java.awt.Image;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,9 +15,7 @@ import java.util.Observer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
@@ -26,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.stevens.code.eager.designer.DesignerUI;
+import edu.stevens.code.eager.ui.DesignSpaceUI;
 import edu.stevens.code.ptg.gui.DesignerPanel;
 import edu.stevens.code.ptg.gui.ManagerPanel;
 import edu.stevens.code.ptg.hla.Ambassador;
@@ -109,18 +107,20 @@ public class DesignerApp implements App {
 				 * 
 				 */
 				JFrame fUI = new JFrame("Designer " + String.valueOf(self.getId()));
-				JTabbedPane tUI = new JTabbedPane();
+//				JTabbedPane tUI = new JTabbedPane();
+				DesignerUI dUI = new DesignerUI("SH01");
 				
 				/* AMVRO: Creating the dUI object. */
-				DesignerUI dUI = new DesignerUI("DS");
+//				DesignSpaceUI dUI = new DesignSpaceUI();
 				
-				tUI.add("Design Space",dUI);
+//				tUI.add("Design Space",dUI);
 				
-				JLabel designSpaceLabel = new JLabel("Design Space");
-				designSpaceLabel.setPreferredSize(new Dimension(200, 30));
-				tUI.setTabComponentAt(0, designSpaceLabel);
+//				JLabel designSpaceLabel = new JLabel("Design Space");
+//				designSpaceLabel.setPreferredSize(new Dimension(200, 30));
+//				tUI.setTabComponentAt(0, designSpaceLabel);
 				
-				fUI.add(tUI);
+//				fUI.add(tUI);
+				fUI.add(dUI);
 				
 //				fUI.setContentPane(dUI);
 				
@@ -158,12 +158,14 @@ public class DesignerApp implements App {
 						fUI.setVisible(true);
 					}
 				});
-				dUI.add(max_button);
-				
-				dUI.useMouse(fUI);
-				dUI.setLayout(null);
-				
-				dUI.observe(manager, designers);
+//				dUI.add(max_button);
+				dUI.designSpace.add(max_button);
+//				
+//				dUI.useMouse(fUI);
+//				dUI.setLayout(null);
+//				
+//				dUI.observe(manager, designers);
+				dUI.designSpace.observe(manager, designers);
 				
 				for(Designer designer : designers) {
 					DesignerPanel dPanel = new DesignerPanel();
@@ -175,9 +177,10 @@ public class DesignerApp implements App {
 					p.add(dPanel);
 					
 					if(designer.equals(self)) {
-						dUI.bindTo(self);
+//						dUI.bindTo(self);
+						dUI.designSpace.bindTo(self);
 					}
-					dUI.setGame("SH01");
+//					dUI.setGame("SH01");
 				}
 				ManagerPanel mPanel = new ManagerPanel();
 				mPanel.observe(getManager());
@@ -202,7 +205,7 @@ public class DesignerApp implements App {
 	 * @param j_frame
 	 * @param dUI
 	 */
-	public void useMouse(JFrame j_frame, DesignerUI dUI){
+	public void useMouse(JFrame j_frame, DesignSpaceUI dUI){
 		
 		j_frame.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) {

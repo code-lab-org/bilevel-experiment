@@ -13,19 +13,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JPanel;
-
-import edu.stevens.code.eager.designer.DesignerUI;
-
-public class UI extends JPanel {
+public class PaintingMethods {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4468797712241079872L;
-	
-	protected static final int X = DesignerUI.X_SHIFT;
-	protected static final int Y = DesignerUI.Y_SHIFT;
+	protected static final int X = DesignSpaceUI.X_SHIFT;
+	protected static final int Y = DesignSpaceUI.Y_SHIFT;
 	
 	public static final Font MONO1 = new Font("Consolas", Font.BOLD, 20);
 	public static final Font MONO2 = new Font("Consolas", Font.BOLD, 28);

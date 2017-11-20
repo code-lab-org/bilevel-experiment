@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
-import edu.stevens.code.eager.designer.DesignerUI;
+import edu.stevens.code.eager.ui.DesignSpaceUI;
 import edu.stevens.code.ptg.DesignerApp;
 
 public class Main extends JFrame implements KeyListener {
@@ -15,7 +15,7 @@ public class Main extends JFrame implements KeyListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	DesignerUI panel;
+	DesignSpaceUI panel;
 	
 	public static void main(String[] args) {
 		
@@ -27,7 +27,7 @@ public class Main extends JFrame implements KeyListener {
 	
 	public Main(String game){
 		
-		panel = new DesignerUI(game);
+		panel = new DesignSpaceUI(game);
 		
 		setContentPane(panel);
 		setUndecorated(true);

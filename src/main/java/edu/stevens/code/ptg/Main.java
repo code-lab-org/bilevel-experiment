@@ -62,20 +62,24 @@ public class Main {
 			String federationName = cmd.getOptionValue("f", "code");
 			if(cmd.hasOption("d")) {
 				for(String value : cmd.getOptionValues("d")) {
-					int id = Integer.parseInt(value);
-					new DesignerApp(id).init(federationName);
+					try {
+						int id = Integer.parseInt(value);
+						new DesignerApp(id).init(federationName);
+					} catch(NumberFormatException e) {
+						logger.error(e);
+					}
 				}
 			}
 			if(cmd.hasOption("m")) {
 				Gson gson = new Gson();
 				try {
-					BufferedReader reader = new BufferedReader(new FileReader(cmd.getOptionValue("m")));
+					String path = cmd.getOptionValue("m");
+					BufferedReader reader = new BufferedReader(new FileReader(path));
 					Session session = gson.fromJson(reader, Session.class);
 					new ManagerApp(session).init(federationName);
 				} catch(FileNotFoundException e) {
 					logger.error(e);
 				}
-				
 			}
 			if(!(cmd.hasOption("d") || cmd.hasOption("m"))) {
 				// print the help menu and quit

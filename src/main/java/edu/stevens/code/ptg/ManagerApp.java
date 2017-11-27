@@ -29,7 +29,7 @@ public class ManagerApp implements App {
 	private Manager self = new Manager();
 	private Ambassador ambassador = null;
 	private Session session = null;
-	private Round round = null;
+	private int roundNumber = -1;
 	
 	/**
 	 * Instantiates a new manager app.
@@ -38,10 +38,24 @@ public class ManagerApp implements App {
 	 */
 	public ManagerApp(Session session) {
 		this.session = session;
+		this.roundNumber = 0;
+		self.setRound(session.getRound(this.roundNumber));
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			Designer d = new Designer();
 			d.setId(i);
 			designers[i] = d;
+		}
+	}
+	
+	/**
+	 * Advances to the next round.
+	 */
+	public void advanceRound() {
+		this.roundNumber++;
+		if(this.roundNumber < session.getRounds().length) {
+			self.setRound(session.getRound(this.roundNumber));
+		} else {
+			self.setRoundName("Complete");
 		}
 	}
 

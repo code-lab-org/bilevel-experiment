@@ -26,7 +26,7 @@ public class ManagerApp implements App {
     private static final Logger logger = LogManager.getLogger(ManagerApp.class);
     
 	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
-	private Manager self = new Manager();
+	private Manager manager = new Manager();
 	private Ambassador ambassador = null;
 	private Session session = null;
 	private int roundNumber = -1;
@@ -39,7 +39,7 @@ public class ManagerApp implements App {
 	public ManagerApp(Session session) {
 		this.session = session;
 		this.roundNumber = 0;
-		self.setRound(session.getRound(this.roundNumber));
+		manager.setRound(session.getRound(this.roundNumber));
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			Designer d = new Designer();
 			d.setId(i);
@@ -48,14 +48,28 @@ public class ManagerApp implements App {
 	}
 	
 	/**
+	 * Return to the previous round.
+	 */
+	public void previousRound() {
+		this.roundNumber--;
+		if(this.roundNumber >= 0) {
+			manager.setRound(session.getRound(this.roundNumber));
+		} else {
+			this.roundNumber = 0;
+		}
+	}
+	
+	/**
 	 * Advances to the next round.
 	 */
-	public void advanceRound() {
+	public void nextRound() {
 		this.roundNumber++;
 		if(this.roundNumber < session.getRounds().length) {
-			self.setRound(session.getRound(this.roundNumber));
+			manager.setRound(session.getRound(this.roundNumber));
 		} else {
-			self.setRoundName("Complete");
+			this.roundNumber = session.getRounds().length;
+			manager.setTimeRemaining(-1);
+			manager.setRoundName("Complete");
 		}
 	}
 
@@ -78,16 +92,18 @@ public class ManagerApp implements App {
 			logger.error(ex);
 		}
 		
-		self.addObserver(new Observer() {
+		manager.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
 				try {
-					ambassador.updateManager(self);
+					ambassador.updateManager(manager);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
 			}
 		});
+		
+		ManagerApp self = this;
 
         SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -99,6 +115,7 @@ public class ManagerApp implements App {
 				JPanel p = new JPanel();
 				p.setLayout(new FlowLayout());
 				ManagerPanel mPanel = new ManagerPanel();
+				mPanel.observe(manager);
 				mPanel.bindTo(self);
 				p.add(mPanel);
 				for(Designer designer : designers) {
@@ -107,7 +124,7 @@ public class ManagerApp implements App {
 					p.add(dPanel);
 				}
 				f.setContentPane(p);
-				f.setTitle(self.toString());
+				f.setTitle(manager.toString());
 				f.setVisible(true);
 		        f.pack();
 		        f.setLocationRelativeTo(null);
@@ -139,7 +156,7 @@ public class ManagerApp implements App {
 	 */
 	@Override
 	public Manager getSelf() {
-		return self;
+		return manager;
 	}
 
 	/* (non-Javadoc)
@@ -166,6 +183,6 @@ public class ManagerApp implements App {
 	 */
 	@Override
 	public Manager getManager() {
-		return self;
+		return manager;
 	}
 }

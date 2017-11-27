@@ -35,7 +35,7 @@ public interface App {
 	public Object getSelf();
 	
 	/**
-	 * Inits the.
+	 * Inits the application.
 	 *
 	 * @param federationName the federation name
 	 */

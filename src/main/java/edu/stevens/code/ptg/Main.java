@@ -28,8 +28,8 @@ public class Main {
     	options.addOption(
     			Option.builder("d")
     				.longOpt("designer")
-    				.hasArg()
-    				.argName("index")
+    				.hasArgs()
+    				.argName("index (indices)")
     				.desc("launch a designer interface")
     				.build()
 				);
@@ -63,9 +63,10 @@ public class Main {
 			
 			String federationName = cmd.getOptionValue("f", "code");
 			if(cmd.hasOption("d")) {
-				int id = Integer.parseInt(cmd.getOptionValue("d"));
-				
-				new DesignerApp(id).init(federationName);
+				for(String value : cmd.getOptionValues("d")) {
+					int id = Integer.parseInt(value);
+					new DesignerApp(id).init(federationName);
+				}
 			}
 			if(cmd.hasOption("m")) {
 				/* AMVRO: Added game file "SH01" */

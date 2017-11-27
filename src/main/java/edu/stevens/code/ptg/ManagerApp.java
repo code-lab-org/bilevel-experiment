@@ -28,18 +28,16 @@ public class ManagerApp implements App {
 	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
 	private Manager self = new Manager();
 	private Ambassador ambassador = null;
-	
-	/** AMVRO: Game file */
-	private String game;
-	public String getGame() { return game; }
-	public void setGame(String game_file) { this.game = game_file; }
-	
+	private Session session = null;
+	private Round round = null;
 	
 	/**
 	 * Instantiates a new manager app.
-	 * AMVRO: Added "game_file" (.csv file path) as an argument
+	 *
+	 * @param session the session
 	 */
-	public ManagerApp(String game_file) {
+	public ManagerApp(Session session) {
+		this.session = session;
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			Designer d = new Designer();
 			d.setId(i);

@@ -1,5 +1,9 @@
 package edu.stevens.code.ptg;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -9,6 +13,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
@@ -61,9 +67,15 @@ public class Main {
 				}
 			}
 			if(cmd.hasOption("m")) {
-				/* AMVRO: Added game file "SH01" */
-				new ManagerApp("SH01").init(federationName);
-			} else {
+				Gson gson = new Gson();
+				try {
+					BufferedReader reader = new BufferedReader(new FileReader(cmd.getOptionValue("m")));
+					Session session = gson.fromJson(reader, Session.class);
+					new ManagerApp(session).init(federationName);
+				} catch(FileNotFoundException e) {
+					logger.error(e);
+				}
+				
 			}
 			if(!(cmd.hasOption("d") || cmd.hasOption("m"))) {
 				// print the help menu and quit

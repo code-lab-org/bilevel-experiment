@@ -42,14 +42,6 @@ public class Main {
 	    			.build()
     			);
     	options.addOption(
-    			Option.builder("t")
-	    			.longOpt("test")
-    				.hasArg()
-    				.argName("experiment")
-	    			.desc("launch a test interface with an experiment")
-	    			.build()
-    			);
-    	options.addOption(
     			Option.builder("f")
 	    			.longOpt("federation")
     				.hasArg()
@@ -71,14 +63,9 @@ public class Main {
 			if(cmd.hasOption("m")) {
 				/* AMVRO: Added game file "SH01" */
 				new ManagerApp("SH01").init(federationName);
-			} else if(cmd.hasOption("t")) {
-				 /* AMVRO: Added game file "SH01" */
-				new ManagerApp("SH01").init(federationName);
-				new DesignerApp(0).init(federationName);
-				new DesignerApp(1).init(federationName);
-//				new DesignerApp(2).init(federationName);
-//				new DesignerApp(3).init(federationName);
 			} else {
+			}
+			if(!(cmd.hasOption("d") || cmd.hasOption("m"))) {
 				// print the help menu and quit
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("CoDE", options);

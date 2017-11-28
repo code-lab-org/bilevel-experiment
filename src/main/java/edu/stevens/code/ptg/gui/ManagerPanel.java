@@ -156,7 +156,7 @@ public class ManagerPanel extends JPanel {
 				}
 				app.previousRound();
 				scoreTable.getSelectionModel().setSelectionInterval(
-						app.getRoundNumber(), app.getRoundNumber());
+						app.getRoundIndex(), app.getRoundIndex());
 			}
 		});
 		nextRound.setEnabled(true);
@@ -168,7 +168,7 @@ public class ManagerPanel extends JPanel {
 				}
 				app.nextRound();
 				scoreTable.getSelectionModel().setSelectionInterval(
-						app.getRoundNumber(), app.getRoundNumber());
+						app.getRoundIndex(), app.getRoundIndex());
 			}
 		});
 		advanceTime.setEnabled(true);
@@ -195,7 +195,7 @@ public class ManagerPanel extends JPanel {
 				app.resetTime();
 				app.resetScores();
 				((ScoreTableModel)scoreTable.getModel()).fireTableRowsUpdated(
-						app.getRoundNumber(), app.getRoundNumber());
+						app.getRoundIndex(), app.getRoundIndex());
 				((ScoreTableModel)scoreTable.getModel()).fireTableRowsUpdated(
 						app.getSession().getRounds().length, 
 						app.getSession().getRounds().length);
@@ -211,14 +211,14 @@ public class ManagerPanel extends JPanel {
 			scoreTable.getColumnModel().getColumn(i).setCellRenderer(renderRight);
 		}
 		scoreTable.getSelectionModel().setSelectionInterval(
-				app.getRoundNumber(), app.getRoundNumber());
+				app.getRoundIndex(), app.getRoundIndex());
 		recordScore.setEnabled(true);
 		recordScore.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				app.recordScores();
 				((ScoreTableModel)scoreTable.getModel()).fireTableRowsUpdated(
-						app.getRoundNumber(), app.getRoundNumber());
+						app.getRoundIndex(), app.getRoundIndex());
 				((ScoreTableModel)scoreTable.getModel()).fireTableRowsUpdated(
 						app.getSession().getRounds().length, 
 						app.getSession().getRounds().length);

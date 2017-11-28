@@ -45,7 +45,7 @@ public class ManagerApp implements App {
 	private Manager manager = new Manager();
 	private Ambassador ambassador = null;
 	private Session session = null;
-	private int roundNumber = -1;
+	private int roundIndex = -1;
 	private int[][] scores = new int[Manager.NUM_DESIGNERS][0];
 	
 	/**
@@ -79,12 +79,21 @@ public class ManagerApp implements App {
 	}
 	
 	/**
-	 * Gets the round number.
+	 * Gets the round.
 	 *
-	 * @return the round number
+	 * @return the round
 	 */
-	public int getRoundNumber() {
-		return this.roundNumber;
+	public Round getRound() {
+		return this.session.getRound(this.roundIndex);
+	}
+	
+	/**
+	 * Gets the round index.
+	 *
+	 * @return the round index
+	 */
+	public int getRoundIndex() {
+		return this.roundIndex;
 	}
 	
 	/**
@@ -122,11 +131,11 @@ public class ManagerApp implements App {
 	 */
 	private void setSession(Session session) {
 		this.session = session;
-		this.roundNumber = 0;
+		this.roundIndex = 0;
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			this.scores[i] = new int[session.getRounds().length];
 		}
-		manager.setRound(session.getRound(this.roundNumber));
+		manager.setRound(session.getRound(this.roundIndex));
 	}
 	
 	public void resetTime() {
@@ -135,7 +144,7 @@ public class ManagerApp implements App {
 	
 	public void resetScores() {
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
-			this.scores[i][this.roundNumber] = 0;
+			this.scores[i][this.roundIndex] = 0;
 		}
 	}
 	
@@ -149,11 +158,11 @@ public class ManagerApp implements App {
 	 * Return to the previous round.
 	 */
 	public void previousRound() {
-		this.roundNumber--;
-		if(this.roundNumber >= 0) {
-			manager.setRound(session.getRound(this.roundNumber));
+		this.roundIndex--;
+		if(this.roundIndex >= 0) {
+			manager.setRound(session.getRound(this.roundIndex));
 		} else {
-			this.roundNumber = 0;
+			this.roundIndex = 0;
 		}
 	}
 	
@@ -161,11 +170,11 @@ public class ManagerApp implements App {
 	 * Advances to the next round.
 	 */
 	public void nextRound() {
-		this.roundNumber++;
-		if(this.roundNumber < session.getRounds().length) {
-			manager.setRound(session.getRound(this.roundNumber));
+		this.roundIndex++;
+		if(this.roundIndex < session.getRounds().length) {
+			manager.setRound(session.getRound(this.roundIndex));
 		} else {
-			this.roundNumber = session.getRounds().length - 1;
+			this.roundIndex = session.getRounds().length - 1;
 			manager.setTimeRemaining(-1);
 			manager.setRoundName("Complete");
 		}

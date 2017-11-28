@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -157,7 +158,9 @@ public class DesignerApp implements App {
 				dUI.designSpace.observe(manager, designers);
 				dUI.designUI[0].observe(manager, designers);
 				dUI.designUI[0].observe(manager, designers);
-				
+
+				JPanel dPanels = new JPanel();
+				dPanels.setLayout(new BoxLayout(dPanels, BoxLayout.Y_AXIS));
 				for(Designer designer : designers) {
 					DesignerPanel dPanel = new DesignerPanel();
 					if(!designer.equals(self)) {
@@ -165,7 +168,7 @@ public class DesignerApp implements App {
 					} else {
 						dPanel.bindTo(self);
 					}
-					p.add(dPanel);
+					dPanels.add(dPanel);
 					
 					if(designer.equals(self)) {
 //						dUI.bindTo(self);
@@ -175,6 +178,7 @@ public class DesignerApp implements App {
 					}
 //					dUI.setGame("SH01");
 				}
+				p.add(dPanels);
 				ManagerPanel mPanel = new ManagerPanel();
 				mPanel.observe(getManager());
 				p.add(mPanel);

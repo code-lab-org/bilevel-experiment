@@ -33,15 +33,15 @@ public class ManagerPanel extends JPanel {
 	private JButton nextRound;
 	
 	private static ImageIcon playIcon = new ImageIcon(
-			ManagerPanel.class.getResource("/icons/control_play.png"));
+			ManagerPanel.class.getResource("/icons/silk/control_play.png"));
 	private static ImageIcon pauseIcon = new ImageIcon(
-			ManagerPanel.class.getResource("/icons/control_pause.png"));
+			ManagerPanel.class.getResource("/icons/silk/control_pause.png"));
 	private static ImageIcon resetIcon = new ImageIcon(
-			ManagerPanel.class.getResource("/icons/control_repeat.png"));
+			ManagerPanel.class.getResource("/icons/silk/control_repeat.png"));
 	private static ImageIcon rightArrowIcon = new ImageIcon(
-			ManagerPanel.class.getResource("/icons/arrow_right.png"));
+			ManagerPanel.class.getResource("/icons/silk/arrow_right.png"));
 	private static ImageIcon leftArrowIcon = new ImageIcon(
-			ManagerPanel.class.getResource("/icons/arrow_left.png"));
+			ManagerPanel.class.getResource("/icons/silk/arrow_left.png"));
 	
 	public ManagerPanel() {
 		this.setLayout(new GridBagLayout());

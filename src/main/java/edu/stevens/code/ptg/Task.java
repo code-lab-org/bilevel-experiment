@@ -104,4 +104,20 @@ public class Task extends Observable {
 		}
 		this.notifyObservers(PROPERTY_DESIGNER_IDS);
 	}
+
+	// cached value map
+	private transient ValueMap valueMap = null;
+	
+	/**
+	 * Gets the value map.
+	 *
+	 * @return the value map
+	 */
+	public ValueMap getValueMap() {
+		// simple cache to avoid re-loading value map
+		if(valueMap == null || !valueMap.getName().equals(getName())) {
+			valueMap = new ValueMap(getName());
+		}
+		return valueMap;
+	}
 }

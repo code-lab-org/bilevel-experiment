@@ -11,7 +11,7 @@ public class Task extends Observable {
 	public static final Object PROPERTY_DESIGNER_IDS = new Object();
 	public static final int NUM_DESIGNERS = 2;
 	
-	private String name = "Initializing";
+	private String name = "";
 	private int[] designerIds = new int[Manager.NUM_DESIGNERS];
 	
 	/**
@@ -103,5 +103,21 @@ public class Task extends Observable {
 			}
 		}
 		this.notifyObservers(PROPERTY_DESIGNER_IDS);
+	}
+
+	// cached value map
+	private transient ValueMap valueMap = null;
+	
+	/**
+	 * Gets the value map.
+	 *
+	 * @return the value map
+	 */
+	public ValueMap getValueMap() {
+		// simple cache to avoid re-loading value map
+		if(valueMap == null || !valueMap.getName().equals(getName())) {
+			valueMap = new ValueMap(getName());
+		}
+		return valueMap;
 	}
 }

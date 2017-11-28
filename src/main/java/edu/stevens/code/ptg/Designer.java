@@ -13,8 +13,9 @@ public class Designer extends Observable {
 	public static final Object PROPERTY_SHARE = new Object();
 	
 	public static final int NUM_STRATEGIES = 2;
-	public static final int MIN_DESIGN_VALUE = -1; /* PTG: 0; AMVRO: Reduced to -1 to avoid exception */
-	public static final int MAX_DESIGN_VALUE = 10; /* PTG: 9; AMVRO: Expanded to 10 to avoid exception */
+	public static final int MIN_DESIGN_VALUE = 0;
+	public static final int MAX_DESIGN_VALUE = 9;
+	public static final int NUM_DESIGNS = MAX_DESIGN_VALUE - MIN_DESIGN_VALUE + 1;
 	
 	private int id = -1;
 	private int[] designs = new int[NUM_STRATEGIES];

@@ -12,10 +12,10 @@ public class Manager extends Observable {
 	public static final Object PROPERTY_TIME = new Object();
 	public static final Object PROPERTY_TASKS = new Object();
 	public static final int MAX_TASK_TIME = 300;
-	public static final int NUM_DESIGNERS = 2; /* AMVRO: It should be 4; check Main 77-78 in PTG package */
+	public static final int NUM_DESIGNERS = 4;
 	public static final int NUM_TASKS = 2;
 	
-	private String roundName = "Initializing";
+	private String roundName = "";
 	private int timeRemaining = -1;
 	private final Task[] tasks = new Task[NUM_TASKS];
 	
@@ -32,6 +32,33 @@ public class Manager extends Observable {
 					notifyObservers(PROPERTY_TASKS);
 				}
 			});
+		}
+	}
+	
+	/**
+	 * Sets the round.
+	 *
+	 * @param round the new round
+	 */
+	public void setRound(Round round) {
+		if(round.getTasks().length != NUM_TASKS) {
+			throw new IllegalArgumentException("invalid number of tasks");
+		}
+		for(int i = 0; i < NUM_TASKS; i++) {
+			for(int j = 0; j < round.getTask(i).getDesignerIds().length; j++) {
+				if(round.getTask(i).getDesignerId(j) < 0 
+						|| round.getTask(i).getDesignerId(j) >= NUM_DESIGNERS) {
+					throw new IllegalArgumentException("invalid designer id");
+				}
+			}
+		}
+		synchronized(this) {
+			this.setRoundName(round.getName());
+			this.setTimeRemaining(MAX_TASK_TIME);
+			for(int i = 0; i < NUM_TASKS; i++) {
+				this.getTask(i).setName(round.getTask(i).getName());
+				this.getTask(i).setDesignerIds(round.getTask(i).getDesignerIds());
+			}
 		}
 	}
 	
@@ -105,15 +132,18 @@ public class Manager extends Observable {
 		return Arrays.copyOf(this.tasks, NUM_TASKS);
 	}
 	
+	/**
+	 * Gets the design partner.
+	 *
+	 * @param designerId the designer id
+	 * @return the design partner
+	 */
 	public int getDesignPartner(int designerId) {
 		if(designerId < 0 || designerId >= NUM_DESIGNERS) {
 			throw new IllegalArgumentException("invalid designer id");
 		}
 		for(Task task : tasks) {
 			// hard code only two designers per task
-			if(Task.NUM_DESIGNERS != 2) {
-				throw new RuntimeException("assumption violated!!!!!");
-			}
 			if(task.getDesignerId(0)==designerId) {
 				return task.getDesignerId(1);
 			}

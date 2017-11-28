@@ -1,18 +1,34 @@
 package edu.stevens.code.ptg;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BoxLayout;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
 
 import edu.stevens.code.ptg.gui.DesignerPanel;
 import edu.stevens.code.ptg.gui.ManagerPanel;
@@ -26,24 +42,165 @@ public class ManagerApp implements App {
     private static final Logger logger = LogManager.getLogger(ManagerApp.class);
     
 	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
-	private Manager self = new Manager();
+	private Manager manager = new Manager();
 	private Ambassador ambassador = null;
-	
-	/** AMVRO: Game file */
-	private String game;
-	public String getGame() { return game; }
-	public void setGame(String game_file) { this.game = game_file; }
-	
+	private Session session = null;
+	private int roundIndex = -1;
+	private int[][] scores = new int[Manager.NUM_DESIGNERS][0];
 	
 	/**
 	 * Instantiates a new manager app.
-	 * AMVRO: Added "game_file" (.csv file path) as an argument
 	 */
-	public ManagerApp(String game_file) {
+	public ManagerApp() {
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			Designer d = new Designer();
 			d.setId(i);
 			designers[i] = d;
+		}
+	}
+	
+	/**
+	 * Instantiates a new manager app.
+	 *
+	 * @param session the session
+	 */
+	public ManagerApp(Session session) {
+		this();
+		this.setSession(session);
+	}
+	
+	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
+	public Session getSession() {
+		return this.session;
+	}
+	
+	/**
+	 * Gets the round.
+	 *
+	 * @return the round
+	 */
+	public Round getRound() {
+		return this.session.getRound(this.roundIndex);
+	}
+	
+	/**
+	 * Gets the round index.
+	 *
+	 * @return the round index
+	 */
+	public int getRoundIndex() {
+		return this.roundIndex;
+	}
+	
+	/**
+	 * Gets the score.
+	 *
+	 * @param designerId the designer id
+	 * @param roundNumber the round number
+	 * @return the score
+	 */
+	public int getScore(int designerId, int roundNumber) {
+		if(designerId < 0 || designerId >= Manager.NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		if(roundNumber < 0 || roundNumber >= session.getRounds().length) {
+			throw new IllegalArgumentException("invalid round number");
+		}
+		return this.scores[designerId][roundNumber];
+	}
+	
+	/**
+	 * Gets the total score.
+	 *
+	 * @param designerId the designer id
+	 * @return the total score
+	 */
+	public int getTotalScore(int designerId) {
+		if(designerId < 0 || designerId >= Manager.NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		int score = 0;
+		for(int i = 0; i < session.getRounds().length; i++) {
+			score += this.scores[designerId][i];
+		}
+		return score;
+	}
+	
+	/**
+	 * Sets the session.
+	 *
+	 * @param session the new session
+	 */
+	private void setSession(Session session) {
+		this.session = session;
+		this.roundIndex = 0;
+		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
+			this.scores[i] = new int[session.getRounds().length];
+		}
+		manager.setRound(session.getRound(this.roundIndex));
+	}
+	
+	/**
+	 * Reset time.
+	 */
+	public void resetTime() {
+		manager.setTimeRemaining(Manager.MAX_TASK_TIME);
+	}
+	
+	/**
+	 * Reset scores.
+	 */
+	public void resetScores() {
+		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
+			this.scores[i][this.roundIndex] = 0;
+		}
+	}
+	
+	/**
+	 * Record scores.
+	 */
+	public void recordScores() {
+		for(int i = 0; i < Manager.NUM_TASKS; i++) {
+			int[] designerIds = manager.getTask(i).getDesignerIds();
+			int[] values = manager.getTask(i).getValueMap().getValues(
+					designers[designerIds[0]].getStrategy(), 
+					designers[designerIds[1]].getStrategy(), 
+					designers[designerIds[0]].getDesign(designers[designerIds[0]].getStrategy()), 
+					designers[designerIds[1]].getDesign(designers[designerIds[1]].getStrategy())
+			);
+			for(int j = 0; j < Task.NUM_DESIGNERS; j++) {
+				this.scores[designerIds[j]][this.roundIndex] = values[j];
+			}
+		}
+	}
+	
+	/**
+	 * Return to the previous round.
+	 */
+	public void previousRound() {
+		this.roundIndex--;
+		if(this.roundIndex >= 0) {
+			manager.setRound(session.getRound(this.roundIndex));
+		} else {
+			this.roundIndex = 0;
+		}
+	}
+	
+	/**
+	 * Advances to the next round.
+	 */
+	public void nextRound() {
+		this.roundIndex++;
+		if(this.roundIndex < session.getRounds().length) {
+			manager.setRound(session.getRound(this.roundIndex));
+		} else {
+			this.roundIndex = session.getRounds().length - 1;
+			manager.setTimeRemaining(-1);
+			manager.setRoundName("Complete");
 		}
 	}
 
@@ -66,36 +223,71 @@ public class ManagerApp implements App {
 			logger.error(ex);
 		}
 		
-		self.addObserver(new Observer() {
+		manager.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
 				try {
-					ambassador.updateManager(self);
+					ambassador.updateManager(manager);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
 			}
 		});
+		
+		ManagerApp self = this;
 
         SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				JFrame f = new JFrame();
+				f.setIconImages(ICONS);
+
+				Gson gson = new Gson();
+				JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
+				fileChooser.setDialogTitle("Open Session");
+				fileChooser.setFileFilter(new FileNameExtensionFilter("Session JSON files", "json"));
 				
-				f.setIconImages(DesignerApp.ICONS); /* ADDED BY AMVRO */
+				JMenuBar menuBar = new JMenuBar();
+				JMenu fileMenu = new JMenu("File");
+				fileMenu.setMnemonic(KeyEvent.VK_F);
+				JMenuItem openItem = new JMenuItem("Open");
+				openItem.setMnemonic(KeyEvent.VK_O);
+				openItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+				openItem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(fileChooser.showOpenDialog(f) == JFileChooser.APPROVE_OPTION) {
+							File file = fileChooser.getSelectedFile();
+							try {
+								BufferedReader reader = new BufferedReader(new FileReader(file));
+								Session session = gson.fromJson(reader, Session.class);
+								setSession(session);
+							} catch(FileNotFoundException ex) {
+								logger.error(e);
+							}
+						}
+					}
+				});
+				fileMenu.add(openItem);
+				menuBar.add(fileMenu);
+				f.setJMenuBar(menuBar);
 				
 				JPanel p = new JPanel();
 				p.setLayout(new FlowLayout());
 				ManagerPanel mPanel = new ManagerPanel();
+				mPanel.observe(manager);
 				mPanel.bindTo(self);
 				p.add(mPanel);
+				JPanel dPanels = new JPanel();
+				dPanels.setLayout(new BoxLayout(dPanels, BoxLayout.Y_AXIS));
 				for(Designer designer : designers) {
 					DesignerPanel dPanel = new DesignerPanel();
 					dPanel.observe(designer);
-					p.add(dPanel);
+					dPanels.add(dPanel);
 				}
+				p.add(dPanels);
 				f.setContentPane(p);
-				f.setTitle(self.toString());
+				f.setTitle(manager.toString());
 				f.setVisible(true);
 		        f.pack();
 		        f.setLocationRelativeTo(null);
@@ -127,7 +319,7 @@ public class ManagerApp implements App {
 	 */
 	@Override
 	public Manager getSelf() {
-		return self;
+		return manager;
 	}
 
 	/* (non-Javadoc)
@@ -154,6 +346,6 @@ public class ManagerApp implements App {
 	 */
 	@Override
 	public Manager getManager() {
-		return self;
+		return manager;
 	}
 }

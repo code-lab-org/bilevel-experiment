@@ -1,10 +1,22 @@
 package edu.stevens.code.ptg;
 
+import java.awt.Image;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.swing.ImageIcon;
+
 /**
  * The Interface App.
  */
 public interface App {
-	
+	public final static ArrayList<Image> ICONS = new ArrayList<Image>(Arrays.asList(
+			new ImageIcon(App.class.getResource("/icons/icon__16.png")).getImage(),
+			new ImageIcon(App.class.getResource("/icons/icon__32.png")).getImage(),
+			new ImageIcon(App.class.getResource("/icons/icon__48.png")).getImage(),
+			new ImageIcon(App.class.getResource("/icons/icon__64.png")).getImage(),
+			new ImageIcon(App.class.getResource("/icons/icon_128.png")).getImage(),
+			new ImageIcon(App.class.getResource("/icons/icon_256.png")).getImage()));
 	/**
 	 * Gets the designers.
 	 *
@@ -35,7 +47,7 @@ public interface App {
 	public Object getSelf();
 	
 	/**
-	 * Inits the.
+	 * Inits the application.
 	 *
 	 * @param federationName the federation name
 	 */

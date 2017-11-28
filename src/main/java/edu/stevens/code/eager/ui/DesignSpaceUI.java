@@ -234,7 +234,7 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 		/* Draw Design Space */
 		DSP.drawDesignSpace();
 		
-		screenToXij( getXscreen(), getYscreen() );
+//		screenToXij( getXscreen(), getYscreen() );
 		DSP.drawRulersXi( getXAi(), getXBi() );		
 		DSP.drawRulersXj( getXAj(), getXBj(), areBothSharing() );
 		
@@ -390,16 +390,19 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 				 * respectively; that could be a better practice. IDK!
 				 */
 				
-				setXscreen(me.getX());
-				setYscreen(me.getY());
-				screenToXij( getXscreen(), getYscreen() );
+//				setXscreen(me.getX());
+//				setYscreen(me.getY());
+//				screenToXij( getXscreen(), getYscreen() );
+//				
+//				if (getXAi() != 10 && getXBi() != 10) {
+//					designer.setDesign(0, getXAi());
+//					designer.setDesign(1, getXBi());
+//				}
 				
-				if (getXAi() != 10 && getXBi() != 10) {
-					designer.setDesign(0, getXAi());
-					designer.setDesign(1, getXBi());
-				}
+				setXAi(designer.getDesign(0));
+				setXBi(designer.getDesign(1));
 				
-				/* Here it is where I repaint the contents in the "main_frame". */
+				/* Here it is where I repaint the contents in the panel. */
 				repaint();
 				
 			}

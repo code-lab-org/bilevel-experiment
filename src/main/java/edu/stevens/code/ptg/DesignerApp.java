@@ -167,7 +167,7 @@ public class DesignerApp implements App {
 //				dUI.observe(manager, designers);
 				dUI.designSpace.observe(manager, designers);
 				dUI.designUI[0].observe(manager, designers);
-				dUI.designUI[0].observe(manager, designers);
+				dUI.designUI[1].observe(manager, designers);
 				
 				for(Designer designer : designers) {
 					DesignerPanel dPanel = new DesignerPanel();

@@ -39,9 +39,7 @@ public class DesignUI extends JPanel {
 	
 	/** Current strategy */
 	private int currentStrategy;
-	public int getStrategy() {	return currentStrategy; }
-	public void setStrategy(int strategy) { this.currentStrategy = strategy; }
-	
+	public int getStrategy() {	return currentStrategy; }	
 	
 	/** Variables xScreen and yScreen, setters, and getters */
 	private int xScreen = 1920/2;
@@ -55,35 +53,26 @@ public class DesignUI extends JPanel {
 	/** Variables xSi and xSi, setters, and getters
 	 *  for players i (horizontal axis) and i (vertical axis)
 	 **/
-	private int[] xSi = {10,10};
-	public int getXSi(int strategy) {
-		if (strategy == 0 || strategy == 1) { return xSi[strategy]; }
-		else { return 10; }
-	}
-	public void setXSi(int strategy, int x_Si) {
-		if (strategy == 0 || strategy == 1) { this.xSi[strategy] = x_Si; }
-	}
+	private int xSi = 10;
+	public int getXSi() { return xSi; }
+	public void setXSi(int x_Si) { this.xSi = x_Si; }
 	
-	private int[] xSj = {-1,-1};
-	public int getXSj(int strategy) {
-		if (strategy == 0 || strategy == 1) { return xSj[strategy]; }
-		else { return -1; }
-	}
-	public void setXSj(int strategy, int x_Sj) {
-		if (strategy == 0 || strategy == 1) { this.xSj[strategy] = x_Sj; }
-	}
+	private int xSj = -1;
+	public int getXSj() { return xSj; }
+	public void setXSj(int x_Sj) { this.xSj = x_Sj; }
 	
 	
+	/** Main DesignUI constructor */
 	public DesignUI(int strategy){
 		/* JPanel preferred size */
-		this.setStrategy(strategy);
+		this.currentStrategy = strategy;
 		this.setPreferredSize(new Dimension(1920,1080));
 		this.setBackground(Color.BLACK);
 		this.setLayout(null);
 		
 	}
 	
-	/** MainUI constructor specifying game
+	/** DesignUI constructor specifying game
 	 * (.csv file in "resources" package)
 	 */
 	public DesignUI(String game_file, int strategy) {
@@ -93,13 +82,13 @@ public class DesignUI extends JPanel {
 	
 	
 	/* Transform (X,Y) screen coordinates to (xi,xj) design space coordinates */
-	private void screenToXij(int strategy, int x_screen, int y_screen){
+	private void screenToXij(int x_screen, int y_screen){
 		
 		if (x_screen >= xS0 && x_screen < xS0 + 800 && y_screen <= yS0 && y_screen > yS0 - 800){
-			setXSi( strategy, (int) Math.floor((x_screen - xS0)/80.) );
-			setXSj( strategy, (int) Math.floor((yS0 - y_screen)/80.) );
+			setXSi( (int) Math.floor((x_screen - xS0)/80.) );
+//			setXSj( strategy, (int) Math.floor((yS0 - y_screen)/80.) );
 		
-			int[] arr = { strategy, getXSi(strategy), getXSj(strategy) };		
+			int[] arr = { getStrategy(), getXSi(), getXSj() };		
 			System.out.println( Arrays.toString( arr ) );
 		}
 		
@@ -124,7 +113,7 @@ public class DesignUI extends JPanel {
 				
 		/* Draw Design Space */
 		DP.drawDesign( getStrategy() );
-		DP.drawRulers( getXSi(getStrategy()), getXSj(getStrategy()) );
+		DP.drawRulers( getXSi(), getXSj() );
 		
 //		screenToXij( getXscreen(), getYscreen() );
 //		DP.drawRulersXi( getXSi(), getXSi() );		
@@ -144,8 +133,8 @@ public class DesignUI extends JPanel {
 					if(manager != null && self != null 
 							&& d.getId() == manager.getDesignPartner(self.getId())) {
 						
-						setXSj( 0, d.getAgreedDesign(0) );
-						setXSj( 1, d.getAgreedDesign(1) );
+//						setXSj( d.getAgreedDesign(getStrategy()) );
+						setXSj( d.getDesign(getStrategy()) );
 						
 						repaint();
 					}
@@ -175,13 +164,14 @@ public class DesignUI extends JPanel {
 //				int[] arr = { me.getX(), me.getY() };
 //				System.out.println(Arrays.toString(arr));
 				
-				screenToXij( getStrategy(), getXscreen(), getYscreen() );
+				screenToXij( getXscreen(), getYscreen() );
 				
-				if ( getXSi( getStrategy() ) != 10 ) {
-					designer.setAgreedDesign( getStrategy(), getXSi( getStrategy() ) );
+				if ( getXSi() != 10 ) {
+//					designer.setAgreedDesign( getStrategy(), getXSi() );
+					designer.setDesign( getStrategy(), getXSi() );
 				}
 				
-				/* Here it is where I repaint the contents in the "main_frame". */
+				/* Here it is where I repaint the contents in the panel. */
 				repaint();
 				
 			}

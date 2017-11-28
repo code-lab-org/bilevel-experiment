@@ -46,6 +46,7 @@ public class ManagerApp implements App {
 	private Ambassador ambassador = null;
 	private Session session = null;
 	private int roundNumber = -1;
+	private int[][] scores = new int[Manager.NUM_DESIGNERS][0];
 	
 	/**
 	 * Instantiates a new manager app.
@@ -69,6 +70,52 @@ public class ManagerApp implements App {
 	}
 	
 	/**
+	 * Gets the session.
+	 *
+	 * @return the session
+	 */
+	public Session getSession() {
+		return this.session;
+	}
+	
+	/**
+	 * Gets the round number.
+	 *
+	 * @return the round number
+	 */
+	public int getRoundNumber() {
+		return this.roundNumber;
+	}
+	
+	/**
+	 * Gets the score.
+	 *
+	 * @param designerId the designer id
+	 * @param roundNumber the round number
+	 * @return the score
+	 */
+	public int getScore(int designerId, int roundNumber) {
+		if(designerId < 0 || designerId >= Manager.NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		if(roundNumber < 0 || roundNumber >= session.getRounds().length) {
+			throw new IllegalArgumentException("invalid round number");
+		}
+		return this.scores[designerId][roundNumber];
+	}
+	
+	public int getTotalScore(int designerId) {
+		if(designerId < 0 || designerId >= Manager.NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		int score = 0;
+		for(int i = 0; i < session.getRounds().length; i++) {
+			score += this.scores[designerId][i];
+		}
+		return score;
+	}
+	
+	/**
 	 * Sets the session.
 	 *
 	 * @param session the new session
@@ -76,7 +123,26 @@ public class ManagerApp implements App {
 	private void setSession(Session session) {
 		this.session = session;
 		this.roundNumber = 0;
+		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
+			this.scores[i] = new int[session.getRounds().length];
+		}
 		manager.setRound(session.getRound(this.roundNumber));
+	}
+	
+	public void resetTime() {
+		manager.setTimeRemaining(Manager.MAX_TASK_TIME);
+	}
+	
+	public void resetScores() {
+		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
+			this.scores[i][this.roundNumber] = 0;
+		}
+	}
+	
+	public void recordScores() {
+		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
+			this.scores[i][this.roundNumber] = 10;
+		}
 	}
 	
 	/**
@@ -99,7 +165,7 @@ public class ManagerApp implements App {
 		if(this.roundNumber < session.getRounds().length) {
 			manager.setRound(session.getRound(this.roundNumber));
 		} else {
-			this.roundNumber = session.getRounds().length;
+			this.roundNumber = session.getRounds().length - 1;
 			manager.setTimeRemaining(-1);
 			manager.setRoundName("Complete");
 		}

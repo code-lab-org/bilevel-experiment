@@ -14,9 +14,12 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.Timer;
+import javax.swing.table.AbstractTableModel;
 
 import edu.stevens.code.ptg.Manager;
 import edu.stevens.code.ptg.ManagerApp;
@@ -27,8 +30,10 @@ public class ManagerPanel extends JPanel {
 	private JTextField roundText;
 	private JFormattedTextField timeText;
 	private TaskPanel[] taskPanels = new TaskPanel[Manager.NUM_TASKS];
+	private JTable scoreTable;
 	private JToggleButton advanceTime;
 	private JButton resetTime;
+	private JButton recordScore;
 	private JButton prevRound;
 	private JButton nextRound;
 	
@@ -38,6 +43,8 @@ public class ManagerPanel extends JPanel {
 			ManagerPanel.class.getResource("/icons/silk/control_pause.png"));
 	private static ImageIcon resetIcon = new ImageIcon(
 			ManagerPanel.class.getResource("/icons/silk/control_repeat.png"));
+	private static ImageIcon scoreIcon = new ImageIcon(
+			ManagerPanel.class.getResource("/icons/silk/wand.png"));
 	private static ImageIcon rightArrowIcon = new ImageIcon(
 			ManagerPanel.class.getResource("/icons/silk/arrow_right.png"));
 	private static ImageIcon leftArrowIcon = new ImageIcon(
@@ -75,6 +82,13 @@ public class ManagerPanel extends JPanel {
 			this.add(panel, c);
 			c.gridy++;
 		}
+		c.fill = GridBagConstraints.HORIZONTAL;
+		this.add(new JLabel("Scores"), c);
+		c.gridy++;
+		c.fill = GridBagConstraints.BOTH;
+		scoreTable = new JTable();
+		this.add(new JScrollPane(scoreTable), c);
+		c.gridy++;
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
 		prevRound = new JButton(leftArrowIcon);
@@ -89,6 +103,10 @@ public class ManagerPanel extends JPanel {
 		resetTime.setToolTipText("Reset time");
 		resetTime.setEnabled(false);
 		buttonPanel.add(resetTime);
+		recordScore = new JButton(scoreIcon);
+		recordScore.setToolTipText("Record scores");
+		recordScore.setEnabled(false);
+		buttonPanel.add(recordScore);
 		nextRound = new JButton(rightArrowIcon);
 		nextRound.setToolTipText("Advance to next round");
 		nextRound.setEnabled(false);
@@ -146,10 +164,7 @@ public class ManagerPanel extends JPanel {
 		advanceTime.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(advanceTime.isSelected()) {
-					if(app.getManager().getTimeRemaining() <= 0) {
-						app.getManager().setTimeRemaining(Manager.MAX_TASK_TIME);
-					}
+				if(advanceTime.isSelected() && app.getManager().getTimeRemaining() > 0) {
 					advanceTime.setIcon(pauseIcon);
 					timer.start();
 					prevRound.setEnabled(false);
@@ -166,10 +181,29 @@ public class ManagerPanel extends JPanel {
 		resetTime.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				app.getManager().setTimeRemaining(Manager.MAX_TASK_TIME);
+				app.resetTime();
+				app.resetScores();
+				((ScoreTableModel)scoreTable.getModel()).fireTableRowsUpdated(
+						app.getRoundNumber(), app.getRoundNumber());
+				((ScoreTableModel)scoreTable.getModel()).fireTableRowsUpdated(
+						app.getSession().getRounds().length, 
+						app.getSession().getRounds().length);
 				if(advanceTime.isSelected()) {
 					timer.restart();
 				}
+			}
+		});
+		scoreTable.setModel(new ScoreTableModel(app));
+		recordScore.setEnabled(true);
+		recordScore.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				app.recordScores();
+				((ScoreTableModel)scoreTable.getModel()).fireTableRowsUpdated(
+						app.getRoundNumber(), app.getRoundNumber());
+				((ScoreTableModel)scoreTable.getModel()).fireTableRowsUpdated(
+						app.getSession().getRounds().length, 
+						app.getSession().getRounds().length);
 			}
 		});
 	}
@@ -218,6 +252,51 @@ public class ManagerPanel extends JPanel {
 		});
 		for(int i = 0; i < Manager.NUM_TASKS; i++) {
 			taskPanels[i].bindTo(manager.getTask(i));
+		}
+	}
+	
+	class ScoreTableModel extends AbstractTableModel {
+		private static final long serialVersionUID = 2952712852662467213L;
+		
+		private ManagerApp app;
+		
+		public ScoreTableModel(ManagerApp app) {
+			this.app = app;
+		}
+		
+		@Override
+		public String getColumnName(int columnIndex) {
+			if(columnIndex == 0) {
+				return "";
+			} else {
+				return app.getDesigner(columnIndex-1).toString();
+			}
+		}
+		
+		@Override
+		public int getRowCount() {
+			return app.getSession().getRounds().length+1;
+		}
+
+		@Override
+		public int getColumnCount() {
+			return app.getDesigners().length+1;
+		}
+
+		@Override
+		public Object getValueAt(int rowIndex, int columnIndex) {
+			if(columnIndex == 0) {
+				if(rowIndex < app.getSession().getRounds().length) {
+					return app.getSession().getRound(rowIndex).getName();
+				} else {
+					return "Total";
+				}
+			}
+			if(rowIndex < app.getSession().getRounds().length) {
+				return app.getScore(columnIndex-1, rowIndex);
+			} else {
+				return app.getTotalScore(columnIndex-1);
+			}
 		}
 	}
 }

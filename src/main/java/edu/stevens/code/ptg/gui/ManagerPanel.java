@@ -1,5 +1,6 @@
 package edu.stevens.code.ptg.gui;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,8 +19,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import edu.stevens.code.ptg.Manager;
 import edu.stevens.code.ptg.ManagerApp;
@@ -87,7 +90,11 @@ public class ManagerPanel extends JPanel {
 		c.gridy++;
 		c.fill = GridBagConstraints.BOTH;
 		scoreTable = new JTable();
-		this.add(new JScrollPane(scoreTable), c);
+		scoreTable.setFocusable(false);
+		scoreTable.setEnabled(false);
+		JScrollPane scoreTableScroll = new JScrollPane(scoreTable);
+		scoreTableScroll.setPreferredSize(new Dimension(400,200));
+		this.add(scoreTableScroll, c);
 		c.gridy++;
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
@@ -148,6 +155,8 @@ public class ManagerPanel extends JPanel {
 					advanceTime.doClick();
 				}
 				app.previousRound();
+				scoreTable.getSelectionModel().setSelectionInterval(
+						app.getRoundNumber(), app.getRoundNumber());
 			}
 		});
 		nextRound.setEnabled(true);
@@ -158,6 +167,8 @@ public class ManagerPanel extends JPanel {
 					advanceTime.doClick();
 				}
 				app.nextRound();
+				scoreTable.getSelectionModel().setSelectionInterval(
+						app.getRoundNumber(), app.getRoundNumber());
 			}
 		});
 		advanceTime.setEnabled(true);
@@ -194,6 +205,13 @@ public class ManagerPanel extends JPanel {
 			}
 		});
 		scoreTable.setModel(new ScoreTableModel(app));
+		DefaultTableCellRenderer renderRight = new DefaultTableCellRenderer();
+		renderRight.setHorizontalAlignment(SwingConstants.RIGHT);
+		for(int i = 1; i <= app.getDesigners().length; i++) {
+			scoreTable.getColumnModel().getColumn(i).setCellRenderer(renderRight);
+		}
+		scoreTable.getSelectionModel().setSelectionInterval(
+				app.getRoundNumber(), app.getRoundNumber());
 		recordScore.setEnabled(true);
 		recordScore.addActionListener(new ActionListener() {
 			@Override
@@ -289,13 +307,13 @@ public class ManagerPanel extends JPanel {
 				if(rowIndex < app.getSession().getRounds().length) {
 					return app.getSession().getRound(rowIndex).getName();
 				} else {
-					return "Total";
+					return "<html><b>Total</b></html>";
 				}
 			}
 			if(rowIndex < app.getSession().getRounds().length) {
 				return app.getScore(columnIndex-1, rowIndex);
 			} else {
-				return app.getTotalScore(columnIndex-1);
+				return "<html><b>"+app.getTotalScore(columnIndex-1)+"</b></html>";
 			}
 		}
 	}

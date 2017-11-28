@@ -1,12 +1,13 @@
 package edu.stevens.code.ptg;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -113,16 +114,19 @@ public class ManagerApp implements App {
 				f.setIconImages(DesignerApp.ICONS); /* ADDED BY AMVRO */
 				
 				JPanel p = new JPanel();
-				p.setLayout(new FlowLayout());
+				p.setLayout(new BorderLayout());
 				ManagerPanel mPanel = new ManagerPanel();
 				mPanel.observe(manager);
 				mPanel.bindTo(self);
-				p.add(mPanel);
+				p.add(mPanel, BorderLayout.WEST);
+				JPanel dPanels = new JPanel();
+				dPanels.setLayout(new BoxLayout(dPanels, BoxLayout.Y_AXIS));
 				for(Designer designer : designers) {
 					DesignerPanel dPanel = new DesignerPanel();
 					dPanel.observe(designer);
-					p.add(dPanel);
+					dPanels.add(dPanel);
 				}
+				p.add(dPanels, BorderLayout.EAST);
 				f.setContentPane(p);
 				f.setTitle(manager.toString());
 				f.setVisible(true);

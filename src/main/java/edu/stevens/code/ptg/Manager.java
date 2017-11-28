@@ -15,7 +15,7 @@ public class Manager extends Observable {
 	public static final int NUM_DESIGNERS = 4;
 	public static final int NUM_TASKS = 2;
 	
-	private String roundName = "Initializing";
+	private String roundName = "";
 	private int timeRemaining = -1;
 	private final Task[] tasks = new Task[NUM_TASKS];
 	

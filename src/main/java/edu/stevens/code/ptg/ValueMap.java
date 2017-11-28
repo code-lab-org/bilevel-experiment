@@ -28,9 +28,9 @@ public class ValueMap {
 					for(int k = 0; k < Designer.NUM_DESIGNS; k++) {
 						String[] row = br.readLine().split(",");
 						for(int l = 0; l < Designer.NUM_DESIGNS; l++) {
-							this.values[0][i][j][k][l] = Integer.parseInt(row[l]);
+							this.values[0][i][j][l][k] = Integer.parseInt(row[l]);
 							// assume symmetric value map
-							this.values[1][i][j][k][l] = Integer.parseInt(row[l]);
+							this.values[1][j][i][k][l] = Integer.parseInt(row[l]);
 						}
 					}
 				}

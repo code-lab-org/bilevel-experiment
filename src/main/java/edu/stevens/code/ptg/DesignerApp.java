@@ -1,19 +1,16 @@
 package edu.stevens.code.ptg;
 
-import java.awt.Image;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -39,14 +36,6 @@ public class DesignerApp implements App {
 	private Designer self = null;
 	private Manager manager = new Manager();
 	private Ambassador ambassador = null;
-	
-	public final static ArrayList<Image> ICONS = new ArrayList<Image>(Arrays.asList(
-			new ImageIcon("src/main/java/resources/icon__16.png").getImage(),
-			new ImageIcon("src/main/java/resources/icon__32.png").getImage(),
-			new ImageIcon("src/main/java/resources/icon__48.png").getImage(),
-			new ImageIcon("src/main/java/resources/icon__64.png").getImage(),
-			new ImageIcon("src/main/java/resources/icon_128.png").getImage(),
-			new ImageIcon("src/main/java/resources/icon_256.png").getImage()));
 	
 	/**
 	 * Instantiates a new designer app.

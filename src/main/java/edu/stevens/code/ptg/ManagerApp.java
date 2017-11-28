@@ -141,13 +141,12 @@ public class ManagerApp implements App {
 			@Override
 			public void run() {
 				JFrame f = new JFrame();
+				f.setIconImages(ICONS);
 
 				Gson gson = new Gson();
 				JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
 				fileChooser.setDialogTitle("Open Session");
 				fileChooser.setFileFilter(new FileNameExtensionFilter("Session JSON files", "json"));
-				
-				f.setIconImages(DesignerApp.ICONS); /* ADDED BY AMVRO */
 				
 				JMenuBar menuBar = new JMenuBar();
 				JMenu fileMenu = new JMenu("File");

@@ -113,6 +113,12 @@ public class ManagerApp implements App {
 		return this.scores[designerId][roundNumber];
 	}
 	
+	/**
+	 * Gets the total score.
+	 *
+	 * @param designerId the designer id
+	 * @return the total score
+	 */
 	public int getTotalScore(int designerId) {
 		if(designerId < 0 || designerId >= Manager.NUM_DESIGNERS) {
 			throw new IllegalArgumentException("invalid designer id");
@@ -138,19 +144,37 @@ public class ManagerApp implements App {
 		manager.setRound(session.getRound(this.roundIndex));
 	}
 	
+	/**
+	 * Reset time.
+	 */
 	public void resetTime() {
 		manager.setTimeRemaining(Manager.MAX_TASK_TIME);
 	}
 	
+	/**
+	 * Reset scores.
+	 */
 	public void resetScores() {
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			this.scores[i][this.roundIndex] = 0;
 		}
 	}
 	
+	/**
+	 * Record scores.
+	 */
 	public void recordScores() {
-		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
-			this.scores[i][this.roundNumber] = 10;
+		for(int i = 0; i < Manager.NUM_TASKS; i++) {
+			int[] designerIds = manager.getTask(i).getDesignerIds();
+			int[] values = manager.getTask(i).getValueMap().getValues(
+					designers[designerIds[0]].getStrategy(), 
+					designers[designerIds[1]].getStrategy(), 
+					designers[designerIds[0]].getDesign(designers[designerIds[0]].getStrategy()), 
+					designers[designerIds[1]].getDesign(designers[designerIds[1]].getStrategy())
+			);
+			for(int j = 0; j < Task.NUM_DESIGNERS; j++) {
+				this.scores[designerIds[j]][this.roundIndex] = values[j];
+			}
 		}
 	}
 	

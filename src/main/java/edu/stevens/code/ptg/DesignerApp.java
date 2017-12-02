@@ -24,7 +24,7 @@ import edu.stevens.code.eager.designer.DesignerUI;
 import edu.stevens.code.eager.ui.DesignSpaceUI;
 import edu.stevens.code.ptg.gui.DesignerPanel;
 import edu.stevens.code.ptg.gui.DesignerPanelImpl;
-import edu.stevens.code.ptg.gui.ManagerPanel;
+import edu.stevens.code.ptg.gui.ManagerPanelImpl;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
@@ -180,7 +180,7 @@ public class DesignerApp implements App {
 //					dUI.setGame("SH01");
 				}
 				p.add(dPanels);
-				ManagerPanel mPanel = new ManagerPanel();
+				ManagerPanelImpl mPanel = new ManagerPanelImpl();
 				mPanel.observe(getManager());
 				p.add(mPanel);
 				f.setContentPane(p);

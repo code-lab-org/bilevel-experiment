@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import edu.stevens.code.ptg.gui.DesignerPanel;
 import edu.stevens.code.ptg.gui.DesignerPanelImpl;
 import edu.stevens.code.ptg.gui.ManagerPanel;
+import edu.stevens.code.ptg.gui.ManagerPanelImpl;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
@@ -275,7 +276,7 @@ public class ManagerApp implements App {
 				
 				JPanel p = new JPanel();
 				p.setLayout(new FlowLayout());
-				ManagerPanel mPanel = new ManagerPanel();
+				ManagerPanel mPanel = new ManagerPanelImpl();
 				mPanel.observe(manager);
 				mPanel.bindTo(self);
 				p.add(mPanel);

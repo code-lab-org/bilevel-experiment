@@ -16,6 +16,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import edu.stevens.code.ptg.Designer;
+import edu.stevens.code.ptg.DesignerApp;
 
 public class DesignerPanelImpl extends DesignerPanel {
 	private static final long serialVersionUID = 2488259187981650893L;
@@ -105,4 +106,7 @@ public class DesignerPanelImpl extends DesignerPanel {
 			}
 		});
 	}
+
+	@Override
+	public void bindTo(DesignerApp app) { }
 }

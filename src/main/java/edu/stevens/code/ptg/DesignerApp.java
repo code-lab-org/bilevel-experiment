@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import edu.stevens.code.eager.designer.DesignerUI;
 import edu.stevens.code.eager.ui.DesignSpaceUI;
 import edu.stevens.code.ptg.gui.DesignerPanel;
+import edu.stevens.code.ptg.gui.DesignerPanelImpl;
 import edu.stevens.code.ptg.gui.ManagerPanel;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
@@ -162,7 +163,7 @@ public class DesignerApp implements App {
 				JPanel dPanels = new JPanel();
 				dPanels.setLayout(new BoxLayout(dPanels, BoxLayout.Y_AXIS));
 				for(Designer designer : designers) {
-					DesignerPanel dPanel = new DesignerPanel();
+					DesignerPanel dPanel = new DesignerPanelImpl();
 					if(!designer.equals(self)) {
 						dPanel.observe(designer);
 					} else {

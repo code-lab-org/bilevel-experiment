@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 
 import edu.stevens.code.ptg.gui.DesignerPanel;
+import edu.stevens.code.ptg.gui.DesignerPanelImpl;
 import edu.stevens.code.ptg.gui.ManagerPanel;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
@@ -281,7 +282,7 @@ public class ManagerApp implements App {
 				JPanel dPanels = new JPanel();
 				dPanels.setLayout(new BoxLayout(dPanels, BoxLayout.Y_AXIS));
 				for(Designer designer : designers) {
-					DesignerPanel dPanel = new DesignerPanel();
+					DesignerPanel dPanel = new DesignerPanelImpl();
 					dPanel.observe(designer);
 					dPanels.add(dPanel);
 				}

@@ -19,9 +19,9 @@ import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
 
 /**
- * The Class DesignerPanelImpl.
+ * The Class DebugDesignerPanel.
  */
-public class DesignerPanelImpl extends DesignerPanel {
+public class DebugDesignerPanel extends DesignerPanel {
 	private static final long serialVersionUID = 2488259187981650893L;
 	
 	private JRadioButton[] strategyRadios = new JRadioButton[Designer.NUM_STRATEGIES];
@@ -29,9 +29,9 @@ public class DesignerPanelImpl extends DesignerPanel {
 	private JToggleButton shareButton;
 	
 	/**
-	 * Instantiates a new designer panel impl.
+	 * Instantiates a new debug designer panel.
 	 */
-	public DesignerPanelImpl() {
+	public DebugDesignerPanel() {
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();

@@ -9,17 +9,17 @@ import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
 
 /**
- * The Class DesignerAppPanelImpl.
+ * The Class DebugDesignerAppPanel.
  */
-public class DesignerAppPanelImpl extends DesignerAppPanel {
+public class DebugDesignerAppPanel extends DesignerAppPanel {
 	private static final long serialVersionUID = -3878809057023355653L;
 	private JPanel dPanels;
 	private ManagerPanel mPanel;
 	
 	/**
-	 * Instantiates a new designer app panel impl.
+	 * Instantiates a new debug designer app panel.
 	 */
-	public DesignerAppPanelImpl() {
+	public DebugDesignerAppPanel() {
 		setLayout(new FlowLayout());
 		dPanels = new JPanel();
 		dPanels.setLayout(new BoxLayout(dPanels, BoxLayout.Y_AXIS));
@@ -34,7 +34,7 @@ public class DesignerAppPanelImpl extends DesignerAppPanel {
 	@Override
 	public void bindTo(DesignerApp app) {
 		for(Designer designer : app.getDesigners()) {
-			DesignerPanel dPanel = new DesignerPanelImpl();
+			DesignerPanel dPanel = new DebugDesignerPanel();
 			if(!designer.equals(app.getController())) {
 				dPanel.observe(designer);
 			} else {

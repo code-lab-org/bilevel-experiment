@@ -22,7 +22,6 @@ import javax.swing.event.ChangeListener;
 
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
-import edu.stevens.code.ptg.Manager;
 import edu.stevens.code.ptg.Task;
 
 /**

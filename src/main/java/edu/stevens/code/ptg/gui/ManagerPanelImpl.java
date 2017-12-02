@@ -27,6 +27,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import edu.stevens.code.ptg.Manager;
 import edu.stevens.code.ptg.ManagerApp;
 
+/**
+ * The Class ManagerPanelImpl.
+ */
 public class ManagerPanelImpl extends ManagerPanel {
 	private static final long serialVersionUID = -4935834958965987709L;
 	
@@ -53,6 +56,9 @@ public class ManagerPanelImpl extends ManagerPanel {
 	private static ImageIcon leftArrowIcon = new ImageIcon(
 			ManagerPanelImpl.class.getResource("/icons/silk/arrow_left.png"));
 	
+	/**
+	 * Instantiates a new manager panel impl.
+	 */
 	public ManagerPanelImpl() {
 		this.setLayout(new GridBagLayout());
 		
@@ -121,6 +127,9 @@ public class ManagerPanelImpl extends ManagerPanel {
 		this.add(buttonPanel, c);
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.gui.ManagerPanel#observe(edu.stevens.code.ptg.Manager)
+	 */
 	@Override
 	public void observe(Manager manager) {
 		this.setBorder(BorderFactory.createTitledBorder(manager.toString()));
@@ -138,6 +147,9 @@ public class ManagerPanelImpl extends ManagerPanel {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.gui.ManagerPanel#bindTo(edu.stevens.code.ptg.ManagerApp)
+	 */
 	@Override
 	public void bindTo(ManagerApp app) {
 		Timer timer = new Timer(1000, new ActionListener(){
@@ -228,6 +240,9 @@ public class ManagerPanelImpl extends ManagerPanel {
 		});
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.gui.ManagerPanel#bindTo(edu.stevens.code.ptg.Manager)
+	 */
 	@Override
 	public void bindTo(Manager manager) {
 		this.setBorder(BorderFactory.createTitledBorder(manager.toString()));
@@ -276,15 +291,26 @@ public class ManagerPanelImpl extends ManagerPanel {
 		}
 	}
 	
+	/**
+	 * The Class ScoreTableModel.
+	 */
 	class ScoreTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 2952712852662467213L;
 		
 		private ManagerApp app;
 		
+		/**
+		 * Instantiates a new score table model.
+		 *
+		 * @param app the app
+		 */
 		public ScoreTableModel(ManagerApp app) {
 			this.app = app;
 		}
 		
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
+		 */
 		@Override
 		public String getColumnName(int columnIndex) {
 			if(columnIndex == 0) {
@@ -294,16 +320,25 @@ public class ManagerPanelImpl extends ManagerPanel {
 			}
 		}
 		
+		/* (non-Javadoc)
+		 * @see javax.swing.table.TableModel#getRowCount()
+		 */
 		@Override
 		public int getRowCount() {
 			return app.getSession().getRounds().length+1;
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.swing.table.TableModel#getColumnCount()
+		 */
 		@Override
 		public int getColumnCount() {
 			return app.getDesigners().length+1;
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.swing.table.TableModel#getValueAt(int, int)
+		 */
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			if(columnIndex == 0) {

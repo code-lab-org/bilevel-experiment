@@ -4,6 +4,9 @@ import javax.swing.JPanel;
 
 import edu.stevens.code.ptg.DesignerApp;
 
+/**
+ * The Class DesignerAppPanel.
+ */
 public abstract class DesignerAppPanel extends JPanel {
 	private static final long serialVersionUID = -6514239839168558527L;
 

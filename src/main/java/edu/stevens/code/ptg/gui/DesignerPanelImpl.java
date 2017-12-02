@@ -18,6 +18,9 @@ import javax.swing.event.ChangeListener;
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
 
+/**
+ * The Class DesignerPanelImpl.
+ */
 public class DesignerPanelImpl extends DesignerPanel {
 	private static final long serialVersionUID = 2488259187981650893L;
 	
@@ -25,6 +28,9 @@ public class DesignerPanelImpl extends DesignerPanel {
 	private JSlider[] designSliders = new JSlider[Designer.NUM_STRATEGIES];
 	private JToggleButton shareButton;
 	
+	/**
+	 * Instantiates a new designer panel impl.
+	 */
 	public DesignerPanelImpl() {
 		this.setLayout(new GridBagLayout());
 		
@@ -55,6 +61,9 @@ public class DesignerPanelImpl extends DesignerPanel {
 		this.add(shareButton, c);
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.gui.DesignerPanel#observe(edu.stevens.code.ptg.Designer)
+	 */
 	@Override
 	public void observe(Designer designer) {
 		this.setBorder(BorderFactory.createTitledBorder(designer.toString()));
@@ -75,6 +84,9 @@ public class DesignerPanelImpl extends DesignerPanel {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.gui.DesignerPanel#bindTo(edu.stevens.code.ptg.Designer)
+	 */
 	@Override
 	public void bindTo(Designer designer) {
 		this.setBorder(BorderFactory.createTitledBorder(designer.toString()));
@@ -107,6 +119,9 @@ public class DesignerPanelImpl extends DesignerPanel {
 		});
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.stevens.code.ptg.gui.DesignerPanel#bindTo(edu.stevens.code.ptg.DesignerApp)
+	 */
 	@Override
 	public void bindTo(DesignerApp app) { }
 }

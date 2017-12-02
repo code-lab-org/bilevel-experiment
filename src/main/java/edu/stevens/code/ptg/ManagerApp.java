@@ -256,7 +256,7 @@ public class ManagerApp implements App {
 	 * @see edu.stevens.code.ptg.App#getSelf()
 	 */
 	@Override
-	public Manager getSelf() {
+	public Manager getController() {
 		return manager;
 	}
 

@@ -1,7 +1,5 @@
 package edu.stevens.code.ptg;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -11,13 +9,11 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
-import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.stevens.code.eager.designer.DesignerUI;
 import edu.stevens.code.eager.ui.DesignSpaceUI;
 import edu.stevens.code.ptg.gui.DesignerAppPanel;
 import edu.stevens.code.ptg.hla.Ambassador;
@@ -89,12 +85,11 @@ public class DesignerApp implements App {
 				/** AMVRO: Test to create a DesignerUI panel
 				 * from PTG's DesignerApp class. 
 				 * 
-				 */
 				JFrame fUI = new JFrame("Designer " + String.valueOf(designer.getId()));
 //				JTabbedPane tUI = new JTabbedPane();
 				DesignerUI dUI = new DesignerUI("SH01");
 				
-				/* AMVRO: Creating the dUI object. */
+				// AMVRO: Creating the dUI object.
 //				DesignSpaceUI dUI = new DesignSpaceUI();
 				
 //				tUI.add("Design Space",dUI);
@@ -109,18 +104,18 @@ public class DesignerApp implements App {
 //				fUI.setContentPane(dUI);
 				
 				
-				/* Because there is no title bar (see previous comment),
-				 * the interface needs to be closed using Alt+F4.
-				 */
+				// Because there is no title bar (see previous comment),
+				// the interface needs to be closed using Alt+F4.
+				
 				fUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				
-				/* Set Icon */
+				// Set Icon
 //				DesignerUI.loadIcons(fUI);
 				
-				/* Initialize JFrame in maximized mode: */
+				// Initialize JFrame in maximized mode:
 				fUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				
-				/* This is the JFrame is packed */
+				// This is the JFrame is packed
 				fUI.pack();
 				fUI.setLocationRelativeTo(null);
 				fUI.setVisible(true);
@@ -162,7 +157,8 @@ public class DesignerApp implements App {
                     }
 //                    dUI.setGame("SH01");
                 }
-
+                */
+				
 				JFrame f = new JFrame();
 				f.setContentPane(new DesignerAppPanel(self));
 				f.setTitle(designer.toString());

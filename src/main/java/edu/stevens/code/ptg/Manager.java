@@ -175,6 +175,15 @@ public class Manager extends Observable {
 	}
 	
 	/**
+	 * Checks if is design enabled.
+	 *
+	 * @return true, if is design enabled
+	 */
+	public boolean isDesignEnabled() {
+		return getTimeRemaining() > 0 && getTimeRemaining() < Manager.MAX_TASK_TIME;
+	}
+	
+	/**
 	 * Sets the task.
 	 *
 	 * @param index the index

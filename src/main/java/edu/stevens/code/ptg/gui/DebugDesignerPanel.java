@@ -188,11 +188,11 @@ public class DebugDesignerPanel extends DesignerPanel {
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				setEnabled(app.getManager());
+				setEnabled(app.getManager().isDesignEnabled());
 			}
 		});
 		// update the interface based on the current manager state
-		setEnabled(app.getManager());
+		setEnabled(app.getManager().isDesignEnabled());
 	}
 	
 	private void updateScores(DesignerApp app, Designer designer) {
@@ -228,21 +228,6 @@ public class DebugDesignerPanel extends DesignerPanel {
 					}
 				}
 			}
-		}
-	}
-	
-	/**
-	 * Enables this panel based on the manager state.
-	 *
-	 * @param manager the manager
-	 */
-	private void setEnabled(Manager manager) {
-		// disable if timer not started or time expired
-		if(manager.getTimeRemaining() == Manager.MAX_TASK_TIME 
-				|| manager.getTimeRemaining() <= 0) {
-			setEnabled(false);
-		} else {
-			setEnabled(true);
 		}
 	}
 }

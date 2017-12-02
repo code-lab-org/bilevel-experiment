@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.stevens.code.ptg.gui.ManagerAppMenuBar;
 import edu.stevens.code.ptg.gui.ManagerAppPanel;
+import edu.stevens.code.ptg.gui.ManagerAppPanelImpl;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
@@ -224,7 +225,9 @@ public class ManagerApp implements App {
 				JFrame f = new JFrame();
 				f.setIconImages(ICONS);
 				f.setJMenuBar(new ManagerAppMenuBar(self));
-				f.setContentPane(new ManagerAppPanel(self));
+				ManagerAppPanel panel = new ManagerAppPanelImpl();
+				panel.bindTo(self);
+				f.setContentPane(panel);
 				f.setTitle(manager.toString());
 				f.setVisible(true);
 		        f.pack();

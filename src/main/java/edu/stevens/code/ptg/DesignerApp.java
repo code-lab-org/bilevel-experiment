@@ -253,4 +253,14 @@ public class DesignerApp implements App {
 	public Manager getManager() {
 		return manager;
 	}
+	
+	/**
+	 * Gets the design partner.
+	 *
+	 * @return the design partner
+	 */
+	public Designer getDesignPartner() {
+		int partnerId = getManager().getDesignPartner(getController().getId());
+		return getDesigner(partnerId);
+	}
 }

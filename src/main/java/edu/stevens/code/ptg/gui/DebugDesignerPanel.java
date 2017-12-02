@@ -1,7 +1,10 @@
 package edu.stevens.code.ptg.gui;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -9,6 +12,8 @@ import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
@@ -18,6 +23,7 @@ import javax.swing.event.ChangeListener;
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
 import edu.stevens.code.ptg.Manager;
+import edu.stevens.code.ptg.Task;
 
 /**
  * The Class DebugDesignerPanel.
@@ -27,7 +33,10 @@ public class DebugDesignerPanel extends DesignerPanel {
 	
 	private JRadioButton[] strategyRadios = new JRadioButton[Designer.NUM_STRATEGIES];
 	private JSlider[] designSliders = new JSlider[Designer.NUM_STRATEGIES];
+	private JLabel[][] scoreLabels = new JLabel[Designer.NUM_STRATEGIES][Designer.NUM_STRATEGIES];
 	private JToggleButton shareButton;
+	
+	private int[] partnerDesigns = new int[Designer.NUM_STRATEGIES];
 	
 	/**
 	 * Instantiates a new debug designer panel.
@@ -53,6 +62,20 @@ public class DebugDesignerPanel extends DesignerPanel {
 			slider.setMaximum(Designer.MAX_DESIGN_VALUE);
 			designSliders[i] = slider;
 			this.add(slider, c);
+			c.gridx++;
+			JPanel scorePanel = new JPanel();
+			scorePanel.setPreferredSize(new Dimension(50,25));
+			scorePanel.setLayout(new GridLayout(1,Designer.NUM_STRATEGIES, 5, 5));
+			for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
+				scoreLabels[i][j] = new JLabel();
+				if(i == j) {
+					scoreLabels[i][j].setFont(getFont().deriveFont(Font.BOLD));
+				} else {
+					scoreLabels[i][j].setFont(getFont().deriveFont(Font.PLAIN));
+				}
+				scorePanel.add(scoreLabels[i][j]);
+			}
+			this.add(scorePanel, c);
 			c.fill = GridBagConstraints.NONE;
 			c.gridy++;
 			c.gridx = 0;
@@ -89,11 +112,13 @@ public class DebugDesignerPanel extends DesignerPanel {
 		designer.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-					strategyRadios[i].setSelected(designer.getStrategy()==i);
-					designSliders[i].setValue(designer.getDesign(i));
+				if(designer.isReadyToShare()) {
+					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+						strategyRadios[i].setSelected(designer.getStrategy()==i);
+						designSliders[i].setValue(designer.getDesign(i));
+					}
+					shareButton.setSelected(designer.isReadyToShare());
 				}
-				shareButton.setSelected(designer.isReadyToShare());
 			}
 		});
 	}
@@ -136,8 +161,19 @@ public class DebugDesignerPanel extends DesignerPanel {
 	 */
 	@Override
 	public void bindTo(DesignerApp app) {
-		// bind to the app designer
-		bindTo(app.getController());
+		for(Designer designer : app.getDesigners()) {
+			// update the scores whenever a designer is updated
+			designer.addObserver(new Observer() {
+				@Override
+				public void update(Observable o, Object arg) {
+					updateScores(app, designer);
+				}
+			});
+			if(designer == app.getController()) {
+				// bind to the app designer
+				bindTo(app.getController());
+			}
+		}
 		// observe the app manager to lock/unlock the interface
 		app.getManager().addObserver(new Observer() {
 			@Override
@@ -147,6 +183,42 @@ public class DebugDesignerPanel extends DesignerPanel {
 		});
 		// update the interface based on the current manager state
 		setEnabled(app.getManager());
+	}
+	
+	private void updateScores(DesignerApp app, Designer designer) {
+		Designer controller = app.getController();
+		Designer partner = app.getDesignPartner();
+		
+		// update partner designs if ready to share
+		if(designer == partner && designer.isReadyToShare()) {
+			partnerDesigns = designer.getDesigns();
+		}
+		
+		// update if the designer is either controller or partner
+		if(designer == controller || designer == partner) {
+			Task task = app.getManager().getTaskByDesignerId(controller.getId());
+			for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+				for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
+					if(task.getDesignerId(0) == controller.getId()) {
+						scoreLabels[i][j].setText(new Integer(
+								task.getValueMap().getValues(
+										i, 
+										j, 
+										controller.getDesign(i), 
+										partnerDesigns[j]
+								)[0]).toString());
+					} else {
+						scoreLabels[i][j].setText(new Integer(
+								task.getValueMap().getValues(
+										j, 
+										i, 
+										partnerDesigns[j], 
+										controller.getDesign(i)
+								)[1]).toString());
+					}
+				}
+			}
+		}
 	}
 	
 	/**

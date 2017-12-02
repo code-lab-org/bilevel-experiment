@@ -36,6 +36,7 @@ public class DebugDesignerPanel extends DesignerPanel {
 	private JLabel[][] scoreLabels = new JLabel[Designer.NUM_STRATEGIES][Designer.NUM_STRATEGIES];
 	private JToggleButton shareButton;
 	
+	private boolean alwaysShare = false;
 	private int[] partnerDesigns = new int[Designer.NUM_STRATEGIES];
 	
 	/**
@@ -85,6 +86,15 @@ public class DebugDesignerPanel extends DesignerPanel {
 		this.add(shareButton, c);
 	}
 	
+	/**
+	 * Sets the always share.
+	 *
+	 * @param alwaysShare the new always share
+	 */
+	public void setAlwaysShare(boolean alwaysShare) {
+		this.alwaysShare = alwaysShare;
+	}
+	
 	/* (non-Javadoc)
 	 * @see javax.swing.JComponent#setEnabled(boolean)
 	 */
@@ -112,13 +122,13 @@ public class DebugDesignerPanel extends DesignerPanel {
 		designer.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				if(designer.isReadyToShare()) {
+				if(alwaysShare || designer.isReadyToShare()) {
 					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 						strategyRadios[i].setSelected(designer.getStrategy()==i);
 						designSliders[i].setValue(designer.getDesign(i));
 					}
-					shareButton.setSelected(designer.isReadyToShare());
 				}
+				shareButton.setSelected(designer.isReadyToShare());
 			}
 		});
 	}
@@ -190,7 +200,7 @@ public class DebugDesignerPanel extends DesignerPanel {
 		Designer partner = app.getDesignPartner();
 		
 		// update partner designs if ready to share
-		if(designer == partner && designer.isReadyToShare()) {
+		if(alwaysShare || (designer == partner && designer.isReadyToShare())) {
 			partnerDesigns = designer.getDesigns();
 		}
 		

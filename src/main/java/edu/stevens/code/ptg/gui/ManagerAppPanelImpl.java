@@ -36,7 +36,8 @@ public class ManagerAppPanelImpl extends ManagerAppPanel {
 		mPanel.observe(app.getManager());
 		mPanel.bindTo(app);
 		for(Designer designer : app.getDesigners()) {
-			DesignerPanel dPanel = new DebugDesignerPanel();
+			DebugDesignerPanel dPanel = new DebugDesignerPanel();
+			dPanel.setAlwaysShare(true);
 			dPanel.observe(designer);
 			dPanels.add(dPanel);
 		}

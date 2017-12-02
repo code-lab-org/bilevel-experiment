@@ -1,6 +1,7 @@
 package edu.stevens.code.ptg.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,6 +18,7 @@ public class DesignerUI extends DesignerAppPanel {
 
 	private JLabel timeLabel;
 	private DesignUI[] designUIs = new DesignUI[Designer.NUM_STRATEGIES];
+	private StrategyUI strategyUI;
 	
 	public DesignerUI() {
 		this.setLayout(new BorderLayout());
@@ -30,8 +32,8 @@ public class DesignerUI extends DesignerAppPanel {
 			designUIs[i] = new DesignUI(i);
 			tabbedPane.addTab("Design " + i, designUIs[i]);
 		}
-		JPanel strategyPanel = new JPanel();
-		tabbedPane.addTab("Final", strategyPanel);
+		strategyUI = new StrategyUI();
+		tabbedPane.addTab("Final", strategyUI);
 		
 		this.add(tabbedPane, BorderLayout.CENTER);
 	}
@@ -42,10 +44,19 @@ public class DesignerUI extends DesignerAppPanel {
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			designUIs[i].bindTo(app);
 		}
+		strategyUI.bindTo(app);
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				timeLabel.setText(new Integer(app.getManager().getTimeRemaining()).toString());
+				int time = app.getManager().getTimeRemaining();
+				timeLabel.setText(new Integer(time).toString());
+				if((time % 60 == 0)
+						|| (time <= 60 && time % 15 == 0) 
+						|| (time <= 10) ) {
+					timeLabel.setForeground(Color.RED);
+				} else {
+					timeLabel.setForeground(Color.BLACK);
+				}
 			}
 		});
 	}

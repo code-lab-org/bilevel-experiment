@@ -1,6 +1,9 @@
 package edu.stevens.code.ptg.gui;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -17,26 +20,64 @@ public class DesignUI extends JPanel {
 	private static final long serialVersionUID = -4318471579781451005L;
 	
 	private int strategy;
-	private JLabel value;
+	private JLabel valueLabel;
 	private ValueSpacePanel valuePanel;
 	private JSlider mySlider;
 	private JSlider partnerSlider;
 	
 	public DesignUI(int strategy) {
 		this.strategy = strategy;
+		if(strategy == 0) {
+			this.setBackground(Color.decode("#ffcccc"));
+		} else {
+			this.setBackground(Color.decode("#ccccff"));
+		}
 		
-		this.setLayout(new BorderLayout());
-		value = new JLabel("0", JLabel.CENTER);
-		this.add(value, BorderLayout.NORTH);
-		valuePanel = new ValueSpacePanel();
-		this.add(valuePanel, BorderLayout.CENTER);
+		this.setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.ipadx = 5;
+		c.ipady = 5;
+		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridwidth = 2;
+		JPanel scorePanel = new JPanel(new FlowLayout());
+		scorePanel.add(new JLabel("Value:"));
+		valueLabel = new JLabel("0", JLabel.CENTER);
+		scorePanel.add(valueLabel);
+		scorePanel.setOpaque(false);
+		this.add(scorePanel, c);
+		
+		c.gridx = 0;
+		c.gridy++;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.VERTICAL;
 		partnerSlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE);
 		partnerSlider.setOrientation(JSlider.VERTICAL);
 		partnerSlider.setEnabled(false);
-		this.add(partnerSlider, BorderLayout.WEST);
+		partnerSlider.setOpaque(false);
+		this.add(partnerSlider, c);
+		
+		c.gridx++;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.BOTH;
+		valuePanel = new ValueSpacePanel();
+		valuePanel.setOpaque(false);
+		this.add(valuePanel, c);
+		
+		c.gridy++;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		mySlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE);
 		mySlider.setEnabled(false);
-		this.add(mySlider, BorderLayout.SOUTH);
+		mySlider.setOpaque(false);
+		this.add(mySlider, c);
 	}
 	
 	@Override
@@ -62,7 +103,7 @@ public class DesignUI extends JPanel {
 					if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
 						partnerSlider.setValue(designer.getDesign(strategy));
 					}
-					value.setText(new Integer(app.getValue(
+					valueLabel.setText(new Integer(app.getValue(
 						strategy, app.getController().getDesign(strategy), 
 						strategy, partnerSlider.getValue()
 					)).toString());

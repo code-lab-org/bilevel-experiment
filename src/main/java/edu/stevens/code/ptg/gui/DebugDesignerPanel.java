@@ -22,7 +22,6 @@ import javax.swing.event.ChangeListener;
 
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
-import edu.stevens.code.ptg.Task;
 
 /**
  * The Class DebugDesignerPanel.
@@ -205,26 +204,11 @@ public class DebugDesignerPanel extends DesignerPanel {
 		
 		// update if the designer is either controller or partner
 		if(designer == controller || designer == partner) {
-			Task task = app.getManager().getTaskByDesignerId(controller.getId());
 			for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 				for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
-					if(task.getDesignerId(0) == controller.getId()) {
-						scoreLabels[i][j].setText(new Integer(
-								task.getValueMap().getValues(
-										i, 
-										j, 
-										controller.getDesign(i), 
-										partnerDesigns[j]
-								)[0]).toString());
-					} else {
-						scoreLabels[i][j].setText(new Integer(
-								task.getValueMap().getValues(
-										j, 
-										i, 
-										partnerDesigns[j], 
-										controller.getDesign(i)
-								)[1]).toString());
-					}
+					scoreLabels[i][j].setText(new Integer(app.getValue(
+							i, controller.getDesign(i), 
+							j, partnerDesigns[j])).toString());
 				}
 			}
 		}

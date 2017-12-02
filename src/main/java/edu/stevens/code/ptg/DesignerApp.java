@@ -263,4 +263,20 @@ public class DesignerApp implements App {
 		int partnerId = getManager().getDesignPartner(getController().getId());
 		return getDesigner(partnerId);
 	}
+	
+	/**
+	 * Gets the value.
+	 *
+	 * @param myStrategy the my strategy
+	 * @param myDesign the my design
+	 * @param partnerStrategy the partner strategy
+	 * @param partnerDesign the partner design
+	 * @return the value
+	 */
+	public int getValue(int myStrategy, int myDesign, int partnerStrategy, int partnerDesign) {
+		int partnerId = getManager().getDesignPartner(designer.getId());
+		return getManager().getTaskByDesignerId(designer.getId()).getValue(
+				designer.getId(), myStrategy, myDesign, 
+				partnerId, partnerStrategy, partnerDesign);
+	}
 }

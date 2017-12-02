@@ -120,4 +120,37 @@ public class Task extends Observable {
 		}
 		return valueMap;
 	}
+	
+	/**
+	 * Gets the value.
+	 *
+	 * @param id0 the designer id 0
+	 * @param strategy0 the strategy0
+	 * @param design0 the design0
+	 * @param id1 the designer id 1
+	 * @param strategy1 the strategy1
+	 * @param design1 the design1
+	 * @return the value
+	 */
+	public int getValue(int id0, int strategy0, int design0, int id1, int strategy1, int design1) {
+		if(id0 < 0 || id0 >= Manager.NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		if(id1 < 0 || id1 >= Manager.NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		if(id0 == id1) {
+			throw new IllegalArgumentException("invalid designer ids for task");
+		}
+		for(int id : designerIds) {
+			if(id != id0 && id != id1) {
+				throw new IllegalArgumentException("invalid designer ids for task");
+			}
+		}
+		if(designerIds[0] == id0) {
+			return getValueMap().getValues(strategy0, strategy1, design0, design1)[0];
+		} else {
+			return getValueMap().getValues(strategy1, strategy0, design1, design0)[1];
+		}
+	}
 }

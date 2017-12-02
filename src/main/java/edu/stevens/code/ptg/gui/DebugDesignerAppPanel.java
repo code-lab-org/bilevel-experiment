@@ -38,7 +38,7 @@ public class DebugDesignerAppPanel extends DesignerAppPanel {
 			if(!designer.equals(app.getController())) {
 				dPanel.observe(designer);
 			} else {
-				dPanel.bindTo(designer);
+				dPanel.bindTo(app);
 			}
 			dPanels.add(dPanel);
 		}

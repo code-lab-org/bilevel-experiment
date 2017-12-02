@@ -155,6 +155,26 @@ public class Manager extends Observable {
 	}
 	
 	/**
+	 * Gets the task by designer id.
+	 *
+	 * @param designerId the designer id
+	 * @return the task
+	 */
+	public Task getTaskByDesignerId(int designerId) {
+		if(designerId < 0 || designerId >= NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		for(Task task : tasks) {
+			for(int id : task.getDesignerIds()) {
+				if(id == designerId) {
+					return task;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Sets the task.
 	 *
 	 * @param index the index

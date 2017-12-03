@@ -22,9 +22,11 @@ public class StrategyUI extends JPanel {
 	private static final long serialVersionUID = -4318471579781451005L;
 	
 	private JPanel[][] valueContainers = new JPanel[Designer.NUM_STRATEGIES][Designer.NUM_STRATEGIES];
-	private ValueSpacePanel[][] valuePanels = new ValueSpacePanel[Designer.NUM_STRATEGIES][Designer.NUM_STRATEGIES];
+	private ValuePanel[][] valuePanels = new ValuePanel[Designer.NUM_STRATEGIES][Designer.NUM_STRATEGIES];
 	private ValueLabel[][] valueLabels = new ValueLabel[Designer.NUM_STRATEGIES][Designer.NUM_STRATEGIES];
 	private JRadioButton[] strategyRadios = new JRadioButton[Designer.NUM_STRATEGIES];
+	
+	private JToggleButton toggleButton;
 	
 	public StrategyUI() {		
 		this.setLayout(new GridBagLayout());
@@ -38,7 +40,7 @@ public class StrategyUI extends JPanel {
 
 		c.gridwidth = 3;
 		c.anchor = GridBagConstraints.EAST;
-		JToggleButton toggleButton = new JToggleButton("Detail");
+		toggleButton = new JToggleButton("Detail");
 		toggleButton.setHorizontalAlignment(JToggleButton.RIGHT);
 		toggleButton.addActionListener(new ActionListener() {
 			@Override
@@ -61,9 +63,10 @@ public class StrategyUI extends JPanel {
 			}
 		});
 		add(toggleButton, c);
-		c.gridwidth = 1;
-		c.gridy++;
 		
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.CENTER;
+		c.gridy++;
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			c.fill = GridBagConstraints.VERTICAL;
 			c.weightx = 0;
@@ -82,7 +85,7 @@ public class StrategyUI extends JPanel {
 				if(i == j) {
 					valueContainers[i][j].setBackground(DesignerUI.STRATEGY_COLORS[j]);
 				}
-				valuePanels[i][j] = new ValueSpacePanel();
+				valuePanels[i][j] = new ValuePanel();
 				valueLabels[i][j] = new ValueLabel();
 				valueContainers[i][j].add(valueLabels[i][j], BorderLayout.CENTER);
 				this.add(valueContainers[i][j], c);
@@ -104,6 +107,13 @@ public class StrategyUI extends JPanel {
 			radios.add(strategyRadios[i]);
 			this.add(strategyRadios[i], c);
 			c.gridx++;
+		}
+	}
+	
+	public void resetUI() {
+		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			strategyRadios[i].setSelected(false);
+			toggleButton.setSelected(false);
 		}
 	}
 	

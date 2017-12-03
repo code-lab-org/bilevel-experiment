@@ -1,14 +1,22 @@
 package edu.stevens.code.ptg.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.ListCellRenderer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -19,8 +27,10 @@ public class DesignUI extends JPanel {
 	private static final long serialVersionUID = -4318471579781451005L;
 	
 	private int strategy;
-	private JLabel valueLabel;
-	private ValueSpacePanel valuePanel;
+	private JLabel[] valueLabels = new JLabel[Designer.NUM_STRATEGIES];
+	private JComboBox<String> strategyCombo;
+	private JPanel valueContainer;
+	private ValuePanel[] valuePanels = new ValuePanel[Designer.NUM_STRATEGIES];
 	private JSlider mySlider;
 	private JSlider partnerSlider;
 	
@@ -40,19 +50,86 @@ public class DesignUI extends JPanel {
 		c.ipady = 5;
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 0;
+		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 2;
 		JPanel scorePanel = new JPanel(new FlowLayout());
 		scorePanel.add(new JLabel("Value:"));
-		valueLabel = new JLabel("0", JLabel.CENTER);
-		scorePanel.add(valueLabel);
+		{
+			valueLabels[strategy] = new JLabel("0", JLabel.CENTER);
+			scorePanel.add(valueLabels[strategy]);
+			valueLabels[strategy].setFont(getFont().deriveFont(Font.BOLD));
+			JLabel label = new JLabel("(Agree)");
+			label.setFont(getFont().deriveFont(Font.BOLD));
+			scorePanel.add(label);
+		}
+		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			if(i != strategy) {
+				valueLabels[i] = new JLabel("0", JLabel.CENTER);
+				scorePanel.add(valueLabels[i]);
+				valueLabels[i].setFont(getFont().deriveFont(Font.PLAIN));
+				JLabel label = new JLabel("(Disagree)");
+				label.setFont(getFont().deriveFont(Font.PLAIN));
+				scorePanel.add(label);
+			}
+		}
 		scorePanel.setOpaque(false);
 		this.add(scorePanel, c);
 		
+		c.gridx = 2;
+		c.gridwidth = 1;		
+		c.weightx = 0;
+		c.fill = GridBagConstraints.NONE;
+		c.anchor = GridBagConstraints.EAST;
+		String[] labels = new String[Designer.NUM_STRATEGIES];
+		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			if(i == strategy) {
+				labels[i] = "Agree";
+			} else {
+
+				labels[i] = "Disagree";
+			}
+		}
+		strategyCombo = new JComboBox<String>(labels);
+		strategyCombo.setRenderer(new ListCellRenderer<String>() {
+			public Component getListCellRendererComponent(
+					JList<? extends String> list, String value, int index, 
+					boolean isSelected, boolean cellHasFocus) {
+				JLabel label = new JLabel(value);
+				label.setOpaque(true);
+				if(index >= 0 && index < Designer.NUM_STRATEGIES) {
+					label.setBackground(DesignerUI.STRATEGY_COLORS[index]);
+				}
+				return label;
+			}
+		});
+		strategyCombo.setOpaque(true);
+		strategyCombo.setBackground(DesignerUI.STRATEGY_COLORS[strategy]);
+		strategyCombo.setSelectedIndex(strategy);
+		strategyCombo.setFocusable(false);
+		strategyCombo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(strategyCombo.getSelectedIndex() >= 0 
+						&& strategyCombo.getSelectedIndex() < Designer.NUM_STRATEGIES) {
+					strategyCombo.setBackground(DesignerUI.STRATEGY_COLORS[strategyCombo.getSelectedIndex()]);
+					valueContainer.removeAll();
+					valueContainer.add(valuePanels[strategyCombo.getSelectedIndex()], BorderLayout.CENTER);
+					valueContainer.validate();
+					valueContainer.repaint();
+				}
+			}
+		});
+		JPanel comboPanel = new JPanel(new FlowLayout());
+		comboPanel.setOpaque(false);
+		comboPanel.add(new JLabel("Partner:"));
+		comboPanel.add(strategyCombo);
+		add(comboPanel, c);
+		
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.CENTER;
 		c.gridx = 0;
 		c.gridy++;
-		c.gridwidth = 1;
 		c.fill = GridBagConstraints.VERTICAL;
 		partnerSlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE);
 		partnerSlider.setOrientation(JSlider.VERTICAL);
@@ -63,10 +140,15 @@ public class DesignUI extends JPanel {
 		c.gridx++;
 		c.weightx = 1;
 		c.weighty = 1;
+		c.gridwidth = 2;
 		c.fill = GridBagConstraints.BOTH;
-		valuePanel = new ValueSpacePanel();
-		valuePanel.setOpaque(false);
-		this.add(valuePanel, c);
+		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			valuePanels[i] = new ValuePanel();
+		}
+		valueContainer = new JPanel(new BorderLayout());
+		valueContainer.setOpaque(false);
+		valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
+		this.add(valueContainer, c);
 		
 		c.gridy++;
 		c.weightx = 0;
@@ -76,6 +158,11 @@ public class DesignUI extends JPanel {
 		mySlider.setEnabled(false);
 		mySlider.setOpaque(false);
 		this.add(mySlider, c);
+	}
+	
+	public void resetUI() {
+		mySlider.setValue(0);
+		strategyCombo.setSelectedIndex(strategy);
 	}
 	
 	@Override
@@ -93,7 +180,9 @@ public class DesignUI extends JPanel {
 			}
 		});
 		partnerSlider.setValue(0);
-		valuePanel.bindTo(app, strategy, strategy);
+		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			valuePanels[i].bindTo(app, strategy, i);
+		}
 		for(Designer designer : app.getDesigners()) {
 			designer.addObserver(new Observer() {
 				@Override
@@ -101,10 +190,12 @@ public class DesignUI extends JPanel {
 					if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
 						partnerSlider.setValue(designer.getDesign(strategy));
 					}
-					valueLabel.setText(new Integer(app.getValue(
-						strategy, app.getController().getDesign(strategy), 
-						strategy, partnerSlider.getValue()
-					)).toString());
+					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+						valueLabels[i].setText(new Integer(app.getValue(
+								strategy, app.getController().getDesign(strategy), 
+								i, partnerSlider.getValue()
+							)).toString());
+					}
 				}
 			});
 		}

@@ -12,14 +12,14 @@ import javax.swing.JPanel;
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
 
-public class ValueSpacePanel extends JPanel {
+public class ValuePanel extends JPanel {
 	private static final long serialVersionUID = -125874855243548180L;
 	
 	private DesignerApp app;
 	private int myStrategy, partnerStrategy;
 	private int myDesign, partnerDesign;
 	
-	public ValueSpacePanel() {
+	public ValuePanel() {
 		this.setPreferredSize(new Dimension(200,200));
 		this.setOpaque(false);
 	}

@@ -15,6 +15,7 @@ import javax.swing.Timer;
 
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
+import edu.stevens.code.ptg.Manager;
 
 public class DesignerUI extends DesignerAppPanel {
 	private static final long serialVersionUID = 1163389143406697128L;
@@ -24,6 +25,7 @@ public class DesignerUI extends DesignerAppPanel {
 	private DesignUI[] designUIs = new DesignUI[Designer.NUM_STRATEGIES];
 	private StrategyUI strategyUI;
 	private int[] partnerDesigns = new int[Designer.NUM_STRATEGIES];
+	private int managerTime;
 	
 	public DesignerUI() {
 		this.setLayout(new BorderLayout());
@@ -43,6 +45,18 @@ public class DesignerUI extends DesignerAppPanel {
 		this.add(tabbedPane, BorderLayout.CENTER);
 	}
 	
+	private void flashTab(int index, Color color) {
+		tabbedPane.setBackgroundAt(index, color);
+		Timer timer = new Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabbedPane.setBackgroundAt(index, tabbedPane.getBackground());
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+	}
+	
 	@Override
 	public void bindTo(DesignerApp app) {
 		app.getController().setReadyToShare(true);
@@ -60,16 +74,7 @@ public class DesignerUI extends DesignerAppPanel {
 								if(partnerDesigns[i] != designer.getDesign(i)) {
 									partnerDesigns[i] = designer.getDesign(i);
 									if(tabbedPane.getSelectedIndex() != i) {
-										final int strategy = i;
-										tabbedPane.setBackgroundAt(i, Color.decode("#ffcc80"));
-										Timer timer = new Timer(1000, new ActionListener() {
-											@Override
-											public void actionPerformed(ActionEvent e) {
-												tabbedPane.setBackgroundAt(strategy, tabbedPane.getBackground());
-											}
-										});
-										timer.setRepeats(false);
-										timer.start();
+										flashTab(i, Color.decode("#ffcc80"));
 									}
 								}
 							}
@@ -82,14 +87,23 @@ public class DesignerUI extends DesignerAppPanel {
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				int time = app.getManager().getTimeRemaining();
-				timeLabel.setText(new Integer(time).toString());
-				if((time % 60 == 0)
-						|| (time <= 60 && time % 15 == 0) 
-						|| (time <= 10) ) {
-					timeLabel.setForeground(Color.RED);
-				} else {
-					timeLabel.setForeground(Color.BLACK);
+				if(managerTime != app.getManager().getTimeRemaining()) {
+					managerTime = app.getManager().getTimeRemaining();
+					timeLabel.setText(new Integer(managerTime).toString());
+					if(managerTime == Manager.MAX_TASK_TIME) {
+						tabbedPane.setSelectedIndex(0);
+					}
+					if((managerTime % 60 == 0)
+							|| (managerTime <= 60 && managerTime % 15 == 0) 
+							|| (managerTime <= 10) ) {
+						timeLabel.setForeground(Color.RED);
+					} else {
+						timeLabel.setForeground(Color.BLACK);
+					}
+					if(tabbedPane.getSelectedIndex() != Designer.NUM_STRATEGIES
+							&& managerTime <= 10 && managerTime % 2 == 0) {
+						flashTab(Designer.NUM_STRATEGIES, Color.RED);
+					}
 				}
 			}
 		});

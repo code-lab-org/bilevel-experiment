@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.stevens.code.eager.ui.DesignSpaceUI;
 import edu.stevens.code.ptg.gui.DesignerAppPanel;
-import edu.stevens.code.ptg.gui.DebugDesignerAppPanel;
+import edu.stevens.code.ptg.gui.DesignerUI;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
@@ -161,7 +161,8 @@ public class DesignerApp implements App {
                 */
 				
 				JFrame f = new JFrame();
-				DesignerAppPanel panel = new DebugDesignerAppPanel();
+				// DesignerAppPanel panel = new DebugDesignerAppPanel();
+				DesignerAppPanel panel = new DesignerUI();
 				panel.bindTo(self);
 				f.setContentPane(panel);
 				f.setTitle(designer.toString());
@@ -275,6 +276,10 @@ public class DesignerApp implements App {
 	 */
 	public int getValue(int myStrategy, int myDesign, int partnerStrategy, int partnerDesign) {
 		int partnerId = getManager().getDesignPartner(designer.getId());
+		if(partnerId == designer.getId() || getManager().getTaskByDesignerId(designer.getId()) == null) {
+			// application is still initializing
+			return 0;
+		}
 		return getManager().getTaskByDesignerId(designer.getId()).getValue(
 				designer.getId(), myStrategy, myDesign, 
 				partnerId, partnerStrategy, partnerDesign);

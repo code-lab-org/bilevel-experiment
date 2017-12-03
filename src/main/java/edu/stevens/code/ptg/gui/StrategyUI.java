@@ -29,13 +29,19 @@ public class StrategyUI extends JPanel {
 		c.gridy = 0;
 		c.ipadx = 5;
 		c.ipady = 5;
+		c.weightx = 0;
+		c.weighty = 0;
 		c.anchor = GridBagConstraints.CENTER;
 		
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			c.fill = GridBagConstraints.VERTICAL;
+			c.weightx = 0;
+			c.weighty = 0;
 			this.add(new JLabel("Design " + i, JLabel.CENTER), c);
 			c.fill = GridBagConstraints.BOTH;
 			c.gridx++;
+			c.weightx = 1;
+			c.weighty = 1;
 			for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
 				valuePanels[i][j] = new ValueSpacePanel();
 				valuePanels[i][j].setOpaque(false);
@@ -46,6 +52,8 @@ public class StrategyUI extends JPanel {
 			c.gridy++;
 		}
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0;
+		c.weighty = 0;
 		this.add(new JLabel(""), c);
 		c.gridx++;
 		ButtonGroup radios = new ButtonGroup();

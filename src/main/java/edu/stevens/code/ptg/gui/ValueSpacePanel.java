@@ -18,33 +18,10 @@ public class ValueSpacePanel extends JPanel {
 	private DesignerApp app;
 	private int myStrategy, partnerStrategy;
 	private int myDesign, partnerDesign;
-
-	private Color[] colorMap = new Color[] {
-			Color.decode("#352a87"),
-			Color.decode("#353eaf"),
-			Color.decode("#1b55d7"),
-			Color.decode("#026ae1"),
-			Color.decode("#0f77db"),
-			Color.decode("#1484d4"),
-			Color.decode("#0d93d2"),
-			Color.decode("#06a0cd"),
-			Color.decode("#07aac1"),
-			Color.decode("#18b1b2"),
-			Color.decode("#33b8a1"),
-			Color.decode("#55bd8e"),
-			Color.decode("#7abf7c"),
-			Color.decode("#9bbf6f"),
-			Color.decode("#b8bd63"),
-			Color.decode("#d3bb58"),
-			Color.decode("#ecb94c"),
-			Color.decode("#ffc13a"),
-			Color.decode("#fad12b"),
-			Color.decode("#f5e31e"),
-			Color.decode("#f9fb0e")
-	};
 	
 	public ValueSpacePanel() {
-		setPreferredSize(new Dimension(200,200));
+		this.setPreferredSize(new Dimension(200,200));
+		this.setOpaque(false);
 	}
 	
 	public void bindTo(DesignerApp app, int myStrategy, int partnerStrategy) {
@@ -87,7 +64,7 @@ public class ValueSpacePanel extends JPanel {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
 				int value = app.getValue(myStrategy, i, partnerStrategy, j);
 				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100) {
-					g.setColor(colorMap[value/5]);
+					g.setColor(DesignerUI.VALUE_COLORS[value/5]);
 				} else {
 					g.setColor(Color.BLACK);
 				}

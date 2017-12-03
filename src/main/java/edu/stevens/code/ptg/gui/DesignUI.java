@@ -1,6 +1,5 @@
 package edu.stevens.code.ptg.gui;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -26,12 +25,11 @@ public class DesignUI extends JPanel {
 	private JSlider partnerSlider;
 	
 	public DesignUI(int strategy) {
-		this.strategy = strategy;
-		if(strategy == 0) {
-			this.setBackground(Color.decode("#ffcccc"));
-		} else {
-			this.setBackground(Color.decode("#ccccff"));
+		if(strategy < 0 || strategy >= Designer.NUM_STRATEGIES) {
+			throw new IllegalArgumentException("invalid strategy index");
 		}
+		this.strategy = strategy;
+		this.setBackground(DesignerUI.STRATEGY_COLORS[strategy]);
 		
 		this.setLayout(new GridBagLayout());
 		

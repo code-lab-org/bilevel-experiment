@@ -19,6 +19,33 @@ import edu.stevens.code.ptg.Manager;
 
 public class DesignerUI extends DesignerAppPanel {
 	private static final long serialVersionUID = 1163389143406697128L;
+	public static final Color[] STRATEGY_COLORS = new Color[] {
+			Color.decode("#ffcccc"),
+			Color.decode("#ccccff")
+	};
+	public static final Color[] VALUE_COLORS = new Color[] {
+			Color.decode("#352a87"),
+			Color.decode("#353eaf"),
+			Color.decode("#1b55d7"),
+			Color.decode("#026ae1"),
+			Color.decode("#0f77db"),
+			Color.decode("#1484d4"),
+			Color.decode("#0d93d2"),
+			Color.decode("#06a0cd"),
+			Color.decode("#07aac1"),
+			Color.decode("#18b1b2"),
+			Color.decode("#33b8a1"),
+			Color.decode("#55bd8e"),
+			Color.decode("#7abf7c"),
+			Color.decode("#9bbf6f"),
+			Color.decode("#b8bd63"),
+			Color.decode("#d3bb58"),
+			Color.decode("#ecb94c"),
+			Color.decode("#ffc13a"),
+			Color.decode("#fad12b"),
+			Color.decode("#f5e31e"),
+			Color.decode("#f9fb0e")
+	};
 
 	private JTabbedPane tabbedPane;
 	private JLabel timeLabel;
@@ -40,7 +67,7 @@ public class DesignerUI extends DesignerAppPanel {
 			tabbedPane.addTab("Design " + i, designUIs[i]);
 		}
 		strategyUI = new StrategyUI();
-		tabbedPane.addTab("Final", strategyUI);
+		tabbedPane.addTab("Composite", strategyUI);
 		
 		this.add(tabbedPane, BorderLayout.CENTER);
 	}

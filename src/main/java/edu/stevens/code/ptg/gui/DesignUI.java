@@ -8,9 +8,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -159,6 +162,19 @@ public class DesignUI extends JPanel {
 		mySlider.setEnabled(false);
 		mySlider.setOpaque(false);
 		this.add(mySlider, c);
+		
+		this.addComponentListener(new ResizeListener());
+	}
+	
+	class ResizeListener extends ComponentAdapter {
+		public void componentResized(ComponentEvent e) {
+			partnerSlider.setBorder(BorderFactory.createEmptyBorder(
+					valuePanels[0].getHeight()/20 - 6, 0, 
+					valuePanels[0].getHeight()/20 - 6, 0));
+			mySlider.setBorder(BorderFactory.createEmptyBorder(
+					0, valuePanels[0].getWidth()/20 - 8, 
+					0, valuePanels[0].getWidth()/20 - 0));
+		}
 	}
 	
 	private void resetUI(DesignerApp app) {

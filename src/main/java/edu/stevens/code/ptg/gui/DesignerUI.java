@@ -16,6 +16,7 @@ import javax.swing.Timer;
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
 import edu.stevens.code.ptg.Manager;
+import edu.stevens.code.ptg.Task;
 
 public class DesignerUI extends DesignerAppPanel {
 	private static final long serialVersionUID = 1163389143406697128L;
@@ -49,6 +50,7 @@ public class DesignerUI extends DesignerAppPanel {
 
 	private JTabbedPane tabbedPane;
 	private JLabel timeLabel, infoLabel;
+	private InstructionUI instructionUI;
 	private DesignUI[] designUIs = new DesignUI[Designer.NUM_STRATEGIES];
 	private StrategyUI strategyUI;
 	private int[] partnerDesigns = new int[Designer.NUM_STRATEGIES];
@@ -64,6 +66,8 @@ public class DesignerUI extends DesignerAppPanel {
 		infoPanel.add(timeLabel);
 		this.add(infoPanel, BorderLayout.NORTH);
 		tabbedPane = new JTabbedPane();
+		instructionUI = new InstructionUI();
+		tabbedPane.addTab("Instructions", instructionUI);
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			designUIs[i] = new DesignUI(i);
 			tabbedPane.addTab("Design " + i, designUIs[i]);
@@ -95,6 +99,7 @@ public class DesignerUI extends DesignerAppPanel {
 	@Override
 	public void bindTo(DesignerApp app) {
 		app.getController().setReadyToShare(true);
+		instructionUI.observe(app.getManager());
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			designUIs[i].bindTo(app);
 		}
@@ -109,7 +114,7 @@ public class DesignerUI extends DesignerAppPanel {
 								if(partnerDesigns[i] != designer.getDesign(i)) {
 									partnerDesigns[i] = designer.getDesign(i);
 									if(tabbedPane.getSelectedIndex() != i) {
-										flashTab(i, Color.decode("#ffcc80"));
+										flashTab(i+1, Color.decode("#ffcc80"));
 									}
 								}
 							}
@@ -123,7 +128,12 @@ public class DesignerUI extends DesignerAppPanel {
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				infoLabel.setText(app.getManager().getRoundName());
+				Task task = app.getManager().getTaskByDesignerId(app.getController().getId());
+				if(task == null) {
+					infoLabel.setText(app.getManager().getRoundName());
+				} else {
+					infoLabel.setText(app.getManager().getRoundName() + ": " + task.getName());
+				}
 				if(managerTime != app.getManager().getTimeRemaining()) {
 					managerTime = app.getManager().getTimeRemaining();
 					timeLabel.setText(new Integer(managerTime).toString());
@@ -139,7 +149,7 @@ public class DesignerUI extends DesignerAppPanel {
 					}
 					if(tabbedPane.getSelectedIndex() != Designer.NUM_STRATEGIES
 							&& managerTime <= 10 && managerTime % 2 == 0) {
-						flashTab(Designer.NUM_STRATEGIES, Color.RED);
+						flashTab(Designer.NUM_STRATEGIES+1, Color.RED);
 					}
 				}
 				setEnabled(app.getManager().isDesignEnabled());

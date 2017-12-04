@@ -117,7 +117,7 @@ public class DesignerUI extends DesignerAppPanel {
 									&& designer.isReadyToShare()) {
 								if(partnerDesigns[i] != designer.getDesign(i)) {
 									partnerDesigns[i] = designer.getDesign(i);
-									if(tabbedPane.getSelectedIndex() != i) {
+									if(tabbedPane.getSelectedIndex() != i + 1) {
 										flashTab(i+1, Color.decode("#ffcc80"));
 									}
 								}

@@ -153,4 +153,12 @@ public class Task extends Observable {
 			return getValueMap().getValues(strategy1, strategy0, design1, design0)[1];
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return name;
+	}
 }

@@ -151,7 +151,7 @@ public class DesignerUI extends DesignerAppPanel {
 					} else {
 						timeLabel.setForeground(Color.BLACK);
 					}
-					if(tabbedPane.getSelectedIndex() != Designer.NUM_STRATEGIES
+					if(tabbedPane.getSelectedIndex() != Designer.NUM_STRATEGIES + 1
 							&& managerTime <= 10 && managerTime % 2 == 0) {
 						flashTab(Designer.NUM_STRATEGIES+1, Color.RED);
 					}

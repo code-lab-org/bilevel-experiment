@@ -12,7 +12,7 @@ public class InstructionUI extends JEditorPane {
 	private static final long serialVersionUID = -5921608043683745782L;
 	
 	public InstructionUI() {
-		super("text/html", "<html></html>");
+		this.setContentType("text/html");
 		this.setEditable(false);
 		this.setFocusable(false);
 	}

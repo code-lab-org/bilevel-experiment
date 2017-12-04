@@ -48,7 +48,7 @@ public class DesignerUI extends DesignerAppPanel {
 	};
 
 	private JTabbedPane tabbedPane;
-	private JLabel timeLabel;
+	private JLabel timeLabel, infoLabel;
 	private DesignUI[] designUIs = new DesignUI[Designer.NUM_STRATEGIES];
 	private StrategyUI strategyUI;
 	private int[] partnerDesigns = new int[Designer.NUM_STRATEGIES];
@@ -56,11 +56,13 @@ public class DesignerUI extends DesignerAppPanel {
 	
 	public DesignerUI() {
 		this.setLayout(new BorderLayout());
-		JPanel timePanel = new JPanel(new FlowLayout());
-		timePanel.add(new JLabel("Time Remaining:"));
+		JPanel infoPanel = new JPanel(new FlowLayout());
+		infoLabel = new JLabel("Initializing", JLabel.LEFT);
+		infoPanel.add(infoLabel);
+		infoPanel.add(new JLabel("Time Remaining:"));
 		timeLabel = new JLabel("0", JLabel.RIGHT);
-		timePanel.add(timeLabel);
-		this.add(timePanel, BorderLayout.NORTH);
+		infoPanel.add(timeLabel);
+		this.add(infoPanel, BorderLayout.NORTH);
 		tabbedPane = new JTabbedPane();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			designUIs[i] = new DesignUI(i);
@@ -114,6 +116,7 @@ public class DesignerUI extends DesignerAppPanel {
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
+				infoLabel.setText(app.getManager().getRoundName());
 				if(managerTime != app.getManager().getTimeRemaining()) {
 					managerTime = app.getManager().getTimeRemaining();
 					timeLabel.setText(new Integer(managerTime).toString());

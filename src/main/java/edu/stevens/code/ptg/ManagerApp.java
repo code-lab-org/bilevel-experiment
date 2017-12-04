@@ -1,37 +1,20 @@
 package edu.stevens.code.ptg;
 
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.BoxLayout;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
-
-import edu.stevens.code.ptg.gui.DesignerPanel;
-import edu.stevens.code.ptg.gui.ManagerPanel;
+import edu.stevens.code.ptg.gui.ManagerAppMenuBar;
+import edu.stevens.code.ptg.gui.ManagerAppPanel;
+import edu.stevens.code.ptg.gui.ManagerAppPanelImpl;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
@@ -135,7 +118,7 @@ public class ManagerApp implements App {
 	 *
 	 * @param session the new session
 	 */
-	private void setSession(Session session) {
+	public void setSession(Session session) {
 		this.session = session;
 		this.roundIndex = 0;
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
@@ -241,52 +224,10 @@ public class ManagerApp implements App {
 			public void run() {
 				JFrame f = new JFrame();
 				f.setIconImages(ICONS);
-
-				Gson gson = new Gson();
-				JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
-				fileChooser.setDialogTitle("Open Session");
-				fileChooser.setFileFilter(new FileNameExtensionFilter("Session JSON files", "json"));
-				
-				JMenuBar menuBar = new JMenuBar();
-				JMenu fileMenu = new JMenu("File");
-				fileMenu.setMnemonic(KeyEvent.VK_F);
-				JMenuItem openItem = new JMenuItem("Open");
-				openItem.setMnemonic(KeyEvent.VK_O);
-				openItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
-				openItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if(fileChooser.showOpenDialog(f) == JFileChooser.APPROVE_OPTION) {
-							File file = fileChooser.getSelectedFile();
-							try {
-								BufferedReader reader = new BufferedReader(new FileReader(file));
-								Session session = gson.fromJson(reader, Session.class);
-								setSession(session);
-							} catch(FileNotFoundException ex) {
-								logger.error(e);
-							}
-						}
-					}
-				});
-				fileMenu.add(openItem);
-				menuBar.add(fileMenu);
-				f.setJMenuBar(menuBar);
-				
-				JPanel p = new JPanel();
-				p.setLayout(new FlowLayout());
-				ManagerPanel mPanel = new ManagerPanel();
-				mPanel.observe(manager);
-				mPanel.bindTo(self);
-				p.add(mPanel);
-				JPanel dPanels = new JPanel();
-				dPanels.setLayout(new BoxLayout(dPanels, BoxLayout.Y_AXIS));
-				for(Designer designer : designers) {
-					DesignerPanel dPanel = new DesignerPanel();
-					dPanel.observe(designer);
-					dPanels.add(dPanel);
-				}
-				p.add(dPanels);
-				f.setContentPane(p);
+				f.setJMenuBar(new ManagerAppMenuBar(self));
+				ManagerAppPanel panel = new ManagerAppPanelImpl();
+				panel.bindTo(self);
+				f.setContentPane(panel);
 				f.setTitle(manager.toString());
 				f.setVisible(true);
 		        f.pack();
@@ -318,7 +259,7 @@ public class ManagerApp implements App {
 	 * @see edu.stevens.code.ptg.App#getSelf()
 	 */
 	@Override
-	public Manager getSelf() {
+	public Manager getController() {
 		return manager;
 	}
 

@@ -172,23 +172,23 @@ public class Ambassador extends NullFederateAmbassador {
 	public void connectManager(ManagerApp managerApp, String federationName) throws RTIexception {
 		this.app = managerApp;
 		
-		this.connect(federationName, managerApp.getSelf().toString(), FEDERATE_TYPE_MANAGER);
+		this.connect(federationName, managerApp.getController().toString(), FEDERATE_TYPE_MANAGER);
 		publishManagerAttributes();
 		subscribeDesignerAttributes();
 
 		logger.debug("Registering this manager object.");
 		ObjectInstanceHandle instance = rtiAmbassador.registerObjectInstance(
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER));
-		registeredInstances.put(managerApp.getSelf(), instance);
+		registeredInstances.put(managerApp.getController(), instance);
 		logger.debug("Registered this manager object.");
 		
-		updateManager(managerApp.getSelf());
+		updateManager(managerApp.getController());
 	}
 	
 	public void connectDesigner(DesignerApp designerApp, String federationName) throws RTIexception {
 		this.app = designerApp;
 		
-		this.connect(federationName, designerApp.getSelf().toString(), FEDERATE_TYPE_DESIGNER);
+		this.connect(federationName, designerApp.getController().toString(), FEDERATE_TYPE_DESIGNER);
 		publishDesignerAttributes();
 		subscribeDesignerAttributes();
 		subscribeManagerAttributes();
@@ -196,10 +196,10 @@ public class Ambassador extends NullFederateAmbassador {
 		logger.debug("Registering this designer object.");
 		ObjectInstanceHandle instance = rtiAmbassador.registerObjectInstance(
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER));
-		registeredInstances.put(designerApp.getSelf(),  instance);
+		registeredInstances.put(designerApp.getController(),  instance);
 		logger.debug("Registered this designer object.");
 
-		updateDesigner(designerApp.getSelf());
+		updateDesigner(designerApp.getController());
 	}
 	
 	public void updateManager(Manager manager) throws RTIexception {

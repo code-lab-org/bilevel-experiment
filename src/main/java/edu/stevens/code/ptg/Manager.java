@@ -138,20 +138,76 @@ public class Manager extends Observable {
 	 * @param designerId the designer id
 	 * @return the design partner
 	 */
-	public int getDesignPartner(int designerId) {
+	public synchronized int getDesignPartner(int designerId) {
 		if(designerId < 0 || designerId >= NUM_DESIGNERS) {
 			throw new IllegalArgumentException("invalid designer id");
 		}
 		for(Task task : tasks) {
 			// hard code only two designers per task
-			if(task.getDesignerId(0)==designerId) {
+			if(task.getDesignerId(0) == designerId) {
 				return task.getDesignerId(1);
 			}
-			if(task.getDesignerId(1)==designerId) {
+			if(task.getDesignerId(1) == designerId) {
 				return task.getDesignerId(0);
 			}
 		}
 		return -1;
+	}
+	
+	/**
+	 * Gets the task by designer id.
+	 *
+	 * @param designerId the designer id
+	 * @return the task
+	 */
+	public synchronized Task getTaskByDesignerId(int designerId) {
+		if(designerId < 0 || designerId >= NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		for(Task task : tasks) {
+			for(int id : task.getDesignerIds()) {
+				if(id == designerId) {
+					return task;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the value.
+	 *
+	 * @param designerId the designer id
+	 * @param strategy the strategy
+	 * @param design the design
+	 * @param partnerStrategy the partner strategy
+	 * @param partnerDesign the partner design
+	 * @return the value
+	 */
+	public synchronized int getValue(int designerId, int strategy, 
+			int design, int partnerStrategy, int partnerDesign) {
+		if(designerId < 0 || designerId >= NUM_DESIGNERS) {
+			throw new IllegalArgumentException("invalid designer id");
+		}
+		for(Task task : tasks) {
+			// hard code only two designers per task
+			if(task.getDesignerId(0) == designerId) {
+				return task.getValueMap().getValues(strategy, partnerStrategy, design, partnerDesign)[0];
+			}
+			if(task.getDesignerId(1) == designerId) {
+				return task.getValueMap().getValues(partnerStrategy, strategy, partnerDesign, design)[1];
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Checks if is design enabled.
+	 *
+	 * @return true, if is design enabled
+	 */
+	public boolean isDesignEnabled() {
+		return getTimeRemaining() > 0 && getTimeRemaining() < Manager.MAX_TASK_TIME;
 	}
 	
 	/**

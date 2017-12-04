@@ -40,11 +40,11 @@ public interface App {
 	public Manager getManager();
 	
 	/**
-	 * Gets the self.
+	 * Gets the controller.
 	 *
-	 * @return the self
+	 * @return the controller
 	 */
-	public Object getSelf();
+	public Object getController();
 	
 	/**
 	 * Inits the application.

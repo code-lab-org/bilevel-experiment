@@ -1,8 +1,5 @@
 package edu.stevens.code.ptg;
 
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -11,19 +8,15 @@ import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.stevens.code.eager.designer.DesignerUI;
 import edu.stevens.code.eager.ui.DesignSpaceUI;
-import edu.stevens.code.ptg.gui.DesignerPanel;
-import edu.stevens.code.ptg.gui.ManagerPanel;
+import edu.stevens.code.ptg.gui.DesignerAppPanel;
+import edu.stevens.code.ptg.gui.DesignerUI;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
@@ -34,7 +27,7 @@ public class DesignerApp implements App {
     private static final Logger logger = LogManager.getLogger(DesignerApp.class);
 
 	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
-	private Designer self = null;
+	private Designer designer = null;
 	private Manager manager = new Manager();
 	private Ambassador ambassador = null;
 	
@@ -52,7 +45,7 @@ public class DesignerApp implements App {
 			d.setId(i);
 			designers[i] = d;
 		}
-		self = designers[id];
+		designer = designers[id];
 	}
 
 	/* (non-Javadoc)
@@ -74,33 +67,30 @@ public class DesignerApp implements App {
 			logger.error(ex);
 		}
 		
-		self.addObserver(new Observer() {
+		designer.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
 				try {
-					ambassador.updateDesigner(self);
+					ambassador.updateDesigner(designer);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
 			}
 		});
+		
+		DesignerApp self = this;
 
         SwingUtilities.invokeLater(new Runnable() {
 			@Override
-			public void run() {
-				JFrame f = new JFrame();
-				JPanel p = new JPanel();
-				p.setLayout(new FlowLayout());
-				
+			public void run() {				
 				/** AMVRO: Test to create a DesignerUI panel
 				 * from PTG's DesignerApp class. 
 				 * 
-				 */
-				JFrame fUI = new JFrame("Designer " + String.valueOf(self.getId()));
+				JFrame fUI = new JFrame("Designer " + String.valueOf(designer.getId()));
 //				JTabbedPane tUI = new JTabbedPane();
 				DesignerUI dUI = new DesignerUI("SH01");
 				
-				/* AMVRO: Creating the dUI object. */
+				// AMVRO: Creating the dUI object.
 //				DesignSpaceUI dUI = new DesignSpaceUI();
 				
 //				tUI.add("Design Space",dUI);
@@ -115,18 +105,18 @@ public class DesignerApp implements App {
 //				fUI.setContentPane(dUI);
 				
 				
-				/* Because there is no title bar (see previous comment),
-				 * the interface needs to be closed using Alt+F4.
-				 */
+				// Because there is no title bar (see previous comment),
+				// the interface needs to be closed using Alt+F4.
+				
 				fUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				
-				/* Set Icon */
+				// Set Icon
 //				DesignerUI.loadIcons(fUI);
 				
-				/* Initialize JFrame in maximized mode: */
+				// Initialize JFrame in maximized mode:
 				fUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				
-				/* This is the JFrame is packed */
+				// This is the JFrame is packed
 				fUI.pack();
 				fUI.setLocationRelativeTo(null);
 				fUI.setVisible(true);
@@ -158,43 +148,25 @@ public class DesignerApp implements App {
 				dUI.designSpace.observe(manager, designers);
 				dUI.designUI[0].observe(manager, designers);
 				dUI.designUI[1].observe(manager, designers);
-
-				JPanel dPanels = new JPanel();
-				dPanels.setLayout(new BoxLayout(dPanels, BoxLayout.Y_AXIS));
-				for(Designer designer : designers) {
-					DesignerPanel dPanel = new DesignerPanel();
-					if(!designer.equals(self)) {
-						dPanel.observe(designer);
-					} else {
-						dPanel.bindTo(self);
-					}
-					dPanels.add(dPanel);
-					
-//					if(!designers.equals(self)) {
-//						dUI.designSpace.observe(manager, designers);
-//						dUI.designUI[0].observe(manager, designers);
-//						dUI.designUI[1].observe(manager, designers);
-//					} else {
-//						dUI.designSpace.bindTo(self);
-//						dUI.designUI[0].bindTo(self);
-//						dUI.designUI[1].bindTo(self);						
-//					}
-					
-					
-					if(designer.equals(self)) {
-//						dUI.bindTo(self);
-						dUI.designSpace.bindTo(self);
-						dUI.designUI[0].bindTo(self);
-						dUI.designUI[1].bindTo(self);
-					}
-//					dUI.setGame("SH01");
-				}
-				p.add(dPanels);
-				ManagerPanel mPanel = new ManagerPanel();
-				mPanel.observe(getManager());
-				p.add(mPanel);
-				f.setContentPane(p);
-				f.setTitle(self.toString());
+				
+                for(Designer designer : designers) {                    
+                    if(designer.equals(designer)) {
+//                        dUI.bindTo(self);
+                        dUI.designSpace.bindTo(designer);
+                        dUI.designUI[0].bindTo(designer);
+                        dUI.designUI[1].bindTo(designer);
+                    }
+//                    dUI.setGame("SH01");
+                }
+                */
+				
+				JFrame f = new JFrame();
+				f.setIconImages(App.ICONS);
+				// DesignerAppPanel panel = new DebugDesignerAppPanel();
+				DesignerAppPanel panel = new DesignerUI();
+				panel.bindTo(self);
+				f.setContentPane(panel);
+				f.setTitle(designer.toString());
 				f.setVisible(true);
 		        f.pack();
 		        f.setLocationRelativeTo(null);
@@ -250,11 +222,11 @@ public class DesignerApp implements App {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getSelf()
+	 * @see edu.stevens.code.ptg.App#getController()
 	 */
 	@Override
-	public Designer getSelf() {
-		return self;
+	public Designer getController() {
+		return designer;
 	}
 
 	/* (non-Javadoc)
@@ -282,5 +254,28 @@ public class DesignerApp implements App {
 	@Override
 	public Manager getManager() {
 		return manager;
+	}
+	
+	/**
+	 * Gets the design partner.
+	 *
+	 * @return the design partner
+	 */
+	public Designer getDesignPartner() {
+		int partnerId = getManager().getDesignPartner(getController().getId());
+		return getDesigner(partnerId);
+	}
+	
+	/**
+	 * Gets the value.
+	 *
+	 * @param myStrategy the my strategy
+	 * @param myDesign the my design
+	 * @param partnerStrategy the partner strategy
+	 * @param partnerDesign the partner design
+	 * @return the value
+	 */
+	public int getValue(int myStrategy, int myDesign, int partnerStrategy, int partnerDesign) {
+		return getManager().getValue(designer.getId(), myStrategy, myDesign, partnerStrategy, partnerDesign);
 	}
 }

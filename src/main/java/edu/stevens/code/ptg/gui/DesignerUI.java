@@ -87,6 +87,12 @@ public class DesignerUI extends DesignerAppPanel {
 	}
 	
 	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		tabbedPane.setEnabled(enabled);
+	}
+	
+	@Override
 	public void bindTo(DesignerApp app) {
 		app.getController().setReadyToShare(true);
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
@@ -113,6 +119,7 @@ public class DesignerUI extends DesignerAppPanel {
 			}
 		}
 		strategyUI.bindTo(app);
+		setEnabled(app.getManager().isDesignEnabled());
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
@@ -135,6 +142,7 @@ public class DesignerUI extends DesignerAppPanel {
 						flashTab(Designer.NUM_STRATEGIES, Color.RED);
 					}
 				}
+				setEnabled(app.getManager().isDesignEnabled());
 			}
 		});
 	}

@@ -173,6 +173,7 @@ public class DesignUI extends JPanel {
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
+		strategyCombo.setEnabled(enabled);
 		mySlider.setEnabled(enabled);
 	}
 	

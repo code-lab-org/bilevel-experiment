@@ -155,9 +155,13 @@ public class ManagerPanelImpl extends ManagerPanel {
 		Timer timer = new Timer(1000, new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(app.getManager().getTimeRemaining() > 0) {
-					app.getManager().setTimeRemaining(
-							app.getManager().getTimeRemaining() - 1);
+				int time = app.getManager().getTimeRemaining();
+				if(time > 0) {
+					app.getManager().setTimeRemaining(time - 1);
+				} else {
+					recordScore.doClick();
+					advanceTime.doClick();
+					nextRound.doClick();
 				}
 			}
 		});
@@ -245,6 +249,7 @@ public class ManagerPanelImpl extends ManagerPanel {
 	 */
 	@Override
 	public void bindTo(Manager manager) {
+		/* unused
 		this.setBorder(BorderFactory.createTitledBorder(manager.toString()));
 		roundText.setText(manager.getRoundName());
 		roundText.setEnabled(true);
@@ -267,6 +272,9 @@ public class ManagerPanelImpl extends ManagerPanel {
 			public void actionPerformed(ActionEvent e) {
 				if(manager.getTimeRemaining() > 0) {
 					manager.setTimeRemaining(manager.getTimeRemaining() - 1);
+				} else {
+					advanceTime.doClick();
+					recordScore.doClick();
 				}
 			}
 		});
@@ -275,9 +283,6 @@ public class ManagerPanelImpl extends ManagerPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(advanceTime.isSelected()) {
-					if(manager.getTimeRemaining() <= 0) {
-						manager.setTimeRemaining(Manager.MAX_TASK_TIME);
-					}
 					advanceTime.setIcon(pauseIcon);
 					timer.start();
 				} else {
@@ -289,6 +294,7 @@ public class ManagerPanelImpl extends ManagerPanel {
 		for(int i = 0; i < Manager.NUM_TASKS; i++) {
 			taskPanels[i].bindTo(manager.getTask(i));
 		}
+		*/
 	}
 	
 	/**

@@ -140,7 +140,7 @@ public class DesignerUI extends DesignerAppPanel {
 					if(managerTime == Manager.MAX_TASK_TIME) {
 						tabbedPane.setSelectedIndex(0);
 					}
-					if((managerTime % 60 == 0)
+					if((managerTime < Manager.MAX_TASK_TIME && managerTime % 60 == 0)
 							|| (managerTime <= 60 && managerTime % 15 == 0) 
 							|| (managerTime <= 10) ) {
 						timeLabel.setForeground(Color.RED);

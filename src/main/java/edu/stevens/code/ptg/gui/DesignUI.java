@@ -22,6 +22,7 @@ import javax.swing.event.ChangeListener;
 
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
+import edu.stevens.code.ptg.Manager;
 
 public class DesignUI extends JPanel {
 	private static final long serialVersionUID = -4318471579781451005L;
@@ -171,6 +172,19 @@ public class DesignUI extends JPanel {
 		mySlider.setEnabled(enabled);
 	}
 	
+	private void updateDesigner(Designer designer, DesignerApp app) {
+		if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
+			partnerSlider.setValue(designer.getDesign(strategy));
+		}
+		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			int value = app.getValue(
+				strategy, app.getController().getDesign(strategy), 
+				i, partnerSlider.getValue()
+			);
+			valueLabels[i].setText(new Integer(value).toString());
+		}
+	}
+	
 	public void bindTo(DesignerApp app) {		
 		mySlider.setValue(app.getController().getDesign(strategy));
 		mySlider.addChangeListener(new ChangeListener() {
@@ -182,20 +196,13 @@ public class DesignUI extends JPanel {
 		partnerSlider.setValue(0);
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			valuePanels[i].bindTo(app, strategy, i);
+			valueLabels[i].setText(new Integer(0).toString());
 		}
 		for(Designer designer : app.getDesigners()) {
 			designer.addObserver(new Observer() {
 				@Override
 				public void update(Observable o, Object arg) {
-					if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
-						partnerSlider.setValue(designer.getDesign(strategy));
-					}
-					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-						valueLabels[i].setText(new Integer(app.getValue(
-								strategy, app.getController().getDesign(strategy), 
-								i, partnerSlider.getValue()
-							)).toString());
-					}
+					updateDesigner(designer, app);
 				}
 			});
 		}
@@ -203,6 +210,9 @@ public class DesignUI extends JPanel {
 			@Override
 			public void update(Observable o, Object arg) {
 				setEnabled(app.getManager().isDesignEnabled());
+				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
+					mySlider.setValue(0);
+				}
 			}
 		});
 	}

@@ -275,13 +275,6 @@ public class DesignerApp implements App {
 	 * @return the value
 	 */
 	public int getValue(int myStrategy, int myDesign, int partnerStrategy, int partnerDesign) {
-		int partnerId = getManager().getDesignPartner(designer.getId());
-		if(partnerId == designer.getId() || getManager().getTaskByDesignerId(designer.getId()) == null) {
-			// application is still initializing
-			return 0;
-		}
-		return getManager().getTaskByDesignerId(designer.getId()).getValue(
-				designer.getId(), myStrategy, myDesign, 
-				partnerId, partnerStrategy, partnerDesign);
+		return getManager().getValue(designer.getId(), myStrategy, myDesign, partnerStrategy, partnerDesign);
 	}
 }

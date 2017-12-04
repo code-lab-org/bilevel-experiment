@@ -57,7 +57,7 @@ public class DesignUI extends JPanel {
 		JPanel scorePanel = new JPanel(new FlowLayout());
 		scorePanel.add(new JLabel("Value:"));
 		{
-			valueLabels[strategy] = new JLabel("0", JLabel.CENTER);
+			valueLabels[strategy] = new JLabel("-", JLabel.CENTER);
 			scorePanel.add(valueLabels[strategy]);
 			valueLabels[strategy].setFont(getFont().deriveFont(Font.BOLD));
 			JLabel label = new JLabel("(Agree)");
@@ -66,7 +66,7 @@ public class DesignUI extends JPanel {
 		}
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			if(i != strategy) {
-				valueLabels[i] = new JLabel("0", JLabel.CENTER);
+				valueLabels[i] = new JLabel("-", JLabel.CENTER);
 				scorePanel.add(valueLabels[i]);
 				valueLabels[i].setFont(getFont().deriveFont(Font.PLAIN));
 				JLabel label = new JLabel("(Disagree)");

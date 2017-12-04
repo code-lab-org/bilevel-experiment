@@ -9,9 +9,9 @@ import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.ManagerApp;
 
 /**
- * The Class ManagerAppPanelImpl.
+ * The Class ManagerUI.
  */
-public class ManagerAppPanelImpl extends ManagerAppPanel {
+public class ManagerUI extends ManagerAppPanel {
 	private static final long serialVersionUID = -582914205975711140L;
 	private ManagerPanel mPanel;
 	private JPanel dPanels;
@@ -19,7 +19,7 @@ public class ManagerAppPanelImpl extends ManagerAppPanel {
 	/**
 	 * Instantiates a new manager app panel impl.
 	 */
-	public ManagerAppPanelImpl() {
+	public ManagerUI() {
 		setLayout(new FlowLayout());
 		mPanel = new ManagerPanelImpl();
 		add(mPanel);

@@ -161,6 +161,7 @@ public class DesignerApp implements App {
                 */
 				
 				JFrame f = new JFrame();
+				f.setIconImages(App.ICONS);
 				// DesignerAppPanel panel = new DebugDesignerAppPanel();
 				DesignerAppPanel panel = new DesignerUI();
 				panel.bindTo(self);

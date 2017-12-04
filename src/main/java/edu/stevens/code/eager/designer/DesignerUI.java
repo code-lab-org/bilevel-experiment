@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import edu.stevens.code.eager.ui.DesignSpaceUI;
 import edu.stevens.code.eager.ui.DesignUI;
@@ -58,6 +60,20 @@ public class DesignerUI extends JTabbedPane {
 		this.setTabComponentAt(3,tab3);
 //		this.setTabComponentAt(4,tab4);
 		
+		this.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				// TODO Auto-generated method stub
+				
+				designUI[0].repaint();
+				designUI[1].repaint();
+				designSpace.repaint();
+				System.out.println("Tab: " + getSelectedIndex());
+			}
+			
+		});
+		
 		
 	}
 	
@@ -93,5 +109,7 @@ public class DesignerUI extends JTabbedPane {
 		frame.setVisible(true);
 
 	}
+	
+	
 
 }

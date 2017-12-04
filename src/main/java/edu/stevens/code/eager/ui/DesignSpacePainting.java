@@ -335,7 +335,7 @@ public class DesignSpacePainting extends PaintingMethods {
 		g2D.setColor(Color.MAGENTA);
 		g2D.drawPolygon(xcPoints, ycPoints, 3);
 		
-		displayCellValue(getStrategy(),getXi(),getXj());
+		displayCellValue( getStrategy(), getXi(), getXj() );
 				
 		/* Display the current cell value on the colorbar */
 		g2D.setFont(MONO2);

@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -46,7 +47,7 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 	public void setGame(String game_file) { this.game = game_file; }
 	
 	/** Self is sharing */
-	private boolean self_sharing = false;
+	private boolean self_sharing = true;
 	public boolean isSelfSharing() { return self_sharing; }
 	public void setSelfStatus(boolean self_status) { self_sharing = self_status; }
 	
@@ -56,7 +57,7 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 	public void setPartnerStatus(boolean partner_status) { partner_sharing = partner_status; }
 	
 	/** Both are sharing */
-	private boolean sharing = false;
+	private boolean sharing = true;
 	public boolean areBothSharing() { return sharing; }
 	public void setSharingStatus(boolean self, boolean partner) { sharing = self && partner; }
 	
@@ -140,27 +141,7 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 		this.setPreferredSize(new Dimension(1920,1080));
 		this.setBackground(Color.BLACK);
 		this.setLayout(null);
-				
-//		ImageIcon share_off = new ImageIcon("src/main/java/resources/share_k__40.png");
-//		ImageIcon share_on  = new ImageIcon("src/main/java/resources/share_c__40.png");
-//		
-//		this.shareButton = new JToggleButton(share_off);
-//		this.shareButton.setSelectedIcon(share_on);
-//		this.shareButton.setEnabled(true);
-//				
-//		this.shareButton.setBounds(1920/2+X_SHIFT-25, 1080-Y_SHIFT, 50, 50);
-//		
-////		shareButton.addItemListener(new ItemListener() {
-////		   public void itemStateChanged(ItemEvent ev) {
-////		      if(ev.getStateChange()==ItemEvent.SELECTED){
-////		    	  setBackground(Color.WHITE);
-////		      } else if(ev.getStateChange()==ItemEvent.DESELECTED){
-////		    	  setBackground(Color.BLACK);
-////		      }
-////		   }
-////		});
-//		
-//		this.add(shareButton);
+		
 	}
 	
 	/** MainUI constructor specifying game
@@ -180,13 +161,13 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 			setXSj( (int) Math.floor((yB0 - y_screen)/40.) );
 		}
 				
-		if (x_screen >= xA0 && x_screen < xA0 + 400){
-			setXAi( (int) Math.floor((x_screen - xA0)/40.) );
-		}
-		
-		if (x_screen >= xB0 && x_screen < xB0 + 400){
-			setXBi( (int) Math.floor((x_screen - xB0)/40.) );
-		}
+//		if (x_screen >= xA0 && x_screen < xA0 + 400){
+//			setXAi( (int) Math.floor((x_screen - xA0)/40.) );
+//		}
+//		
+//		if (x_screen >= xB0 && x_screen < xB0 + 400){
+//			setXBi( (int) Math.floor((x_screen - xB0)/40.) );
+//		}
 		
 //		if (y_screen <= yA0 && y_screen > yA0 - 400){
 //			setXAj( (int) Math.floor((yA0 - y_screen)/40.) );
@@ -234,7 +215,7 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 		/* Draw Design Space */
 		DSP.drawDesignSpace();
 		
-//		screenToXij( getXscreen(), getYscreen() );
+		screenToXij( getXscreen(), getYscreen() );
 		DSP.drawRulersXi( getXAi(), getXBi() );		
 		DSP.drawRulersXj( getXAj(), getXBj(), areBothSharing() );
 		
@@ -242,7 +223,8 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 //		DSP.displayNormalForm( areBothSharing() );
 		DSP.selectedCell( getXSi(), getXSj() );
 		
-//		System.out.println( getYscreen() );
+		int[] arr = {getXSi(), getXSj()};
+		System.out.println( Arrays.toString(arr) );
 				
 	}
 	
@@ -359,7 +341,7 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 			d.addObserver(new Observer() {
 				@Override
 				public void update(Observable arg0, Object arg1) {
-					if(manager != null && self != null 
+					if(manager != null && self != null && getXAi() != 10 && getXBi() != -1
 							&& d.getId() == manager.getDesignPartner(self.getId())) {
 						
 						setXAj( d.getDesign(0) );
@@ -368,11 +350,14 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 						setPartnerStatus( d.isReadyToShare() );
 						setSharingStatus( isSelfSharing(), isPartnerSharing() );
 						
-						repaint();
+//						repaint();
 					}
 				}
 			});
 		}
+		
+		repaint();
+		
 	}
 	
 	private Designer self = null;
@@ -380,34 +365,38 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 	public void bindTo(Designer designer) {
 		this.self = designer;
 		
-		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent me) {
-				
-				/* The next two lines take the (x,y) position of the MouseEvent "me"
-				 * and assign it to xAi and xAj.
-				 * I might use main_frame.setXAi(int) and main_frame.setXAj(int)
-				 * instead of main_frame.xAi = int and main_frame.xAj = int,
-				 * respectively; that could be a better practice. IDK!
-				 */
-				
-//				setXscreen(me.getX());
-//				setYscreen(me.getY());
-//				screenToXij( getXscreen(), getYscreen() );
-//				
-//				if (getXAi() != 10 && getXBi() != 10) {
-//					designer.setDesign(0, getXAi());
-//					designer.setDesign(1, getXBi());
-//				}
-				
-				setXAi(designer.getDesign(0));
-				setXBi(designer.getDesign(1));
-				
-				/* Here it is where I repaint the contents in the panel. */
-				repaint();
-				
-			}
-        });
+//		setXAi(designer.getDesign(0));
+//		setXBi(designer.getDesign(1));
+//		
+//		repaint();
 		
+//		addMouseListener(new MouseAdapter() {
+//			public void mousePressed(MouseEvent me) {
+//				
+//				/* The next two lines take the (x,y) position of the MouseEvent "me"
+//				 * and assign it to xAi and xAj.
+//				 * I might use main_frame.setXAi(int) and main_frame.setXAj(int)
+//				 * instead of main_frame.xAi = int and main_frame.xAj = int,
+//				 * respectively; that could be a better practice. IDK!
+//				 */
+//				
+////				setXscreen(me.getX());
+////				setYscreen(me.getY());
+////				screenToXij( getXscreen(), getYscreen() );
+////				
+////				if (getXAi() != 10 && getXBi() != 10) {
+////					designer.setDesign(0, getXAi());
+////					designer.setDesign(1, getXBi());
+////				}
+//				
+//				setXAi(designer.getDesign(0));
+//				setXBi(designer.getDesign(1));
+//				
+//				/* Here it is where I repaint the contents in the panel. */
+//				repaint();
+//				
+//			}
+//        });
 		
 //		shareButton.addActionListener(new ActionListener() {
 //			@Override
@@ -420,8 +409,8 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 		
 		/** AMVRO: Added temporarily before removing sharing definitely */
 		designer.setReadyToShare( true );
-		setSelfStatus( true );
-		setSharingStatus( true, true );
+//		setSelfStatus( true );
+//		setSharingStatus( true, true );
 		
 	}
 }

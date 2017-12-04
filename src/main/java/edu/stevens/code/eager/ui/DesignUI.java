@@ -126,11 +126,20 @@ public class DesignUI extends JPanel {
 	
 	public void observe(Manager manager, Designer[] designers) {
 		this.manager = manager;
+		
+		for(Designer d : designers) {
+			if(manager != null && self != null && getXSi() != 10 && getXSi() != -1
+					&& d.getId() == manager.getDesignPartner(self.getId())) {
+				setXSj( d.getDesign(getStrategy()) );
+				repaint();
+			}
+		}
+		
 		for(Designer d : designers) {
 			d.addObserver(new Observer() {
 				@Override
 				public void update(Observable arg0, Object arg1) {
-					if(manager != null && self != null 
+					if(manager != null && self != null && getXSi() != 10 && getXSi() != -1
 							&& d.getId() == manager.getDesignPartner(self.getId())) {
 						
 //						setXSj( d.getAgreedDesign(getStrategy()) );
@@ -155,7 +164,7 @@ public class DesignUI extends JPanel {
 				 * and assign it to xAi and xAj.
 				 * I might use main_frame.setXAi(int) and main_frame.setXAj(int)
 				 * instead of main_frame.xAi = int and main_frame.xAj = int,
-				 * respectively; that could be a better practice. IDK!
+				 * respectively; that could be a better practice. IDK LOL!
 				 */
 				
 				setXscreen(me.getX());

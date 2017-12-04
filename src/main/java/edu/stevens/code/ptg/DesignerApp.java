@@ -170,6 +170,17 @@ public class DesignerApp implements App {
 					}
 					dPanels.add(dPanel);
 					
+//					if(!designers.equals(self)) {
+//						dUI.designSpace.observe(manager, designers);
+//						dUI.designUI[0].observe(manager, designers);
+//						dUI.designUI[1].observe(manager, designers);
+//					} else {
+//						dUI.designSpace.bindTo(self);
+//						dUI.designUI[0].bindTo(self);
+//						dUI.designUI[1].bindTo(self);						
+//					}
+					
+					
 					if(designer.equals(self)) {
 //						dUI.bindTo(self);
 						dUI.designSpace.bindTo(self);

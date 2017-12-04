@@ -20,6 +20,10 @@ import edu.stevens.code.ptg.Task;
 
 public class DesignerUI extends DesignerAppPanel {
 	private static final long serialVersionUID = 1163389143406697128L;
+	public static final String[] STRATEGY_LABELS = new String[] {
+			"Red", 
+			"Blue"
+	};
 	public static final Color[] STRATEGY_COLORS = new Color[] {
 			Color.decode("#ffcccc"),
 			Color.decode("#ccccff")
@@ -70,10 +74,10 @@ public class DesignerUI extends DesignerAppPanel {
 		tabbedPane.addTab("Instructions", instructionUI);
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			designUIs[i] = new DesignUI(i);
-			tabbedPane.addTab("Design " + i, designUIs[i]);
+			tabbedPane.addTab(STRATEGY_LABELS[i] + " Design", designUIs[i]);
 		}
 		strategyUI = new StrategyUI();
-		tabbedPane.addTab("Composite", strategyUI);
+		tabbedPane.addTab("Decision", strategyUI);
 		
 		this.add(tabbedPane, BorderLayout.CENTER);
 	}

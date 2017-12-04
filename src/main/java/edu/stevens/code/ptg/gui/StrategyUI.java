@@ -1,6 +1,7 @@
 package edu.stevens.code.ptg.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -72,7 +73,7 @@ public class StrategyUI extends JPanel {
 			c.fill = GridBagConstraints.VERTICAL;
 			c.weightx = 0;
 			c.weighty = 0;
-			JLabel designLabel = new JLabel("Design " + i, JLabel.CENTER);
+			JLabel designLabel = new JLabel(DesignerUI.STRATEGY_LABELS[i] + " Design", JLabel.CENTER);
 			designLabel.setOpaque(true);
 			designLabel.setBackground(DesignerUI.STRATEGY_COLORS[i]);
 			this.add(designLabel, c);
@@ -82,7 +83,13 @@ public class StrategyUI extends JPanel {
 			c.weighty = 1;
 			for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
 				valueContainers[i][j] = new JPanel(new BorderLayout());
-				valueContainers[i][j].setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+				if(j == 0) {
+					valueContainers[i][j].setBorder(
+							BorderFactory.createMatteBorder(10,10,10,10,Color.BLACK));
+				} else {
+					valueContainers[i][j].setBorder(
+							BorderFactory.createEmptyBorder(10,10,10,10));
+				}
 				if(i == j) {
 					valueContainers[i][j].setBackground(DesignerUI.STRATEGY_COLORS[j]);
 				}
@@ -102,9 +109,27 @@ public class StrategyUI extends JPanel {
 		c.gridx++;
 		ButtonGroup radios = new ButtonGroup();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-			strategyRadios[i] = new JRadioButton("Design " + i);
+			strategyRadios[i] = new JRadioButton(DesignerUI.STRATEGY_LABELS[i] + " Design");
 			strategyRadios[i].setHorizontalAlignment(JLabel.CENTER);
 			strategyRadios[i].setBackground(DesignerUI.STRATEGY_COLORS[i]);
+			strategyRadios[i].addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+						if(strategyRadios[i].isSelected()) {
+							for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
+								valueContainers[j][i].setBorder(
+										BorderFactory.createMatteBorder(10,10,10,10,Color.BLACK));
+							}
+						} else {
+							for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
+								valueContainers[j][i].setBorder(
+										BorderFactory.createEmptyBorder(10,10,10,10));
+							}
+						}
+					}
+				}
+			});
 			radios.add(strategyRadios[i]);
 			this.add(strategyRadios[i], c);
 			c.gridx++;

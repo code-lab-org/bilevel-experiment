@@ -161,28 +161,19 @@ public class DesignUI extends JPanel {
 		this.add(mySlider, c);
 	}
 	
-	public void resetUI() {
+	private void resetUI(DesignerApp app) {
 		mySlider.setValue(0);
 		strategyCombo.setSelectedIndex(strategy);
+		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			int value = app.getValue(strategy, 0, strategy, 0);
+			valueLabels[i].setText(new Integer(value).toString());
+		}
 	}
 	
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		mySlider.setEnabled(enabled);
-	}
-	
-	private void updateDesigner(Designer designer, DesignerApp app) {
-		if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
-			partnerSlider.setValue(designer.getDesign(strategy));
-		}
-		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-			int value = app.getValue(
-				strategy, app.getController().getDesign(strategy), 
-				i, partnerSlider.getValue()
-			);
-			valueLabels[i].setText(new Integer(value).toString());
-		}
 	}
 	
 	public void bindTo(DesignerApp app) {		
@@ -196,13 +187,23 @@ public class DesignUI extends JPanel {
 		partnerSlider.setValue(0);
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			valuePanels[i].bindTo(app, strategy, i);
-			valueLabels[i].setText(new Integer(0).toString());
+			int value = app.getValue(strategy, 0, strategy, 0);
+			valueLabels[i].setText(new Integer(value).toString());
 		}
 		for(Designer designer : app.getDesigners()) {
 			designer.addObserver(new Observer() {
 				@Override
 				public void update(Observable o, Object arg) {
-					updateDesigner(designer, app);
+					if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
+						partnerSlider.setValue(designer.getDesign(strategy));
+					}
+					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+						int value = app.getValue(
+							strategy, app.getController().getDesign(strategy), 
+							i, partnerSlider.getValue()
+						);
+						valueLabels[i].setText(new Integer(value).toString());
+					}
 				}
 			});
 		}
@@ -211,7 +212,7 @@ public class DesignUI extends JPanel {
 			public void update(Observable o, Object arg) {
 				setEnabled(app.getManager().isDesignEnabled());
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
-					mySlider.setValue(0);
+					resetUI(app);
 				}
 			}
 		});

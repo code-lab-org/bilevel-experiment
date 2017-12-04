@@ -17,6 +17,7 @@ import javax.swing.JToggleButton;
 
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
+import edu.stevens.code.ptg.Manager;
 
 public class StrategyUI extends JPanel {
 	private static final long serialVersionUID = -4318471579781451005L;
@@ -110,10 +111,10 @@ public class StrategyUI extends JPanel {
 		}
 	}
 	
-	public void resetUI() {
-		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-			strategyRadios[i].setSelected(false);
-			toggleButton.setSelected(false);
+	private void resetUI() {
+		strategyRadios[0].setSelected(true);
+		if(toggleButton.isSelected()) {
+			toggleButton.doClick();
 		}
 	}
 	
@@ -144,6 +145,9 @@ public class StrategyUI extends JPanel {
 			@Override
 			public void update(Observable o, Object arg) {
 				setEnabled(app.getManager().isDesignEnabled());
+				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
+					resetUI();
+				}
 			}
 		});
 	}

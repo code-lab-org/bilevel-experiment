@@ -153,10 +153,18 @@ public class DesignUI extends JPanel {
 		valueContainer.setOpaque(false);
 		valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
 		this.add(valueContainer, c);
+		c.gridx+=2;
+		c.weightx = 0;
+		c.weighty = 1;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.VERTICAL;
+		this.add(new ColorBarPanel(), c);
 		
+		c.gridx = 1;
 		c.gridy++;
 		c.weightx = 0;
 		c.weighty = 0;
+		c.gridwidth = 2;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		mySlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE);
 		mySlider.setEnabled(false);

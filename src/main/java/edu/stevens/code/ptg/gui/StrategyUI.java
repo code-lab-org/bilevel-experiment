@@ -6,6 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -90,6 +92,13 @@ public class StrategyUI extends JPanel {
 			c.weighty = 1;
 			for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
 				valueContainers[i][j] = new JPanel(new BorderLayout());
+				final int strategy = j;
+				valueContainers[i][j].addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						strategyRadios[strategy].doClick();
+					}
+				});
 				if(j == 0) {
 					valueContainers[i][j].setBorder(
 							BorderFactory.createMatteBorder(10,10,10,10,Color.BLACK));

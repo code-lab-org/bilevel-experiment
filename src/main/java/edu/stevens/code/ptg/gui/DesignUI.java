@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -148,6 +150,14 @@ public class DesignUI extends JPanel {
 		c.fill = GridBagConstraints.BOTH;
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			valuePanels[i] = new ValuePanel();
+			valuePanels[i].addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int design = ((ValuePanel)e.getSource()).getDesign(e.getX());
+					System.out.println(design);
+					mySlider.setValue(design);
+				}
+			});
 		}
 		valueContainer = new JPanel(new BorderLayout());
 		valueContainer.setOpaque(false);

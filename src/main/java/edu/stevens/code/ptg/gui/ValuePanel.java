@@ -55,6 +55,12 @@ public class ValuePanel extends JPanel {
 		this.partnerStrategy = partnerStrategy;
 	}
 	
+	public int getDesign(int x) {
+		Insets insets = this.getInsets();
+		int width = (this.getWidth() - insets.left - insets.right)/Designer.NUM_DESIGNS;
+		return x / width;
+	}
+	
 	public void paint(Graphics g) {
 		super.paint(g);
 		

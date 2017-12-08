@@ -1,6 +1,7 @@
 package edu.stevens.code.ptg.hla;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -202,68 +203,90 @@ public class Ambassador extends NullFederateAmbassador {
 		updateDesigner(designerApp.getController());
 	}
 	
-	public void updateManager(Manager manager) throws RTIexception {
+	public void updateManager(Manager manager, Object... properties) throws RTIexception {
 		if(registeredInstances.containsKey(manager)) {
 			logger.info("Updating manager attribute values.");
 			AttributeHandleValueMap attributes = 
 					rtiAmbassador.getAttributeHandleValueMapFactory().create(0);
-			HLAunicodeString round = encoderFactory.createHLAunicodeString(manager.getRoundName());
-			attributes.put(rtiAmbassador.getAttributeHandle(
-					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
-					ATTRIBUTE_NAME_MANAGER_ROUND), round.toByteArray());
-			HLAinteger32BE time = encoderFactory.createHLAinteger32BE(manager.getTimeRemaining());
-			attributes.put(rtiAmbassador.getAttributeHandle(
-					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
-					ATTRIBUTE_NAME_MANAGER_TIME), time.toByteArray());
-			HLAfixedArray<HLAfixedRecord> tasks = encoderFactory.createHLAfixedArray(new DataElementFactory<HLAfixedRecord>(){
-				@Override
-				public HLAfixedRecord createElement(int taskId) {
-					HLAfixedRecord task = encoderFactory.createHLAfixedRecord();
-					task.add(encoderFactory.createHLAunicodeString(manager.getTask(taskId).getName()));
-					task.add(encoderFactory.createHLAfixedArray(new DataElementFactory<HLAinteger32BE>(){
-						@Override
-						public HLAinteger32BE createElement(int designerId) {
-							return encoderFactory.createHLAinteger32BE(manager.getTask(taskId).getDesignerId(designerId));
-						}
-					}, Task.NUM_DESIGNERS));
-					return task;
-				}
-			}, Task.NUM_DESIGNERS);
-			attributes.put(rtiAmbassador.getAttributeHandle(
-					rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
-					ATTRIBUTE_NAME_MANAGER_TASKS), tasks.toByteArray());
-			rtiAmbassador.updateAttributeValues(registeredInstances.get(manager), attributes, new byte[0]);
-			logger.debug("Updated manager attribute values.");
+			if(properties.length == 0 || Arrays.asList(properties).contains(Manager.PROPERTY_ROUND)) {
+				HLAunicodeString round = encoderFactory.createHLAunicodeString(manager.getRoundName());
+				attributes.put(rtiAmbassador.getAttributeHandle(
+						rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+						ATTRIBUTE_NAME_MANAGER_ROUND), round.toByteArray());
+			}
+			if(properties.length == 0 || Arrays.asList(properties).contains(Manager.PROPERTY_TIME)) {
+				HLAinteger32BE time = encoderFactory.createHLAinteger32BE(manager.getTimeRemaining());
+				attributes.put(rtiAmbassador.getAttributeHandle(
+						rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+						ATTRIBUTE_NAME_MANAGER_TIME), time.toByteArray());
+			}
+			if(properties.length == 0 || Arrays.asList(properties).contains(Manager.PROPERTY_TASKS)) {
+				HLAfixedArray<HLAfixedRecord> tasks = encoderFactory.createHLAfixedArray(new DataElementFactory<HLAfixedRecord>(){
+					@Override
+					public HLAfixedRecord createElement(int taskId) {
+						HLAfixedRecord task = encoderFactory.createHLAfixedRecord();
+						task.add(encoderFactory.createHLAunicodeString(manager.getTask(taskId).getName()));
+						task.add(encoderFactory.createHLAfixedArray(new DataElementFactory<HLAinteger32BE>(){
+							@Override
+							public HLAinteger32BE createElement(int designerId) {
+								return encoderFactory.createHLAinteger32BE(manager.getTask(taskId).getDesignerId(designerId));
+							}
+						}, Task.NUM_DESIGNERS));
+						return task;
+					}
+				}, Task.NUM_DESIGNERS);
+				attributes.put(rtiAmbassador.getAttributeHandle(
+						rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+						ATTRIBUTE_NAME_MANAGER_TASKS), tasks.toByteArray());
+			}
+			if(!attributes.isEmpty()) {
+				rtiAmbassador.updateAttributeValues(registeredInstances.get(manager), attributes, new byte[0]);
+				logger.debug("Updated manager attribute values.");
+			} else {
+				logger.debug("No new manager attribute values to update.");
+			}
 		} else {
 			logger.warn("Manager not registered as object instance.");
 		}
 	}
 	
-	public void updateDesigner(Designer designer) throws RTIexception {
+	public void updateDesigner(Designer designer, Object... properties) throws RTIexception {
 		if(registeredInstances.containsKey(designer)) {
 			logger.info("Updating designer attribute values.");
 			AttributeHandleValueMap attributes = 
 					rtiAmbassador.getAttributeHandleValueMapFactory().create(0);
-			byte[] id = encoderFactory.createHLAinteger32BE(designer.getId()).toByteArray();
-			attributes.put(rtiAmbassador.getAttributeHandle(
-					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
-					ATTRIBUTE_NAME_DESIGNER_ID), id);
-			byte[] designs = encoderFactory.createHLAfixedArray(
-					encoderFactory.createHLAinteger32BE(designer.getDesign(0)),
-					encoderFactory.createHLAinteger32BE(designer.getDesign(1))).toByteArray();
-			attributes.put(rtiAmbassador.getAttributeHandle(
-					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
-					ATTRIBUTE_NAME_DESIGNER_DESIGN), designs);
-			byte[] strategy = encoderFactory.createHLAinteger32BE(designer.getStrategy()).toByteArray();
-			attributes.put(rtiAmbassador.getAttributeHandle(
-					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
-					ATTRIBUTE_NAME_DESIGNER_STRATEGY), strategy);
-			byte[] share = encoderFactory.createHLAboolean(designer.isReadyToShare()).toByteArray();
-			attributes.put(rtiAmbassador.getAttributeHandle(
-					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
-					ATTRIBUTE_NAME_DESIGNER_SHARE), share);
-			rtiAmbassador.updateAttributeValues(registeredInstances.get(designer), attributes, new byte[0]);
-			logger.debug("Updated designer attribute values.");
+			if(properties.length == 0 || Arrays.asList(properties).contains(Designer.PROPERTY_ID)) {
+				byte[] id = encoderFactory.createHLAinteger32BE(designer.getId()).toByteArray();
+				attributes.put(rtiAmbassador.getAttributeHandle(
+						rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+						ATTRIBUTE_NAME_DESIGNER_ID), id);
+			}
+			if(properties.length == 0 || Arrays.asList(properties).contains(Designer.PROPERTY_DESIGNS)) {
+				byte[] designs = encoderFactory.createHLAfixedArray(
+						encoderFactory.createHLAinteger32BE(designer.getDesign(0)),
+						encoderFactory.createHLAinteger32BE(designer.getDesign(1))).toByteArray();
+				attributes.put(rtiAmbassador.getAttributeHandle(
+						rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+						ATTRIBUTE_NAME_DESIGNER_DESIGN), designs);
+			}
+			if(properties.length == 0 || Arrays.asList(properties).contains(Designer.PROPERTY_STRATEGY)) {
+				byte[] strategy = encoderFactory.createHLAinteger32BE(designer.getStrategy()).toByteArray();
+				attributes.put(rtiAmbassador.getAttributeHandle(
+						rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+						ATTRIBUTE_NAME_DESIGNER_STRATEGY), strategy);
+			}
+			if(properties.length == 0 || Arrays.asList(properties).contains(Designer.PROPERTY_SHARE)) {
+				byte[] share = encoderFactory.createHLAboolean(designer.isReadyToShare()).toByteArray();
+				attributes.put(rtiAmbassador.getAttributeHandle(
+						rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+						ATTRIBUTE_NAME_DESIGNER_SHARE), share);
+			}
+			if(!attributes.isEmpty()) {
+				rtiAmbassador.updateAttributeValues(registeredInstances.get(designer), attributes, new byte[0]);
+				logger.debug("Updated designer attribute values.");
+			} else {
+				logger.debug("No new designer attribute values to update.");
+			}
 		} else {
 			logger.warn("Designer not registered as object instance.");
 		}
@@ -341,29 +364,31 @@ public class Ambassador extends NullFederateAmbassador {
 							rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
 							ATTRIBUTE_NAME_DESIGNER_DESIGN));
 					if(designsData != null) {
-						HLAfixedArray<HLAinteger32BE> designs = encoderFactory.createHLAfixedArray(
+						HLAfixedArray<HLAinteger32BE> hlaDesigns = encoderFactory.createHLAfixedArray(
 								encoderFactory.createHLAinteger32BE(),
 								encoderFactory.createHLAinteger32BE());
-						designs.decode(designsData);
+						hlaDesigns.decode(designsData);
+						int[] designs = new int[hlaDesigns.size()];
 						for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-							designer.setDesign(i, designs.get(i).getValue());
+							designs[i] = hlaDesigns.get(i).getValue();
 						}
+						designer.setDesigns(designs);
 					}
 					byte[] strategyData = theAttributes.get(rtiAmbassador.getAttributeHandle(
 							rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
 							ATTRIBUTE_NAME_DESIGNER_STRATEGY));
 					if(strategyData != null) {
-						HLAinteger32BE strategy = encoderFactory.createHLAinteger32BE();
-						strategy.decode(strategyData);
-						designer.setStrategy(strategy.getValue());
+						HLAinteger32BE hlaStrategy = encoderFactory.createHLAinteger32BE();
+						hlaStrategy.decode(strategyData);
+						designer.setStrategy(hlaStrategy.getValue());
 					}
 					byte[] shareData = theAttributes.get(rtiAmbassador.getAttributeHandle(
 							rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
 							ATTRIBUTE_NAME_DESIGNER_SHARE));
 					if(shareData != null) {
-						HLAboolean share = encoderFactory.createHLAboolean();
-						share.decode(shareData);
-						designer.setReadyToShare(share.getValue());
+						HLAboolean hlaShare = encoderFactory.createHLAboolean();
+						hlaShare.decode(shareData);
+						designer.setReadyToShare(hlaShare.getValue());
 					}
 					logger.debug("Reflected designer attibute values.");
 				} else if(discoveredInstances.get(theObject) instanceof Manager) {
@@ -372,23 +397,23 @@ public class Ambassador extends NullFederateAmbassador {
 							rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
 							ATTRIBUTE_NAME_MANAGER_ROUND));
 					if(roundData != null) {
-						HLAunicodeString round = encoderFactory.createHLAunicodeString();
-						round.decode(roundData);
-						manager.setRoundName(round.getValue());
+						HLAunicodeString hlaRound = encoderFactory.createHLAunicodeString();
+						hlaRound.decode(roundData);
+						manager.setRoundName(hlaRound.getValue());
 					}
 					byte[] timeData = theAttributes.get(rtiAmbassador.getAttributeHandle(
 							rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
 							ATTRIBUTE_NAME_MANAGER_TIME));
 					if(timeData != null) {
-						HLAinteger32BE time = encoderFactory.createHLAinteger32BE();
-						time.decode(timeData);
-						manager.setTimeRemaining(time.getValue());
+						HLAinteger32BE hlaTime = encoderFactory.createHLAinteger32BE();
+						hlaTime.decode(timeData);
+						manager.setTimeRemaining(hlaTime.getValue());
 					}
 					byte[] taskData = theAttributes.get(rtiAmbassador.getAttributeHandle(
 							rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
 							ATTRIBUTE_NAME_MANAGER_TASKS));
 					if(taskData != null) {
-						HLAfixedArray<HLAfixedRecord> tasks = encoderFactory.createHLAfixedArray(new DataElementFactory<HLAfixedRecord>(){
+						HLAfixedArray<HLAfixedRecord> hlaTasks = encoderFactory.createHLAfixedArray(new DataElementFactory<HLAfixedRecord>(){
 							@Override
 							public HLAfixedRecord createElement(int taskId) {
 								HLAfixedRecord task = encoderFactory.createHLAfixedRecord();
@@ -402,16 +427,16 @@ public class Ambassador extends NullFederateAmbassador {
 								return task;
 							}
 						}, Task.NUM_DESIGNERS);
-						tasks.decode(taskData);
+						hlaTasks.decode(taskData);
 						for(int i = 0; i < Manager.NUM_TASKS; i++) {
-							if(tasks.get(i).get(0) instanceof HLAunicodeString) {
-								manager.getTask(i).setName(((HLAunicodeString)tasks.get(i).get(0)).getValue());
+							if(hlaTasks.get(i).get(0) instanceof HLAunicodeString) {
+								manager.getTask(i).setName(((HLAunicodeString)hlaTasks.get(i).get(0)).getValue());
 							}
 							for(int j = 0; j < Task.NUM_DESIGNERS; j++) {
-								if(tasks.get(i).get(1) instanceof HLAfixedArray<?> 
-									&& ((HLAfixedArray<?>)tasks.get(i).get(1)).get(j) instanceof HLAinteger32BE) {
+								if(hlaTasks.get(i).get(1) instanceof HLAfixedArray<?> 
+									&& ((HLAfixedArray<?>)hlaTasks.get(i).get(1)).get(j) instanceof HLAinteger32BE) {
 									manager.getTask(i).setDesignerId(j, 
-											((HLAinteger32BE)((HLAfixedArray<?>)tasks.get(i).get(1)).get(j)).getValue());
+											((HLAinteger32BE)((HLAfixedArray<?>)hlaTasks.get(i).get(1)).get(j)).getValue());
 								}
 							}
 						}

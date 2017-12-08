@@ -71,7 +71,7 @@ public class DesignerApp implements App {
 			@Override
 			public void update(Observable o, Object arg) {
 				try {
-					ambassador.updateDesigner(designer);
+					ambassador.updateDesigner(designer, arg);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}

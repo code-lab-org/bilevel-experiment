@@ -210,7 +210,7 @@ public class ManagerApp implements App {
 			@Override
 			public void update(Observable o, Object arg) {
 				try {
-					ambassador.updateManager(manager);
+					ambassador.updateManager(manager, arg);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}

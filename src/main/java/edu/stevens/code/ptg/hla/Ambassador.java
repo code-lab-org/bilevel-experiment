@@ -337,6 +337,11 @@ public class Ambassador extends NullFederateAmbassador {
 			} else {
 				logger.warn("Could not determine object class.");
 			}
+			// if this ambassador is controlling a designer, make sure to update the id
+			if(app.getController() instanceof Designer) {
+				// update the designer ID
+				updateDesigner((Designer) app.getController(), Designer.PROPERTY_ID);
+			}
 		} catch (RTIexception e) {
 			logger.error(e);
 		}

@@ -86,8 +86,8 @@ public class ValuePanel extends JPanel {
 			}
 			String text = new Integer(value).toString();
 			FontMetrics fm = getFontMetrics(getFont());
-			int x = (int) (insets.left + (myDesign+0.5)*width - fm.getStringBounds(text, g).getWidth()/2);
-			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign)*height - (height-fm.getStringBounds(text, g).getHeight()));
+			int x = (int) (insets.left + (myDesign+0.5)*width - fm.getStringBounds(text, g).getCenterX());
+			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-0.5)*height - fm.getStringBounds(text, g).getCenterY());
 			g.drawString(text, x, y);
 		}
 	}

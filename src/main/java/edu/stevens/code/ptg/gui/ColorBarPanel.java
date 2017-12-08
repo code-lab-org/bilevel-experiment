@@ -48,7 +48,7 @@ public class ColorBarPanel extends JPanel {
 			g.setColor(Color.BLACK);
 			String text = new Integer(value).toString();
 			int textX = (int) (x + width + textPadding);
-			int textY = (int) (y + fm.getStringBounds(text, g).getHeight());
+			int textY = (int) (y+0.5*height - fm.getStringBounds(text, g).getCenterY());
 			g.drawString(text, textX, textY);
 		}
 	}

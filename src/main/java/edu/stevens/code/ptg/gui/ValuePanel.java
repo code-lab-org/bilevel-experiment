@@ -62,6 +62,8 @@ public class ValuePanel extends JPanel {
 		int width = (this.getWidth() - insets.left - insets.right)/Designer.NUM_DESIGNS;
 		int height = (this.getHeight() - insets.top - insets.bottom)/Designer.NUM_DESIGNS;
 		
+		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(width/2f,height/1.0f), 48), 12)));
+		
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
 				int value = app.getValue(myStrategy, i, partnerStrategy, j);
@@ -85,7 +87,7 @@ public class ValuePanel extends JPanel {
 			String text = new Integer(value).toString();
 			FontMetrics fm = getFontMetrics(getFont());
 			int x = (int) (insets.left + (myDesign+0.5)*width - fm.getStringBounds(text, g).getWidth()/2);
-			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-0.5)*height + fm.getStringBounds(text, g).getHeight()/2);
+			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign)*height - (height-fm.getStringBounds(text, g).getHeight()));
 			g.drawString(text, x, y);
 		}
 	}

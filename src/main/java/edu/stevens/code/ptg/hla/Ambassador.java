@@ -433,18 +433,22 @@ public class Ambassador extends NullFederateAmbassador {
 							}
 						}, Task.NUM_DESIGNERS);
 						hlaTasks.decode(taskData);
+						Task[] tasks = new Task[Manager.NUM_TASKS];
 						for(int i = 0; i < Manager.NUM_TASKS; i++) {
+							String taskName = "";
 							if(hlaTasks.get(i).get(0) instanceof HLAunicodeString) {
-								manager.getTask(i).setName(((HLAunicodeString)hlaTasks.get(i).get(0)).getValue());
+								taskName = ((HLAunicodeString)hlaTasks.get(i).get(0)).getValue();
 							}
+							int[] designerIds = new int[Task.NUM_DESIGNERS];
 							for(int j = 0; j < Task.NUM_DESIGNERS; j++) {
 								if(hlaTasks.get(i).get(1) instanceof HLAfixedArray<?> 
 									&& ((HLAfixedArray<?>)hlaTasks.get(i).get(1)).get(j) instanceof HLAinteger32BE) {
-									manager.getTask(i).setDesignerId(j, 
-											((HLAinteger32BE)((HLAfixedArray<?>)hlaTasks.get(i).get(1)).get(j)).getValue());
+									designerIds[j] = ((HLAinteger32BE)((HLAfixedArray<?>)hlaTasks.get(i).get(1)).get(j)).getValue();
 								}
 							}
+							tasks[i] = new Task(taskName, designerIds);
 						}
+						manager.setTasks(tasks);
 					}
 					logger.debug("Reflected manager attibute values.");
 				}

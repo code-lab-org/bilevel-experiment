@@ -143,7 +143,7 @@ public class ManagerPanelImpl extends ManagerPanel {
 			}
 		});
 		for(int i = 0; i < Manager.NUM_TASKS; i++) {
-			taskPanels[i].observe(manager.getTask(i));
+			taskPanels[i].observe(manager, i);
 		}
 	}
 

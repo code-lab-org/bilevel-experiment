@@ -59,39 +59,47 @@ public class TaskPanel extends JPanel {
 		}
 	}
 	
-	public void observe(Task task) {
-		nameText.setText(task.getName());
+	public void observe(Manager manager, int taskIndex) {
+		nameText.setText(manager.getTask(taskIndex).getName());
 		for(int i = 0; i < Task.NUM_DESIGNERS; i++) {
-			designerCombos[i].setSelectedIndex(task.getDesignerId(i));
+			designerCombos[i].setSelectedIndex(manager.getTask(taskIndex).getDesignerId(i));
 		}
-		task.addObserver(new Observer() {
+		manager.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				nameText.setText(task.getName());
+				nameText.setText(manager.getTask(taskIndex).getName());
 				for(int i = 0; i < Task.NUM_DESIGNERS; i++) {
-					designerCombos[i].setSelectedIndex(task.getDesignerId(i));
+					designerCombos[i].setSelectedIndex(manager.getTask(taskIndex).getDesignerId(i));
 				}
 			}
 		});
 	}
 
-	public void bindTo(Task task) {
-		nameText.setText(task.getName());
+	public void bindTo(Manager manager, int taskIndex) {
+		nameText.setText(manager.getTask(taskIndex).getName());
 		nameText.setEnabled(true);
 		nameText.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				task.setName(nameText.getText());
+				manager.setTask(taskIndex, new Task(
+						nameText.getText(), 
+						manager.getTask(taskIndex).getDesignerIds()
+				));
 			}
 		});
 		for(int i = 0; i < Task.NUM_DESIGNERS; i++) {
 			final int designerIndex = i;
-			designerCombos[i].setSelectedIndex(task.getDesignerId(i));
+			designerCombos[i].setSelectedIndex(manager.getTask(taskIndex).getDesignerId(i));
 			designerCombos[i].setEnabled(true);
 			designerCombos[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					task.setDesignerId(designerIndex, designerCombos[designerIndex].getSelectedIndex());
+					int[] designerIds = new int[Task.NUM_DESIGNERS];
+					designerIds[designerIndex] = designerCombos[designerIndex].getSelectedIndex();
+					manager.setTask(taskIndex, new Task(
+							manager.getTask(taskIndex).getName(),
+							designerIds
+					));
 				}
 			});
 		}

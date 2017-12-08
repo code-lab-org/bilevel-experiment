@@ -2,7 +2,6 @@ package edu.stevens.code.ptg;
 
 import java.util.Arrays;
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * The Class Manager.
@@ -17,7 +16,7 @@ public class Manager extends Observable {
 	
 	private String roundName = "";
 	private int timeRemaining = -1;
-	private final Task[] tasks = new Task[NUM_TASKS];
+	private Task[] tasks = new Task[NUM_TASKS];
 	
 	/**
 	 * Instantiates a new manager.
@@ -25,13 +24,6 @@ public class Manager extends Observable {
 	public Manager() {
 		for(int i = 0; i < NUM_TASKS; i++) {
 			this.tasks[i] = new Task();
-			this.tasks[i].addObserver(new Observer() {
-				@Override
-				public void update(Observable o, Object arg) {
-					setChanged();
-					notifyObservers(PROPERTY_TASKS);
-				}
-			});
 		}
 	}
 	
@@ -55,10 +47,11 @@ public class Manager extends Observable {
 		synchronized(this) {
 			this.setRoundName(round.getName());
 			this.setTimeRemaining(MAX_TASK_TIME);
+			Task[] tasks = new Task[NUM_TASKS];
 			for(int i = 0; i < NUM_TASKS; i++) {
-				this.getTask(i).setName(round.getTask(i).getName());
-				this.getTask(i).setDesignerIds(round.getTask(i).getDesignerIds());
+				tasks[i] = new Task(round.getTask(i).getName(), round.getTask(i).getDesignerIds());
 			}
+			this.setTasks(tasks);
 		}
 	}
 	
@@ -215,6 +208,7 @@ public class Manager extends Observable {
 	 *
 	 * @param index the index
 	 * @param task the task
+	 */
 	public void setTask(int index, Task task) {
 		if(index < 0 || index >= NUM_TASKS) {
 			throw new IllegalArgumentException("invalid task index");
@@ -232,6 +226,7 @@ public class Manager extends Observable {
 	 * Sets the tasks.
 	 *
 	 * @param tasks the new tasks
+	 */
 	public void setTasks(Task[] tasks) {
 		if(tasks.length != NUM_TASKS) {
 			throw new IllegalArgumentException("invalid number of tasks");
@@ -244,7 +239,6 @@ public class Manager extends Observable {
 		}
 		this.notifyObservers(PROPERTY_TASKS);
 	}
-	 */
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

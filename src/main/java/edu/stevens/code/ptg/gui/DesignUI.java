@@ -154,7 +154,6 @@ public class DesignUI extends JPanel {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					int design = ((ValuePanel)e.getSource()).getDesign(e.getX());
-					System.out.println(design);
 					mySlider.setValue(design);
 				}
 			});

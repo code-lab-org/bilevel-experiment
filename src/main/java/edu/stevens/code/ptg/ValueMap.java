@@ -36,7 +36,7 @@ public class ValueMap {
 				}
 			}
 		} catch (IOException e) {
-			logger.error(e);
+			logger.warn(e);
 		}
 	}
 	

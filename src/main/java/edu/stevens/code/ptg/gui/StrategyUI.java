@@ -40,7 +40,7 @@ public class StrategyUI extends JPanel {
 		c.weighty = 0;
 		c.anchor = GridBagConstraints.CENTER;
 
-		c.gridwidth = 3;
+		c.gridwidth = 4;
 		c.anchor = GridBagConstraints.EAST;
 		toggleButton = new JToggleButton("Detail");
 		toggleButton.setHorizontalAlignment(JToggleButton.RIGHT);
@@ -67,23 +67,17 @@ public class StrategyUI extends JPanel {
 		add(toggleButton, c);
 		
 		c.gridy++;
-		c.gridx = 1 + Designer.NUM_STRATEGIES;
-		c.weightx = 0;
-		c.weighty = 1;
+		c.gridx = Designer.NUM_STRATEGIES + 1;
 		c.gridwidth = 1;
-		c.ipadx = 5;
-		c.ipady = 5;
 		c.gridheight = Designer.NUM_STRATEGIES;
 		c.fill = GridBagConstraints.VERTICAL;
 		this.add(new ColorBarPanel(), c);
 		
-		c.gridx = 0;
-		c.ipadx = 0;
-		c.ipady = 0;
 		c.gridheight = 1;
-		c.anchor = GridBagConstraints.CENTER;
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			c.gridx = 0;
 			c.fill = GridBagConstraints.VERTICAL;
+			c.anchor = GridBagConstraints.CENTER;
 			c.weightx = 0;
 			c.weighty = 0;
 			JLabel designLabel = new JLabel(DesignerUI.STRATEGY_LABELS[i] + " Design", JLabel.CENTER);
@@ -112,12 +106,12 @@ public class StrategyUI extends JPanel {
 				this.add(valueContainers[i][j], c);
 				c.gridx++;
 			}
-			c.gridx = 0;
 			c.gridy++;
 		}
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridheight = 1;
+		c.gridx = 0;
 		c.weightx = 0;
 		c.weighty = 0;
 		this.add(new JLabel(""), c);

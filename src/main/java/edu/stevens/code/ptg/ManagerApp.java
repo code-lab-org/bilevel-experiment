@@ -30,15 +30,42 @@ public class ManagerApp implements App {
 	private Session session = null;
 	private int roundIndex = -1;
 	private int[][] scores = new int[Manager.NUM_DESIGNERS][0];
-	
+	private final ExperimentLogger expLogger;
 	/**
 	 * Instantiates a new manager app.
 	 */
 	public ManagerApp() {
+		expLogger = new ExperimentLogger();
+		manager.addObserver(new Observer() {
+			@Override
+			public void update(Observable o, Object arg) {
+				if(Manager.PROPERTY_ROUND.equals(arg)) {
+					expLogger.logRoundChange(manager);
+				} else if(Manager.PROPERTY_TASKS.equals(arg)) {
+					expLogger.logTaskChange(manager);
+				} else if(Manager.PROPERTY_TIME.equals(arg) 
+						&& manager.getTimeRemaining() == Manager.MAX_TASK_TIME - 1) {
+					expLogger.logTaskStart(manager);
+				} else if(Manager.PROPERTY_TIME.equals(arg) 
+						&& manager.getTimeRemaining() == 0) {
+					expLogger.logTaskEnd(manager);
+				}
+			}
+		});
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
-			Designer d = new Designer();
-			d.setId(i);
-			designers[i] = d;
+			Designer designer = new Designer();
+			designer.setId(i);
+			designers[i] = designer;
+			designer.addObserver(new Observer() {
+				@Override
+				public void update(Observable o, Object arg) {
+					if(Designer.PROPERTY_DESIGNS.equals(arg)) {
+						expLogger.logDesignerDesignChange(designer);
+					} else if(Designer.PROPERTY_STRATEGY.equals(arg)) {
+						expLogger.logDesignerStrategyChange(designer);
+					}
+				}
+			});
 		}
 	}
 	

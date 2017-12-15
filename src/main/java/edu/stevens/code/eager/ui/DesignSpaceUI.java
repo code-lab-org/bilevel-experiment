@@ -125,7 +125,7 @@ public class DesignSpaceUI extends JPanel implements ActionListener, KeyListener
 		
 		/* Create the aforementioned "main_frame" object of class MainUI. */
 		final DesignSpaceUI main_frame = new DesignSpaceUI();
-		main_frame.setGame("PB01");
+		main_frame.setGame("NN0905_01");
 		
 		
 		main_frame.setJFrameUI(frame);

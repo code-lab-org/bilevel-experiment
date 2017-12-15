@@ -86,7 +86,7 @@ public class DesignerUI extends JTabbedPane {
 		JFrame frame = new JFrame("Collective Design Laboratory");
 		
 		/* Create the aforementioned "main_frame" object of class MainUI. */
-		final DesignerUI dTabbedPanels = new DesignerUI("SH01");
+		final DesignerUI dTabbedPanels = new DesignerUI("NN0905_01");
 		
 		frame.add(dTabbedPanels);		
 		frame.setIconImages(DesignerApp.ICONS);

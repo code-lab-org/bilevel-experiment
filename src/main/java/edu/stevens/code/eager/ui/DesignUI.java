@@ -25,7 +25,7 @@ public class DesignUI extends JPanel {
 	private static final long serialVersionUID = -4256491169699543466L;
 	
 	/** Game file */
-	private String game = "PB01"; /* Default game */
+	private String game = "NN0905_01"; /* Default game */
 	public String getGame() { return game; }
 	public void setGame(String game_file) { this.game = game_file; }
 	

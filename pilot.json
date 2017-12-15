@@ -5,11 +5,11 @@
       name: "Round 1",
       tasks: [
         {
-          name: "SH01",
+          name: "SH0905_01",
           designerIds: [0, 1]
         },
         {
-          name: "SH02",
+          name: "SH0905_02",
           designerIds: [2, 3]
         }
       ]
@@ -18,11 +18,11 @@
       name: "Round 2",
       tasks: [
         {
-          name: "PB01",
+          name: "PD0905_01",
           designerIds: [0, 2]
         },
         {
-          name: "PD01",
+          name: "PD0905_02",
           designerIds: [1, 3]
         }
       ]

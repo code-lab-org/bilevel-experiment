@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
+import edu.stevens.code.ptg.Manager;
 
 public class ValuePanel extends JPanel {
 	private static final long serialVersionUID = -125874855243548180L;
@@ -30,6 +31,9 @@ public class ValuePanel extends JPanel {
 		this.app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
+				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
+					partnerDesign = 0;
+				}
 				repaint();
 			}
 		});

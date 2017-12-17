@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
+import edu.stevens.code.ptg.Manager;
 
 public class ValueLabel extends JLabel {
 	private static final long serialVersionUID = -125874855243548180L;
@@ -29,6 +30,9 @@ public class ValueLabel extends JLabel {
 		this.app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
+				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
+					partnerDesign = 0;
+				}
 				updateLabel();
 			}
 		});

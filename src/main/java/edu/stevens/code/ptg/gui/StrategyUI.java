@@ -73,20 +73,19 @@ public class StrategyUI extends JPanel {
 		c.gridwidth = 1;
 		c.gridheight = Designer.NUM_STRATEGIES;
 		c.fill = GridBagConstraints.VERTICAL;
+		c.anchor = GridBagConstraints.CENTER;
 		this.add(new ColorBarPanel(), c);
 		
 		c.gridheight = 1;
+		c.fill = GridBagConstraints.BOTH;
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			c.gridx = 0;
-			c.fill = GridBagConstraints.VERTICAL;
-			c.anchor = GridBagConstraints.CENTER;
 			c.weightx = 0;
 			c.weighty = 0;
 			JLabel designLabel = new JLabel(DesignerUI.STRATEGY_LABELS[i] + " Design", JLabel.CENTER);
 			designLabel.setOpaque(true);
 			designLabel.setBackground(DesignerUI.STRATEGY_COLORS[i]);
 			this.add(designLabel, c);
-			c.fill = GridBagConstraints.BOTH;
 			c.gridx++;
 			c.weightx = 1;
 			c.weighty = 1;
@@ -155,7 +154,7 @@ public class StrategyUI extends JPanel {
 	}
 	
 	private void resetUI() {
-		strategyRadios[0].setSelected(true);
+		strategyRadios[0].doClick();
 		if(toggleButton.isSelected()) {
 			toggleButton.doClick();
 		}

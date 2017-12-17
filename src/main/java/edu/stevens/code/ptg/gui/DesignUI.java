@@ -196,6 +196,7 @@ public class DesignUI extends JPanel {
 	
 	private void resetUI(DesignerApp app) {
 		mySlider.setValue(0);
+		partnerSlider.setValue(0);
 		strategyCombo.setSelectedIndex(strategy);
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			int value = app.getValue(strategy, 0, strategy, 0);

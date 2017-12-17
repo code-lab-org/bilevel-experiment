@@ -37,13 +37,11 @@ public class ExperimentLogger {
 		logAction(manager.toString(), "task", manager.getTasks());
 	}
 	
-	public void logTaskStart(Manager manager) {
-		int[] values = new int[4]; // TODO
+	public void logTaskStart(Manager manager, int[] values) {
 		logAction(manager.toString(), "start", values);
 	}
 	
-	public void logTaskEnd(Manager manager) {
-		int[] values = new int[4]; // TODO
+	public void logTaskEnd(Manager manager, int[] values) {
 		logAction(manager.toString(), "end", values);
 	}
 	

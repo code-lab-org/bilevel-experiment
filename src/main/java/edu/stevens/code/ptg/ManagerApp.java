@@ -45,10 +45,10 @@ public class ManagerApp implements App {
 					expLogger.logTaskChange(manager);
 				} else if(Manager.PROPERTY_TIME.equals(arg) 
 						&& manager.getTimeRemaining() == Manager.MAX_TASK_TIME - 1) {
-					expLogger.logTaskStart(manager);
+					expLogger.logTaskStart(manager, getScores());
 				} else if(Manager.PROPERTY_TIME.equals(arg) 
 						&& manager.getTimeRemaining() == 0) {
-					expLogger.logTaskEnd(manager);
+					expLogger.logTaskEnd(manager, getScores());
 				}
 			}
 		});
@@ -171,6 +171,24 @@ public class ManagerApp implements App {
 	}
 	
 	/**
+	 * Gets the scores.
+	 *
+	 * @return the scores
+	 */
+	private int[] getScores() {
+		int[] scores = new int[Manager.NUM_DESIGNERS];
+		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
+			int j = manager.getDesignPartner(i);
+			scores[i] = manager.getTaskByDesignerId(i).getValue(
+					i, designers[i].getStrategy(), 
+					designers[i].getDesign(designers[i].getStrategy()), 
+					j, designers[j].getStrategy(), 
+					designers[j].getDesign(designers[j].getStrategy()));
+		}
+		return scores;
+	}
+	
+	/**
 	 * Record scores.
 	 */
 	public void recordScores() {
@@ -186,6 +204,7 @@ public class ManagerApp implements App {
 				this.scores[designerIds[j]][this.roundIndex] = values[j];
 			}
 		}
+		manager.setTimeRemaining(0);
 	}
 	
 	/**

@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -20,7 +21,8 @@ public class ExperimentLogger {
 	private Gson gson = new Gson();
 	
 	public ExperimentLogger() {
-		logFile = Paths.get("logs/log_"+new Date().getTime()+".log");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+		logFile = Paths.get("logs/log-"+format.format(new Date())+".log");
 		try {
 			Files.createDirectories(Paths.get("logs"));
 			Files.createFile(logFile);

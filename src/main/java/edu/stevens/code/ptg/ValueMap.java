@@ -27,10 +27,16 @@ public class ValueMap {
 				for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
 					for(int k = 0; k < Designer.NUM_DESIGNS; k++) {
 						String[] row = br.readLine().split(",");
+						
 						for(int l = 0; l < Designer.NUM_DESIGNS; l++) {
+							
+							// AMVRO: index m = complement to index l in 'modulo NUM_DESIGNS'
+							int m = (Designer.MAX_DESIGN_VALUE - l)%Designer.NUM_DESIGNS;
+							
 							this.values[0][i][j][l][k] = Integer.parseInt(row[l]);
 							// assume symmetric value map
-							this.values[1][j][i][k][l] = Integer.parseInt(row[l]);
+							// AMVRO: flip player 1's value map L-R by replacing l with m in values
+							this.values[1][j][i][k][m] = Integer.parseInt(row[l]);
 						}
 					}
 				}

@@ -185,12 +185,16 @@ public class DesignUI extends JPanel {
 	
 	class ResizeListener extends ComponentAdapter {
 		public void componentResized(ComponentEvent e) {
+			
+			int min_length = Math.min(valuePanels[strategy].getWidth(),
+							  	   	   valuePanels[strategy].getHeight());
+			
 			partnerSlider.setBorder(BorderFactory.createEmptyBorder(
-					valuePanels[strategy].getHeight()/20 - 6, 0, 
-					valuePanels[strategy].getHeight()/20 - 6, 0));
+					min_length/20 + 0, 0, 
+					min_length/20 + (valuePanels[strategy].getHeight() - min_length)/1 + 0, 0));
 			mySlider.setBorder(BorderFactory.createEmptyBorder(
-					0, valuePanels[strategy].getWidth()/20 - 8, 
-					0, valuePanels[strategy].getWidth()/20 - 0));
+					0, min_length/20 + 0, 
+					0, min_length/20 + (valuePanels[strategy].getWidth() - min_length)/1 + 0));
 		}
 	}
 	

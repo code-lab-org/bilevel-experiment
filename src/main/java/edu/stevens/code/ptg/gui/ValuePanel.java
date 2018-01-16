@@ -72,6 +72,12 @@ public class ValuePanel extends JPanel {
 		int width = (this.getWidth() - insets.left - insets.right)/Designer.NUM_DESIGNS;
 		int height = (this.getHeight() - insets.top - insets.bottom)/Designer.NUM_DESIGNS;
 		
+		if (width > height) {
+			width = height;
+		} else {
+			height = width;
+		}
+		
 		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(width/2f,height/1.0f), 48), 12)));
 		
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {

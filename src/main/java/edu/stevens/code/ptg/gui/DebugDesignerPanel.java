@@ -46,14 +46,18 @@ public class DebugDesignerPanel extends DesignerPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
+		c.weighty = 1;
 		ButtonGroup radios = new ButtonGroup();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+			c.fill = GridBagConstraints.NONE;
+			c.gridx = 0;
 			JRadioButton radio = new JRadioButton("Design " + i);
 			radio.setEnabled(false);
 			radios.add(radio);
 			strategyRadios[i] = radio;
 			this.add(radio, c);
 			c.gridx++;
+			c.weightx = 1;
 			c.fill = GridBagConstraints.HORIZONTAL;
 			JSlider slider = new JSlider();
 			slider.setEnabled(false);
@@ -62,6 +66,7 @@ public class DebugDesignerPanel extends DesignerPanel {
 			designSliders[i] = slider;
 			this.add(slider, c);
 			c.gridx++;
+			c.weightx = 0;
 			JPanel scorePanel = new JPanel();
 			scorePanel.setPreferredSize(new Dimension(50,25));
 			scorePanel.setLayout(new GridLayout(1,Designer.NUM_STRATEGIES, 5, 5));
@@ -75,10 +80,12 @@ public class DebugDesignerPanel extends DesignerPanel {
 				scorePanel.add(scoreLabels[i][j]);
 			}
 			this.add(scorePanel, c);
-			c.fill = GridBagConstraints.NONE;
 			c.gridy++;
-			c.gridx = 0;
 		}
+		c.gridx++;
+		c.gridheight = Designer.NUM_STRATEGIES;
+		c.gridy = 0;
+		c.fill = GridBagConstraints.BOTH;
 		shareButton = new JToggleButton("Share");
 		shareButton.setEnabled(false);
 		this.add(shareButton, c);

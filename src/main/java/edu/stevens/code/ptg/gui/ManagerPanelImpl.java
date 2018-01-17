@@ -1,6 +1,5 @@
 package edu.stevens.code.ptg.gui;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -65,14 +64,17 @@ public class ManagerPanelImpl extends ManagerPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
+		c.weighty = 1;
 		this.add(new JLabel("Round: "), c);
 		c.gridx++;
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
 		roundText = new JTextField(20);
 		roundText.setEnabled(false);
 		this.add(roundText, c);
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
+		c.weightx = 0;
 		c.gridy++;
 		this.add(new JLabel("Time: "), c);
 		c.gridx++;
@@ -95,13 +97,14 @@ public class ManagerPanelImpl extends ManagerPanel {
 		this.add(new JLabel("Scores"), c);
 		c.gridy++;
 		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 2;
 		scoreTable = new JTable();
 		scoreTable.setFocusable(false);
 		scoreTable.setEnabled(false);
 		JScrollPane scoreTableScroll = new JScrollPane(scoreTable);
-		scoreTableScroll.setPreferredSize(new Dimension(400,200));
 		this.add(scoreTableScroll, c);
 		c.gridy++;
+		c.weighty = 1;
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
 		prevRound = new JButton(leftArrowIcon);

@@ -1,8 +1,8 @@
 package edu.stevens.code.ptg.gui;
 
-import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import edu.stevens.code.ptg.Designer;
@@ -20,12 +20,20 @@ public class ManagerUI extends ManagerAppPanel {
 	 * Instantiates a new manager app panel impl.
 	 */
 	public ManagerUI() {
-		setLayout(new FlowLayout());
+		this.setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 1;
+		c.weighty = 1;
 		mPanel = new ManagerPanelImpl();
-		add(mPanel);
+		add(mPanel, c);
+		c.gridx++;
 		dPanels = new JPanel();
-		dPanels.setLayout(new BoxLayout(dPanels, BoxLayout.Y_AXIS));
-		add(dPanels);
+		dPanels.setLayout(new GridBagLayout());
+		add(dPanels, c);
 	}
 
 	/* (non-Javadoc)
@@ -35,11 +43,17 @@ public class ManagerUI extends ManagerAppPanel {
 	public void bindTo(ManagerApp app) {
 		mPanel.observe(app.getManager());
 		mPanel.bindTo(app);
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridy = 0;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.BOTH;
 		for(Designer designer : app.getDesigners()) {
 			DebugDesignerPanel dPanel = new DebugDesignerPanel();
 			dPanel.setAlwaysShare(true);
 			dPanel.observe(designer);
-			dPanels.add(dPanel);
+			dPanels.add(dPanel, c);
+			c.gridy++;
 		}
 	}
 }

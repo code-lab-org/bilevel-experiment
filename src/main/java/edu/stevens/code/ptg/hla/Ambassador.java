@@ -342,7 +342,7 @@ public class Ambassador extends NullFederateAmbassador {
 							rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
 							attribute));
 				}
-				logger.debug("Requesting attribute value updates.");
+				logger.debug("Requesting designer attribute value updates.");
 				rtiAmbassador.requestAttributeValueUpdate(theObject, designerHandles, new byte[0]);
 			} else if(rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER).equals(theObjectClass)) {
 				// record the discovered manager
@@ -356,15 +356,10 @@ public class Ambassador extends NullFederateAmbassador {
 							rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
 							attribute));
 				}
-				logger.debug("Requesting attribute value updates.");
+				logger.debug("Requesting manager attribute value updates.");
 				rtiAmbassador.requestAttributeValueUpdate(theObject, managerHandles, new byte[0]);
 			} else {
 				logger.warn("Could not determine object class.");
-			}
-			// if this ambassador is controlling a designer, make sure to update the id
-			if(app.getController() instanceof Designer) {
-				// update the designer ID
-				updateDesigner((Designer) app.getController(), Designer.PROPERTY_ID);
 			}
 		} catch (RTIexception e) {
 			logger.error(e);

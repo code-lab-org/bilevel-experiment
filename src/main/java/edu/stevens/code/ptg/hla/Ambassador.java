@@ -120,15 +120,11 @@ public class Ambassador extends NullFederateAmbassador {
 		AttributeHandleSet designerHandles = 
 				rtiAmbassador.getAttributeHandleSetFactory().create();
 		for(String attribute : ATTRIBUTE_NAMES_DESIGNER) {
-			logger.warn(attribute + " " + rtiAmbassador.getAttributeHandle(
-					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
-					attribute));
 			designerHandles.add(rtiAmbassador.getAttributeHandle(
 					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
 					attribute));
 			AttributeHandleSet handle = rtiAmbassador.getAttributeHandleSetFactory().create();
 			handle.add(rtiAmbassador.getAttributeHandle(rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER),  attribute));
-			logger.warn(attribute + " " + handle);
 			rtiAmbassador.publishObjectClassAttributes(rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), handle);
 		}
 		rtiAmbassador.publishObjectClassAttributes(

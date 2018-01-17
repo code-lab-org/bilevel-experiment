@@ -119,6 +119,7 @@ public class DesignUI extends JPanel {
 				if(strategyCombo.getSelectedIndex() >= 0 
 						&& strategyCombo.getSelectedIndex() < Designer.NUM_STRATEGIES) {
 					strategyCombo.setBackground(DesignerUI.STRATEGY_COLORS[strategyCombo.getSelectedIndex()]);
+					valuePanels[strategyCombo.getSelectedIndex()].setIfSquare(true);
 					valueContainer.removeAll();
 					valueContainer.add(valuePanels[strategyCombo.getSelectedIndex()], BorderLayout.CENTER);
 					valueContainer.validate();

@@ -1,0 +1,44 @@
+{
+  name: "Pilot",
+  rounds: [
+    {
+      name: "Training 0",
+      tasks: [
+        {
+          name: "",
+          designerIds: [0, 1]
+        },
+        {
+          name: "",
+          designerIds: [2, 3]
+        }
+      ]
+    },
+    {
+      name: "Training 1",
+      tasks: [
+        {
+          name: "NN0705_01",
+          designerIds: [1, 0]
+        },
+        {
+          name: "",
+          designerIds: [2, 3]
+        }
+      ]
+    },
+    {
+      name: "Training 2",
+      tasks: [
+        {
+          name: "NN0705_02",
+          designerIds: [0, 1]
+        },
+        {
+          name: "",
+          designerIds: [2, 3]
+        }
+      ]
+    }
+  ]
+}

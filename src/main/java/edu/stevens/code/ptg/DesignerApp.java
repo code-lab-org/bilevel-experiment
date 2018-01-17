@@ -1,7 +1,5 @@
 package edu.stevens.code.ptg;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
@@ -14,7 +12,6 @@ import javax.swing.SwingUtilities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import edu.stevens.code.eager.ui.DesignSpaceUI;
 import edu.stevens.code.ptg.gui.DesignerAppPanel;
 import edu.stevens.code.ptg.gui.DesignerUI;
 import edu.stevens.code.ptg.hla.Ambassador;
@@ -82,84 +79,7 @@ public class DesignerApp implements App {
 
         SwingUtilities.invokeLater(new Runnable() {
 			@Override
-			public void run() {				
-				/** AMVRO: Test to create a DesignerUI panel
-				 * from PTG's DesignerApp class. 
-				 * 
-				JFrame fUI = new JFrame("Designer " + String.valueOf(designer.getId()));
-//				JTabbedPane tUI = new JTabbedPane();
-				DesignerUI dUI = new DesignerUI("SH01");
-				
-				// AMVRO: Creating the dUI object.
-//				DesignSpaceUI dUI = new DesignSpaceUI();
-				
-//				tUI.add("Design Space",dUI);
-				
-//				JLabel designSpaceLabel = new JLabel("Design Space");
-//				designSpaceLabel.setPreferredSize(new Dimension(200, 30));
-//				tUI.setTabComponentAt(0, designSpaceLabel);
-				
-//				fUI.add(tUI);
-				fUI.add(dUI);
-				
-//				fUI.setContentPane(dUI);
-				
-				
-				// Because there is no title bar (see previous comment),
-				// the interface needs to be closed using Alt+F4.
-				
-				fUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				
-				// Set Icon
-//				DesignerUI.loadIcons(fUI);
-				
-				// Initialize JFrame in maximized mode:
-				fUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
-				
-				// This is the JFrame is packed
-				fUI.pack();
-				fUI.setLocationRelativeTo(null);
-				fUI.setVisible(true);
-				
-				fUI.setIconImages(ICONS);
-				
-
-				final JToggleButton max_button = new JToggleButton();
-				max_button.setBounds(1920-50, 0, 50, 50);
-				max_button.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						fUI.dispose();
-						if (max_button.isSelected()) {
-							fUI.setUndecorated(true);
-						} else {
-							fUI.setUndecorated(false);
-						}
-						fUI.setVisible(true);
-					}
-				});
-//				dUI.add(max_button);
-				dUI.designSpace.add(max_button);
-//				
-//				dUI.useMouse(fUI);
-//				dUI.setLayout(null);
-//				
-//				dUI.observe(manager, designers);
-				dUI.designSpace.observe(manager, designers);
-				dUI.designUI[0].observe(manager, designers);
-				dUI.designUI[1].observe(manager, designers);
-				
-                for(Designer designer : designers) {                    
-                    if(designer.equals(designer)) {
-//                        dUI.bindTo(self);
-                        dUI.designSpace.bindTo(designer);
-                        dUI.designUI[0].bindTo(designer);
-                        dUI.designUI[1].bindTo(designer);
-                    }
-//                    dUI.setGame("SH01");
-                }
-                */
-				
+			public void run() {								
 				JFrame f = new JFrame();
 				f.setIconImages(App.ICONS);
 				// DesignerAppPanel panel = new DebugDesignerAppPanel();
@@ -181,34 +101,6 @@ public class DesignerApp implements App {
         });
 	}
 	
-	/** AMVRO: Method originally from DesignerUI class
-	 * 
-	 * @param j_frame
-	 * @param dUI
-	 */
-	public void useMouse(JFrame j_frame, DesignSpaceUI dUI){
-		
-		j_frame.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent me) {
-				
-				/* The next two lines take the (x,y) position of the MouseEvent "me"
-				 * and assign it to xAi and xAj.
-				 * I might use main_frame.setXAi(int) and main_frame.setXAj(int)
-				 * instead of main_frame.xAi = int and main_frame.xAj = int,
-				 * respectively; that could be a better practice. IDK!
-				 */
-				
-				dUI.setXscreen(me.getX());
-				dUI.setYscreen(me.getY());
-				
-				/* Here it is where I repaint the contents in the "main_frame". */
-				dUI.repaint();
-				}
-        });
-		
-	}
-	
-
 	/* (non-Javadoc)
 	 * @see edu.stevens.code.ptg.App#kill()
 	 */

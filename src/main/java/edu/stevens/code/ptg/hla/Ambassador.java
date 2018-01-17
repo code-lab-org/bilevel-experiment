@@ -119,9 +119,16 @@ public class Ambassador extends NullFederateAmbassador {
 		AttributeHandleSet designerHandles = 
 				rtiAmbassador.getAttributeHandleSetFactory().create();
 		for(String attribute : ATTRIBUTE_NAMES_DESIGNER) {
+			logger.warn(attribute + " " + rtiAmbassador.getAttributeHandle(
+					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+					attribute));
 			designerHandles.add(rtiAmbassador.getAttributeHandle(
 					rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
 					attribute));
+			AttributeHandleSet handle = rtiAmbassador.getAttributeHandleSetFactory().create();
+			handle.add(rtiAmbassador.getAttributeHandle(rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER),  attribute));
+			logger.warn(attribute + " " + handle);
+			rtiAmbassador.publishObjectClassAttributes(rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), handle);
 		}
 		rtiAmbassador.publishObjectClassAttributes(
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), designerHandles);
@@ -334,6 +341,8 @@ public class Ambassador extends NullFederateAmbassador {
 				// record the discovered manager
 				discoveredInstances.put(theObject, app.getManager());
 				logger.debug("Discovered manager instance.");
+				// notify all observers of initial values
+				app.getManager().notifyObservers();
 			} else {
 				logger.warn("Could not determine object class.");
 			}
@@ -361,6 +370,8 @@ public class Ambassador extends NullFederateAmbassador {
 				HLAinteger32BE id = encoderFactory.createHLAinteger32BE();
 				id.decode(idData);
 				discoveredInstances.put(theObject, app.getDesigner(id.getValue()));
+				// notify all observers of initial values
+				app.getDesigner(id.getValue()).notifyObservers();
 			}
 			if(discoveredInstances.containsKey(theObject)) {
 				if(discoveredInstances.get(theObject) instanceof Designer) {

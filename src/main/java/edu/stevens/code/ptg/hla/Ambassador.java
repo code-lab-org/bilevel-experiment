@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -337,12 +338,30 @@ public class Ambassador extends NullFederateAmbassador {
 			if(rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER).equals(theObjectClass)) {
 				// don't record the discovered designer yet... don't know the id
 				logger.debug("Discovered designer instance.");
+				// request attribute value updates to initialize state
+				AttributeHandleSet designerHandles = 
+						rtiAmbassador.getAttributeHandleSetFactory().create();
+				for(String attribute : ATTRIBUTE_NAMES_DESIGNER) {
+					designerHandles.add(rtiAmbassador.getAttributeHandle(
+							rtiAmbassador.getObjectClassHandle(CLASS_NAME_DESIGNER), 
+							attribute));
+				}
+				logger.debug("Requesting attribute value updates.");
+				rtiAmbassador.requestAttributeValueUpdate(theObject, designerHandles, new byte[0]);
 			} else if(rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER).equals(theObjectClass)) {
 				// record the discovered manager
 				discoveredInstances.put(theObject, app.getManager());
 				logger.debug("Discovered manager instance.");
-				// notify all observers of initial values
-				app.getManager().notifyObservers();
+				// request attribute value updates to initialize state
+				AttributeHandleSet managerHandles = 
+						rtiAmbassador.getAttributeHandleSetFactory().create();
+				for(String attribute : ATTRIBUTE_NAMES_MANAGER) {
+					managerHandles.add(rtiAmbassador.getAttributeHandle(
+							rtiAmbassador.getObjectClassHandle(CLASS_NAME_MANAGER), 
+							attribute));
+				}
+				logger.debug("Requesting attribute value updates.");
+				rtiAmbassador.requestAttributeValueUpdate(theObject, managerHandles, new byte[0]);
 			} else {
 				logger.warn("Could not determine object class.");
 			}
@@ -370,8 +389,6 @@ public class Ambassador extends NullFederateAmbassador {
 				HLAinteger32BE id = encoderFactory.createHLAinteger32BE();
 				id.decode(idData);
 				discoveredInstances.put(theObject, app.getDesigner(id.getValue()));
-				// notify all observers of initial values
-				app.getDesigner(id.getValue()).notifyObservers();
 			}
 			if(discoveredInstances.containsKey(theObject)) {
 				if(discoveredInstances.get(theObject) instanceof Designer) {
@@ -480,6 +497,17 @@ public class Ambassador extends NullFederateAmbassador {
 			logger.info("Removed object instance.");
 		} else {
 			logger.warn("Object instance not discovered.");
+		}
+	}
+	
+	@Override
+	public void provideAttributeValueUpdate(ObjectInstanceHandle theObject, AttributeHandleSet theAttributes,
+			byte[] userSuppliedTag) throws FederateInternalError {
+		logger.info("Providing attribute value update.");
+		for(Object o : registeredInstances.keySet()) {
+			if(registeredInstances.get(o).equals(theObject) && o instanceof Observable) {
+				((Observable)o).notifyObservers();
+			}
 		}
 	}
 }

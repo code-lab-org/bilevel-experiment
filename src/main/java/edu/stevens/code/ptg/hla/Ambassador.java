@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

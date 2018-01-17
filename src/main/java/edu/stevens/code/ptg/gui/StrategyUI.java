@@ -40,7 +40,6 @@ public class StrategyUI extends JPanel {
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
-		c.anchor = GridBagConstraints.CENTER;
 
 		c.gridwidth = 4;
 		c.anchor = GridBagConstraints.EAST;
@@ -72,7 +71,7 @@ public class StrategyUI extends JPanel {
 		c.gridx = Designer.NUM_STRATEGIES + 1;
 		c.gridwidth = 1;
 		c.gridheight = Designer.NUM_STRATEGIES;
-		c.fill = GridBagConstraints.VERTICAL;
+		c.fill = GridBagConstraints.BOTH;
 		c.anchor = GridBagConstraints.CENTER;
 		this.add(new ColorBarPanel(), c);
 		
@@ -89,6 +88,7 @@ public class StrategyUI extends JPanel {
 			c.gridx++;
 			c.weightx = 1;
 			c.weighty = 1;
+			
 			for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
 				valueContainers[i][j] = new JPanel(new BorderLayout());
 				final int strategy = j;
@@ -109,6 +109,7 @@ public class StrategyUI extends JPanel {
 					valueContainers[i][j].setBackground(DesignerUI.STRATEGY_COLORS[j]);
 				}
 				valuePanels[i][j] = new ValuePanel();
+				valuePanels[i][j].setIfSquare(false);
 				valueLabels[i][j] = new ValueLabel();
 				valueContainers[i][j].add(valueLabels[i][j], BorderLayout.CENTER);
 				this.add(valueContainers[i][j], c);

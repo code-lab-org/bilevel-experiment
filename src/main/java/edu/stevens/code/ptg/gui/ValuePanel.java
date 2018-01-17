@@ -21,8 +21,13 @@ public class ValuePanel extends JPanel {
 	private int myStrategy, partnerStrategy;
 	private int myDesign, partnerDesign;
 	
+	private int cellWidth;
+	private int cellHeight;
+	private boolean isSquare;
+	
+	
 	public ValuePanel() {
-		this.setPreferredSize(new Dimension(200,200));
+		this.setPreferredSize(new Dimension(720,720));
 		this.setOpaque(false);
 	}
 	
@@ -65,18 +70,32 @@ public class ValuePanel extends JPanel {
 		return x / width;
 	}
 	
+	public void setAspect() {
+		
+		Insets insets = this.getInsets();
+		
+		setCellWidth( (this.getWidth() - insets.left - insets.right)/Designer.NUM_DESIGNS );
+		setCellHeight( (this.getHeight() - insets.top - insets.bottom)/Designer.NUM_DESIGNS );
+		
+		if (this.isSquare == true){ 
+			if (getCellWidth() > getCellHeight()) {
+				setCellWidth( getCellHeight() );
+			} else {
+				setCellHeight( getCellWidth() );
+			}
+		}
+	}
+	
+	
 	public void paint(Graphics g) {
 		super.paint(g);
 		
-		Insets insets = this.getInsets();
-		int width = (this.getWidth() - insets.left - insets.right)/Designer.NUM_DESIGNS;
-		int height = (this.getHeight() - insets.top - insets.bottom)/Designer.NUM_DESIGNS;
+		setAspect();				
 		
-		if (width > height) {
-			width = height;
-		} else {
-			height = width;
-		}
+		Insets insets = this.getInsets();
+		
+		int width = getCellWidth();
+		int height = getCellHeight();
 		
 		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(width/2f,height/1.0f), 48), 12)));
 		
@@ -106,5 +125,25 @@ public class ValuePanel extends JPanel {
 			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-0.5)*height - fm.getStringBounds(text, g).getCenterY());
 			g.drawString(text, x, y);
 		}
+	}
+
+	public int getCellWidth() {
+		return cellWidth;
+	}
+
+	public void setCellWidth(int cellWidth) {
+		this.cellWidth = cellWidth;
+	}
+
+	public int getCellHeight() {
+		return cellHeight;
+	}
+
+	public void setCellHeight(int cellHeight) {
+		this.cellHeight = cellHeight;
+	}
+
+	public void setIfSquare(boolean bool) {
+		this.isSquare = bool;
 	}
 }

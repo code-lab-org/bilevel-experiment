@@ -50,15 +50,15 @@ public class DesignUI extends JPanel {
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
+		c.gridx = 1;
 		c.gridy = 0;
 		c.ipadx = 5;
 		c.ipady = 5;
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.NONE;
+		c.weightx = 1.0;
 		c.weighty = 0;
-		c.gridwidth = 2;
+		c.gridwidth = 1;
 		JPanel scorePanel = new JPanel(new FlowLayout());
 		scorePanel.add(new JLabel("Value:"));
 		{
@@ -85,7 +85,7 @@ public class DesignUI extends JPanel {
 		c.gridx = 2;
 		c.gridwidth = 1;		
 		c.weightx = 0;
-		c.fill = GridBagConstraints.NONE;
+		c.fill = GridBagConstraints.BOTH;
 		c.anchor = GridBagConstraints.EAST;
 		String[] labels = new String[Designer.NUM_STRATEGIES];
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
@@ -134,8 +134,10 @@ public class DesignUI extends JPanel {
 		
 		c.gridwidth = 1;
 		c.anchor = GridBagConstraints.CENTER;
+		c.weightx = 0.8;
 		c.gridx = 0;
 		c.gridy++;
+		c.anchor = GridBagConstraints.EAST;
 		c.fill = GridBagConstraints.VERTICAL;
 		partnerSlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE);
 		partnerSlider.setOrientation(JSlider.VERTICAL);
@@ -146,7 +148,8 @@ public class DesignUI extends JPanel {
 		c.gridx++;
 		c.weightx = 1;
 		c.weighty = 1;
-		c.gridwidth = 2;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.BOTH;
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			valuePanels[i] = new ValuePanel();
@@ -158,22 +161,28 @@ public class DesignUI extends JPanel {
 				}
 			});
 		}
+		
+		valuePanels[strategy].setIfSquare(true);
+		
 		valueContainer = new JPanel(new BorderLayout());
 		valueContainer.setOpaque(false);
 		valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
 		this.add(valueContainer, c);
-		c.gridx+=2;
+		c.gridx = 2;
 		c.weightx = 0;
 		c.weighty = 1;
 		c.gridwidth = 1;
+		c.gridheight = 2;
+//		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.VERTICAL;
 		this.add(new ColorBarPanel(), c);
 		
 		c.gridx = 1;
 		c.gridy++;
 		c.weightx = 0;
-		c.weighty = 0;
-		c.gridwidth = 2;
+		c.weighty = 0.05;
+		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		mySlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE);
 		mySlider.setEnabled(false);

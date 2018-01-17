@@ -501,8 +501,21 @@ public class Ambassador extends NullFederateAmbassador {
 			byte[] userSuppliedTag) throws FederateInternalError {
 		logger.info("Providing attribute value update.");
 		for(Object o : registeredInstances.keySet()) {
-			if(registeredInstances.get(o).equals(theObject) && o instanceof Observable) {
-				((Observable)o).notifyObservers();
+			if(registeredInstances.get(o).equals(theObject)) {
+				if(o instanceof Manager) {
+					try {
+						updateManager((Manager) o, new Object[0]);
+					} catch (RTIexception e) {
+						logger.error(e);
+					}
+				}
+				if(o instanceof Designer) {
+					try {
+						updateDesigner((Designer) o, new Object[0]);
+					} catch (RTIexception e) {
+						logger.error(e);
+					}
+				}
 			}
 		}
 	}

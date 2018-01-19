@@ -39,9 +39,9 @@ public class ValueMap {
 							
 							// assume symmetric value map
 							// AMVRO: flip player 0's value map U-D by replacing k with u in values
-							this.values[0][i][j][l][u] = Integer.parseInt(row[l]);
+							this.values[0][i][j][l][k] = Integer.parseInt(row[l]);
 							// AMVRO: flip player 1's value map L-R by replacing l with v in values
-							this.values[1][j][i][k][v] = Integer.parseInt(row[l]);
+							this.values[1][j][i][u][v] = Integer.parseInt(row[l]);
 						}
 					}
 				}

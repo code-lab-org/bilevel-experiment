@@ -2,10 +2,10 @@
   name: "Pilot",
   rounds: [
     {
-      name: "Training 0",
+      name: "Basics",
       tasks: [
         {
-          name: "",
+          name: "NN0705_03",
           designerIds: [0, 1]
         },
         {
@@ -15,11 +15,11 @@
       ]
     },
     {
-      name: "Training 1",
+      name: "Pilot 1",
       tasks: [
         {
           name: "NN0705_01",
-          designerIds: [1, 0]
+          designerIds: [0, 1]
         },
         {
           name: "",
@@ -28,7 +28,7 @@
       ]
     },
     {
-      name: "Training 2",
+      name: "Pilot 2",
       tasks: [
         {
           name: "NN0705_02",

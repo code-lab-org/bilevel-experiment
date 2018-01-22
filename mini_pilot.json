@@ -9,7 +9,7 @@
           designerIds: [0, 1]
         },
         {
-          name: "",
+          name: "NN0705_03",
           designerIds: [2, 3]
         }
       ]
@@ -22,7 +22,7 @@
           designerIds: [0, 1]
         },
         {
-          name: "",
+          name: "NN0705_01",
           designerIds: [2, 3]
         }
       ]
@@ -35,7 +35,7 @@
           designerIds: [0, 1]
         },
         {
-          name: "",
+          name: "NN0705_02",
           designerIds: [2, 3]
         }
       ]

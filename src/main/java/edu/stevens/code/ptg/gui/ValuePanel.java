@@ -22,7 +22,7 @@ public class ValuePanel extends JPanel {
 	private int myDesign, partnerDesign;
 	
 	public ValuePanel() {
-		this.setPreferredSize(new Dimension(720,720));
+		this.setPreferredSize(new Dimension(840,840));
 		this.setOpaque(false);
 	}
 	

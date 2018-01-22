@@ -90,7 +90,7 @@ public class DesignerApp implements App {
 				f.setVisible(true);
 		        f.pack();
 		        f.setLocationRelativeTo(null);
-		        f.setExtendedState(JFrame.MAXIMIZED_BOTH);
+//		        f.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		        f.addWindowListener(new WindowAdapter() {
 					@Override
 					public void windowClosing(WindowEvent e) {

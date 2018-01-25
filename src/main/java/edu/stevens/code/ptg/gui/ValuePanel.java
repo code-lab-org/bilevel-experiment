@@ -1,7 +1,6 @@
 package edu.stevens.code.ptg.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Insets;
@@ -22,7 +21,6 @@ public class ValuePanel extends JPanel {
 	private int myDesign, partnerDesign;
 	
 	public ValuePanel() {
-		this.setPreferredSize(new Dimension(840,840));
 		this.setOpaque(false);
 	}
 	

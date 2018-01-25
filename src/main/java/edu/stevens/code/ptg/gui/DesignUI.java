@@ -1,7 +1,6 @@
 package edu.stevens.code.ptg.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -16,12 +15,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.ListCellRenderer;
+import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -34,7 +31,7 @@ public class DesignUI extends JPanel {
 	
 	private int strategy;
 	private JLabel[] valueLabels = new JLabel[Designer.NUM_STRATEGIES];
-	private JComboBox<String> strategyCombo;
+	private JToggleButton strategyToggle;
 	private JPanel valueContainer;
 	private ValuePanel[] valuePanels = new ValuePanel[Designer.NUM_STRATEGIES];
 	private JSlider mySlider;
@@ -87,49 +84,28 @@ public class DesignUI extends JPanel {
 		c.weightx = 0;
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.EAST;
-		String[] labels = new String[Designer.NUM_STRATEGIES];
-		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-			if(i == strategy) {
-				labels[i] = "Agree";
-			} else {
-
-				labels[i] = "Disagree";
-			}
-		}
-		strategyCombo = new JComboBox<String>(labels);
-		strategyCombo.setRenderer(new ListCellRenderer<String>() {
-			public Component getListCellRendererComponent(
-					JList<? extends String> list, String value, int index, 
-					boolean isSelected, boolean cellHasFocus) {
-				JLabel label = new JLabel(value);
-				label.setOpaque(true);
-				if(index >= 0 && index < Designer.NUM_STRATEGIES) {
-					label.setBackground(DesignerUI.STRATEGY_COLORS[index]);
-				}
-				return label;
-			}
-		});
-		strategyCombo.setOpaque(true);
-		strategyCombo.setBackground(DesignerUI.STRATEGY_COLORS[strategy]);
-		strategyCombo.setSelectedIndex(strategy);
-		strategyCombo.setFocusable(false);
-		strategyCombo.addActionListener(new ActionListener() {
+		strategyToggle = new JToggleButton("Agree", false);
+		strategyToggle.setEnabled(false);
+		strategyToggle.setFocusable(false);
+		strategyToggle.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(strategyCombo.getSelectedIndex() >= 0 
-						&& strategyCombo.getSelectedIndex() < Designer.NUM_STRATEGIES) {
-					strategyCombo.setBackground(DesignerUI.STRATEGY_COLORS[strategyCombo.getSelectedIndex()]);
-					valueContainer.removeAll();
-					valueContainer.add(valuePanels[strategyCombo.getSelectedIndex()], BorderLayout.CENTER);
-					valueContainer.validate();
-					valueContainer.repaint();
+				valueContainer.removeAll();
+				if(strategyToggle.isSelected()) {
+					strategyToggle.setText("Disagree");
+					valueContainer.add(valuePanels[1-strategy], BorderLayout.CENTER);
+				} else {
+					strategyToggle.setText("Agree");
+					valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
 				}
+				valueContainer.validate();
+				valueContainer.repaint();
 			}
 		});
 		JPanel comboPanel = new JPanel(new FlowLayout());
 		comboPanel.setOpaque(false);
 		comboPanel.add(new JLabel("Partner:"));
-		comboPanel.add(strategyCombo);
+		comboPanel.add(strategyToggle);
 		add(comboPanel, c);
 		
 		c.gridwidth = 1;
@@ -203,9 +179,14 @@ public class DesignUI extends JPanel {
 	private void resetUI(DesignerApp app) {
 		mySlider.setValue(0);
 		partnerSlider.setValue(0);
-		strategyCombo.setSelectedIndex(strategy);
+		strategyToggle.setText("Agree");
+		strategyToggle.setSelected(false);
+		valueContainer.removeAll();
+		valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
+		valueContainer.validate();
+		valueContainer.repaint();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-			int value = app.getValue(strategy, 0, strategy, 0);
+			int value = app.getValue(strategy, 0, i==0?strategy:1-strategy, 0);
 			valueLabels[i].setText(new Integer(value).toString());
 		}
 	}
@@ -213,7 +194,7 @@ public class DesignUI extends JPanel {
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
-		strategyCombo.setEnabled(enabled);
+		strategyToggle.setEnabled(enabled);
 		mySlider.setEnabled(enabled);
 	}
 	
@@ -228,7 +209,7 @@ public class DesignUI extends JPanel {
 		partnerSlider.setValue(0);
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			valuePanels[i].bindTo(app, strategy, i);
-			int value = app.getValue(strategy, 0, strategy, 0);
+			int value = app.getValue(strategy, 0, i==0?strategy:1-strategy, 0);
 			valueLabels[i].setText(new Integer(value).toString());
 		}
 		for(Designer designer : app.getDesigners()) {

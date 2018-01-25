@@ -65,7 +65,7 @@ public class StrategyUI extends JPanel {
 				}
 			}
 		});
-		add(toggleButton, c);
+		// add(toggleButton, c);
 		
 		c.gridy++;
 		c.gridx = Designer.NUM_STRATEGIES + 1;

@@ -1,6 +1,5 @@
 package edu.stevens.code.ptg.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;

@@ -106,7 +106,7 @@ public class DesignUI extends JPanel {
 		comboPanel.setOpaque(false);
 		comboPanel.add(new JLabel("Partner:"));
 		comboPanel.add(strategyToggle);
-		add(comboPanel, c);
+		//add(comboPanel, c);
 		
 		c.gridwidth = 1;
 		c.gridx = 0;

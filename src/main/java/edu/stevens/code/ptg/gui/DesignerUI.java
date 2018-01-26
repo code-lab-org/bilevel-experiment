@@ -3,6 +3,8 @@ package edu.stevens.code.ptg.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -61,14 +63,29 @@ public class DesignerUI extends DesignerAppPanel {
 	private int managerTime;
 	
 	public DesignerUI() {
-		this.setLayout(new BorderLayout());
+		this.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.NORTHWEST;
 		JPanel infoPanel = new JPanel(new FlowLayout());
 		infoLabel = new JLabel("Initializing", JLabel.LEFT);
 		infoPanel.add(infoLabel);
-		infoPanel.add(new JLabel("Time Remaining:"));
+		this.add(infoPanel, c);
+		c.gridx++;
+		c.anchor = GridBagConstraints.NORTHEAST;
+		JPanel timePanel = new JPanel(new FlowLayout());
+		timePanel.add(new JLabel("Time Remaining:", JLabel.RIGHT));
 		timeLabel = new JLabel("0", JLabel.RIGHT);
-		infoPanel.add(timeLabel);
-		this.add(infoPanel, BorderLayout.NORTH);
+		timeLabel.setFont(timeLabel.getFont().deriveFont(20f));
+		timePanel.add(timeLabel);
+		this.add(timePanel, c);
+		c.gridx = 0;
+		c.gridwidth = 2;
+		c.gridy++;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 1;
+		c.weighty = 1;
 		tabbedPane = new JTabbedPane();
 		instructionUI = new InstructionUI();
 		tabbedPane.addTab("Instructions", instructionUI);
@@ -79,7 +96,7 @@ public class DesignerUI extends DesignerAppPanel {
 		strategyUI = new StrategyUI();
 		tabbedPane.addTab("Decision", strategyUI);
 		
-		this.add(tabbedPane, BorderLayout.CENTER);
+		this.add(tabbedPane, c);
 	}
 	
 	private void flashTab(int index, Color color) {

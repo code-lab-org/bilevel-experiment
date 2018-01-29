@@ -2,11 +2,11 @@ package edu.stevens.code.ptg.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -69,7 +69,7 @@ public class ValuePanel extends JPanel {
 	
 	public void paint(Graphics g) {
 		super.paint(g);
-		
+			
 		Graphics2D g2D = (Graphics2D) g;
 		
 		Insets insets = this.getInsets();
@@ -77,6 +77,7 @@ public class ValuePanel extends JPanel {
 		int width = (this.getWidth() - insets.left - insets.right)/(Designer.NUM_DESIGNS + 1);
 		int height = (this.getHeight() - insets.top - insets.bottom)/(Designer.NUM_DESIGNS + 1);
 		
+		this.setFont(new Font("Arial", Font.BOLD, getFont().getSize()));
 		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(width/2f,height/1.0f), 48), 12)));
 		
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
@@ -92,15 +93,16 @@ public class ValuePanel extends JPanel {
 		}
 		if(app.getManager().isDesignEnabled()) {
 			
+			
 			/** Tick labels */
-			/*  Horizontal tick labels */
+			/*  Horizontal tick label background */
 			if (myStrategy == 0) {
 				g2D.setColor(Color.RED);
 			} else if (myStrategy == 1) {
 				g2D.setColor(Color.BLUE);
 			}
 			g2D.fillRect(width, (Designer.NUM_DESIGNS)*height, (Designer.NUM_DESIGNS)*width, height);
-			/*  Vertical tick labels */
+			/*  Vertical tick labels background */
 			if (partnerStrategy == 0) {
 				g2D.setColor(Color.RED);
 			} else if (partnerStrategy == 1) {
@@ -133,12 +135,19 @@ public class ValuePanel extends JPanel {
 			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-0.5)*height - fm.getStringBounds(text, g2D).getCenterY());
 			g2D.drawString(text, x, y);
 			
-			
-			
-			
-//			for (int i = Designer.MIN_DESIGN_VALUE; i < Designer.MAX_DESIGN_VALUE+1; i++){
-//			
-//			}
+			g2D.setColor(Color.WHITE);
+			for (int i = Designer.MIN_DESIGN_VALUE; i < Designer.MAX_DESIGN_VALUE+1; i++){
+				
+				String ticklabel = String.valueOf((char)(i + 64 + 1));
+				
+				int xi = (int) (insets.left + (i+0.5+1)*width - fm.getStringBounds(ticklabel, g2D).getCenterX());
+				int yi = (int) (insets.top + (Designer.NUM_DESIGNS+1-0.5)*height - fm.getStringBounds(ticklabel, g2D).getCenterY());
+				int xj = (int) (insets.left + (0+0.5+0)*width - fm.getStringBounds(ticklabel, g2D).getCenterX());
+				int yj = (int) (insets.top + (Designer.NUM_DESIGNS-i-0.5)*height - fm.getStringBounds(ticklabel, g2D).getCenterY());
+				
+				g2D.drawString(ticklabel, xi, yi);
+				g2D.drawString(ticklabel, xj, yj);
+			}
 			
 			
 		}

@@ -111,7 +111,7 @@ public class DesignUI extends JPanel {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy++;
-		c.anchor = GridBagConstraints.EAST;
+		c.anchor = GridBagConstraints.SOUTH;
 		c.fill = GridBagConstraints.VERTICAL;
 		partnerSlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE);
 		partnerSlider.setOrientation(JSlider.VERTICAL);
@@ -123,7 +123,7 @@ public class DesignUI extends JPanel {
 		c.weightx = 1;
 		c.weighty = 1;
 		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.CENTER;
+		c.anchor = GridBagConstraints.SOUTH;
 		c.fill = GridBagConstraints.BOTH;
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			valuePanels[i] = new ValuePanel();
@@ -131,7 +131,9 @@ public class DesignUI extends JPanel {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					int design = ((ValuePanel)e.getSource()).getDesign(e.getX());
-					mySlider.setValue(design);
+					if (design >= 0){
+						mySlider.setValue(design);
+					}
 				}
 			});
 		}
@@ -168,11 +170,11 @@ public class DesignUI extends JPanel {
 							  	   	   valuePanels[strategy].getHeight());
 			
 			partnerSlider.setBorder(BorderFactory.createEmptyBorder(
-					min_length/20 + 0, 0, 
-					min_length/20 + 0, 0));
+					1*min_length/(2*(Designer.NUM_DESIGNS+1)) + 0, 0, 
+					3*min_length/(2*(Designer.NUM_DESIGNS+1)) + 0, 0));
 			mySlider.setBorder(BorderFactory.createEmptyBorder(
-					0, min_length/20 + 0, 
-					0, min_length/20 + 0));
+					0, 3*min_length/(2*(Designer.NUM_DESIGNS+1)) + 0, 
+					0, 1*min_length/(2*(Designer.NUM_DESIGNS+1)) + 0));
 		}
 	}
 	

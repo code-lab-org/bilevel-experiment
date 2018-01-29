@@ -62,8 +62,9 @@ public class ValuePanel extends JPanel {
 	
 	public int getDesign(int x) {
 		Insets insets = this.getInsets();
-		int width = (this.getWidth() - insets.left - insets.right)/Designer.NUM_DESIGNS;
-		return x / width;
+		int width = (this.getWidth() - insets.left - insets.right)/(Designer.NUM_DESIGNS+1);
+		System.out.println(x / width - 1);
+		return x / width - 1;
 	}
 	
 	public void paint(Graphics g) {
@@ -72,8 +73,9 @@ public class ValuePanel extends JPanel {
 		Graphics2D g2D = (Graphics2D) g;
 		
 		Insets insets = this.getInsets();
-		int width = (this.getWidth() - insets.left - insets.right)/Designer.NUM_DESIGNS;
-		int height = (this.getHeight() - insets.top - insets.bottom)/Designer.NUM_DESIGNS;
+		/* Number of cells = Number of designs + 1; Reason: adding tick labels */ 
+		int width = (this.getWidth() - insets.left - insets.right)/(Designer.NUM_DESIGNS + 1);
+		int height = (this.getHeight() - insets.top - insets.bottom)/(Designer.NUM_DESIGNS + 1);
 		
 		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(width/2f,height/1.0f), 48), 12)));
 		
@@ -85,19 +87,40 @@ public class ValuePanel extends JPanel {
 				} else {
 					g2D.setColor(Color.BLACK);
 				}
-				g2D.fillRect(insets.left + i*width, insets.top + (Designer.NUM_DESIGNS-j-1)*height, width, height);
+				g2D.fillRect(insets.left + (i+1)*width, insets.top + (Designer.NUM_DESIGNS-j-1)*height, width, height);
 			}
 		}
 		if(app.getManager().isDesignEnabled()) {
+			
+			/** Tick labels */
+			/*  Horizontal tick labels */
+			if (myStrategy == 0) {
+				g2D.setColor(Color.RED);
+			} else if (myStrategy == 1) {
+				g2D.setColor(Color.BLUE);
+			}
+			g2D.fillRect(width, (Designer.NUM_DESIGNS)*height, (Designer.NUM_DESIGNS)*width, height);
+			/*  Vertical tick labels */
+			if (partnerStrategy == 0) {
+				g2D.setColor(Color.RED);
+			} else if (partnerStrategy == 1) {
+				g2D.setColor(Color.BLUE);
+			}
+			g2D.fillRect(0, 0, width, (Designer.NUM_DESIGNS)*height);
+			
+			/** Rulers */
 			g2D.setColor(new Color(147, 93, 116));
 			g2D.setStroke(new BasicStroke(1));
-			g2D.drawRect(insets.left + myDesign*width, insets.top + 0, width, Designer.NUM_DESIGNS*height);
-			g2D.setStroke(new BasicStroke(1));
-			g2D.drawRect(insets.left + 0, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, Designer.NUM_DESIGNS*width, height);
+			/*  Vertical ruler (horizontal slider */
+			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + 0, width, (Designer.NUM_DESIGNS+1)*height);
+			/*  Horizontal ruler (vertical slider */
+			g2D.drawRect(insets.left + 0, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, (Designer.NUM_DESIGNS+1)*width, height);
+			
+			/** Selected cell */
 			g2D.setColor(Color.MAGENTA);
 			int t = 2+(width*height/(100*100));
 			g2D.setStroke(new BasicStroke(t));
-			g2D.drawRect(insets.left + myDesign*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height + t/2, width, height);
+			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height + t/2, width, height);
 			int value = app.getValue(myStrategy, myDesign, partnerStrategy, partnerDesign);
 			if (value > 45) {
 				g2D.setColor(Color.BLACK);
@@ -106,9 +129,19 @@ public class ValuePanel extends JPanel {
 			}
 			String text = new Integer(value).toString();
 			FontMetrics fm = getFontMetrics(getFont());
-			int x = (int) (insets.left + (myDesign+0.5)*width - fm.getStringBounds(text, g2D).getCenterX());
+			int x = (int) (insets.left + (myDesign+0.5+1)*width - fm.getStringBounds(text, g2D).getCenterX());
 			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-0.5)*height - fm.getStringBounds(text, g2D).getCenterY());
 			g2D.drawString(text, x, y);
+			
+			
+			
+			
+//			for (int i = Designer.MIN_DESIGN_VALUE; i < Designer.MAX_DESIGN_VALUE+1; i++){
+//			
+//			}
+			
+			
 		}
 	}
+	
 }

@@ -1,9 +1,12 @@
 package edu.stevens.code.ptg.gui;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -66,6 +69,8 @@ public class ValuePanel extends JPanel {
 	public void paint(Graphics g) {
 		super.paint(g);
 		
+		Graphics2D g2D = (Graphics2D) g;
+		
 		Insets insets = this.getInsets();
 		int width = (this.getWidth() - insets.left - insets.right)/Designer.NUM_DESIGNS;
 		int height = (this.getHeight() - insets.top - insets.bottom)/Designer.NUM_DESIGNS;
@@ -76,27 +81,34 @@ public class ValuePanel extends JPanel {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
 				int value = app.getValue(myStrategy, i, partnerStrategy, j);
 				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100) {
-					g.setColor(DesignerUI.VALUE_COLORS[value/5]);
+					g2D.setColor(DesignerUI.VALUE_COLORS[value/5]);
 				} else {
-					g.setColor(Color.BLACK);
+					g2D.setColor(Color.BLACK);
 				}
-				g.fillRect(insets.left + i*width, insets.top + (Designer.NUM_DESIGNS-j-1)*height, width, height);
+				g2D.fillRect(insets.left + i*width, insets.top + (Designer.NUM_DESIGNS-j-1)*height, width, height);
 			}
 		}
 		if(app.getManager().isDesignEnabled()) {
-			g.setColor(Color.RED);
-			g.drawRect(insets.left + myDesign*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
+			g2D.setColor(new Color(147, 93, 116));
+			g2D.setStroke(new BasicStroke(1));
+			g2D.drawRect(insets.left + myDesign*width, insets.top + 0, width, Designer.NUM_DESIGNS*height);
+			g2D.setStroke(new BasicStroke(1));
+			g2D.drawRect(insets.left + 0, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, Designer.NUM_DESIGNS*width, height);
+			g2D.setColor(Color.MAGENTA);
+			int t = 2+(width*height/(100*100));
+			g2D.setStroke(new BasicStroke(t));
+			g2D.drawRect(insets.left + myDesign*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height + t/2, width, height);
 			int value = app.getValue(myStrategy, myDesign, partnerStrategy, partnerDesign);
 			if (value > 45) {
-				g.setColor(Color.BLACK);
+				g2D.setColor(Color.BLACK);
 			} else {
-				g.setColor(Color.WHITE);
+				g2D.setColor(Color.WHITE);
 			}
 			String text = new Integer(value).toString();
 			FontMetrics fm = getFontMetrics(getFont());
-			int x = (int) (insets.left + (myDesign+0.5)*width - fm.getStringBounds(text, g).getCenterX());
-			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-0.5)*height - fm.getStringBounds(text, g).getCenterY());
-			g.drawString(text, x, y);
+			int x = (int) (insets.left + (myDesign+0.5)*width - fm.getStringBounds(text, g2D).getCenterX());
+			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-0.5)*height - fm.getStringBounds(text, g2D).getCenterY());
+			g2D.drawString(text, x, y);
 		}
 	}
 }

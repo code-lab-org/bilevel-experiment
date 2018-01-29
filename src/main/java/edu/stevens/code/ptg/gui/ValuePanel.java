@@ -63,7 +63,6 @@ public class ValuePanel extends JPanel {
 	public int getDesign(int x) {
 		Insets insets = this.getInsets();
 		int width = (this.getWidth() - insets.left - insets.right)/(Designer.NUM_DESIGNS+1);
-		System.out.println(x / width - 1);
 		return x / width - 1;
 	}
 	
@@ -94,25 +93,27 @@ public class ValuePanel extends JPanel {
 		if(app.getManager().isDesignEnabled()) {
 			
 			
-			/** Tick labels */
-			/*  Horizontal tick label background */
+			/** Tick label background */
+			/*  Horizontal tick label background
 			if (myStrategy == 0) {
 				g2D.setColor(Color.RED);
 			} else if (myStrategy == 1) {
 				g2D.setColor(Color.BLUE);
 			}
 			g2D.fillRect(width, (Designer.NUM_DESIGNS)*height, (Designer.NUM_DESIGNS)*width, height);
-			/*  Vertical tick labels background */
+			/*  Vertical tick labels background
 			if (partnerStrategy == 0) {
 				g2D.setColor(Color.RED);
 			} else if (partnerStrategy == 1) {
 				g2D.setColor(Color.BLUE);
 			}
 			g2D.fillRect(0, 0, width, (Designer.NUM_DESIGNS)*height);
+			*/
 			
 			/** Rulers */
 			g2D.setColor(new Color(147, 93, 116));
-			g2D.setStroke(new BasicStroke(1));
+			int t = 1+(width*height/(80*80));
+			g2D.setStroke(new BasicStroke(t));
 			/*  Vertical ruler (horizontal slider */
 			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + 0, width, (Designer.NUM_DESIGNS+1)*height);
 			/*  Horizontal ruler (vertical slider */
@@ -120,9 +121,8 @@ public class ValuePanel extends JPanel {
 			
 			/** Selected cell */
 			g2D.setColor(Color.MAGENTA);
-			int t = 2+(width*height/(100*100));
-			g2D.setStroke(new BasicStroke(t));
-			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height + t/2, width, height);
+			g2D.setStroke(new BasicStroke(t+2));
+			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
 			int value = app.getValue(myStrategy, myDesign, partnerStrategy, partnerDesign);
 			if (value > 45) {
 				g2D.setColor(Color.BLACK);
@@ -135,7 +135,7 @@ public class ValuePanel extends JPanel {
 			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-0.5)*height - fm.getStringBounds(text, g2D).getCenterY());
 			g2D.drawString(text, x, y);
 			
-			g2D.setColor(Color.WHITE);
+			g2D.setColor(Color.BLACK);
 			for (int i = Designer.MIN_DESIGN_VALUE; i < Designer.MAX_DESIGN_VALUE+1; i++){
 				
 				String ticklabel = String.valueOf((char)(i + 64 + 1));

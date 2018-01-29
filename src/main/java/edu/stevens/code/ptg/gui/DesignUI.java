@@ -106,7 +106,7 @@ public class DesignUI extends JPanel {
 		comboPanel.setOpaque(false);
 		comboPanel.add(new JLabel("Partner:"));
 		comboPanel.add(strategyToggle);
-		add(comboPanel, c);
+//		add(comboPanel, c);
 		
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -218,7 +218,7 @@ public class DesignUI extends JPanel {
 			designer.addObserver(new Observer() {
 				@Override
 				public void update(Observable o, Object arg) {
-					if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
+					if(designer.getDesign(strategy) >= 0 && designer == app.getDesignPartner() && designer.isReadyToShare()) {
 						partnerSlider.setValue(designer.getDesign(strategy));
 					}
 					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {

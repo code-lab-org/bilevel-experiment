@@ -32,11 +32,11 @@
       tasks: [
         {
           name: "NN0705_02",
-          designerIds: [0, 2]
+          designerIds: [0, 1]
         },
         {
           name: "NN0705_02",
-          designerIds: [3, 1]
+          designerIds: [2, 3]
         }
       ]
     },
@@ -45,11 +45,11 @@
       tasks: [
         {
           name: "NN0705_04",
-          designerIds: [2, 1]
+          designerIds: [0, 1]
         },
         {
           name: "NN0705_04",
-          designerIds: [3, 0]
+          designerIds: [2, 3]
         }
       ]
     }

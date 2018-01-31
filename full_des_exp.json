@@ -2,20 +2,20 @@
   name: "Pilot",
   rounds: [
     {
-      name: "Training",
+      name: "Training Task",
       tasks: [
         {
-          name: "NN0705_02",
-          designerIds: [0, 1]
+          name: "NN0705_03",
+          designerIds: [3, 1]
         },
         {
-          name: "NN0705_02",
-          designerIds: [2, 3]
+          name: "NN0705_03",
+          designerIds: [2, 0]
         }
       ]
     },
     {
-      name: "Round 1",
+      name: "Task 1/12",
       tasks: [
         {
           name: "HA0705_01",
@@ -28,33 +28,33 @@
       ]
     },
     {
-      name: "Round 2",
+      name: "Task 2/12",
       tasks: [
         {
           name: "PD0705_02",
-          designerIds: [3, 0]
+          designerIds: [0, 2]
         },
         {
           name: "CH0705_02",
-          designerIds: [1, 2]
+          designerIds: [3, 1]
         }
       ]
     },
     {
-      name: "Round 3",
+      name: "Task 3/12",
       tasks: [
         {
           name: "HA0705_01",
-          designerIds: [2, 3]
+          designerIds: [2, 1]
         },
         {
           name: "SH0705_01",
-          designerIds: [0, 1]
+          designerIds: [3, 0]
         }
       ]
     },
     {
-      name: "Round 4",
+      name: "Task 4/12",
       tasks: [
         {
           name: "SH0705_03",
@@ -62,111 +62,111 @@
         },
         {
           name: "CH0705_03",
-          designerIds: [3, 1]
+          designerIds: [1, 3]
         }
       ]
     },
     {
-      name: "Round 5",
+      name: "Task 5/12",
       tasks: [
         {
           name: "HA0705_02",
-          designerIds: [0, 3]
+          designerIds: [3, 2]
         },
         {
           name: "PD0705_02",
-          designerIds: [1, 2]
+          designerIds: [1, 0]
         }
       ]
     },
     {
-      name: "Round 6",
+      name: "Task 6/12",
       tasks: [
         {
           name: "SH0705_03",
-          designerIds: [3, 1]
-        },
-        {
-          name: "HA0705_03",
-          designerIds: [2, 0]
-        }
-      ]
-    },
-    {
-      name: "Round 7",
-      tasks: [
-        {
-          name: "CH0705_01",
-          designerIds: [3, 2]
-        },
-        {
-          name: "PD0705_01",
-          designerIds: [1, 0]
-        }
-      ]
-    },
-    {
-      name: "Round 8",
-      tasks: [
-        {
-          name: "SH0705_02",
-          designerIds: [0, 3]
-        },
-        {
-          name: "HA0705_02",
-          designerIds: [2, 1]
-        }
-      ]
-    },
-    {
-      name: "Round 9",
-      tasks: [
-        {
-          name: "CH0705_01",
-          designerIds: [1, 0]
-        },
-        {
-          name: "SH0705_01",
-          designerIds: [3, 2]
-        }
-      ]
-    },
-    {
-      name: "Round 10",
-      tasks: [
-        {
-          name: "PD0705_03",
-          designerIds: [1, 3]
-        },
-        {
-          name: "CH0705_03",
-          designerIds: [0, 2]
-        }
-      ]
-    },
-    {
-      name: "Round 11",
-      tasks: [
-        {
-          name: "CH0705_02",
           designerIds: [3, 0]
         },
         {
-          name: "SH0705_02",
+          name: "HA0705_03",
           designerIds: [2, 1]
         }
       ]
     },
     {
-      name: "Round 12",
+      name: "Task 7/12",
+      tasks: [
+        {
+          name: "CH0705_01",
+          designerIds: [1, 3]
+        },
+        {
+          name: "PD0705_01",
+          designerIds: [0, 2]
+        }
+      ]
+    },
+    {
+      name: "Task 8/12",
+      tasks: [
+        {
+          name: "SH0705_02",
+          designerIds: [1, 0]
+        },
+        {
+          name: "HA0705_02",
+          designerIds: [2, 3]
+        }
+      ]
+    },
+    {
+      name: "Task 9/12",
+      tasks: [
+        {
+          name: "CH0705_01",
+          designerIds: [0, 3]
+        },
+        {
+          name: "SH0705_01",
+          designerIds: [2, 1]
+        }
+      ]
+    },
+    {
+      name: "Task 10/12",
       tasks: [
         {
           name: "PD0705_03",
-          designerIds: [0, 2]
+          designerIds: [0, 1]
+        },
+        {
+          name: "CH0705_03",
+          designerIds: [3, 2]
+        }
+      ]
+    },
+    {
+      name: "Task 11/12",
+      tasks: [
+        {
+          name: "CH0705_02",
+          designerIds: [2, 0]
+        },
+        {
+          name: "SH0705_02",
+          designerIds: [3, 1]
+        }
+      ]
+    },
+    {
+      name: "Task 12/12",
+      tasks: [
+        {
+          name: "PD0705_03",
+          designerIds: [2, 1]
         },
         {
           name: "HA0705_03",
-          designerIds: [1, 3]
+          designerIds: [0, 3]
         }
       ]
     }

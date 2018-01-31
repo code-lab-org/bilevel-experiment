@@ -6,6 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
@@ -129,9 +131,9 @@ public class StrategyUI extends JPanel {
 			strategyRadios[i] = new JRadioButton(DesignerUI.STRATEGY_LABELS[i] + " Design");
 			strategyRadios[i].setHorizontalAlignment(JLabel.CENTER);
 			strategyRadios[i].setBackground(DesignerUI.STRATEGY_COLORS[i]);
-			strategyRadios[i].addActionListener(new ActionListener() {
+			strategyRadios[i].addItemListener(new ItemListener() {
 				@Override
-				public void actionPerformed(ActionEvent e) {
+				public void itemStateChanged(ItemEvent e) {
 					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 						if(strategyRadios[i].isSelected()) {
 							for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {

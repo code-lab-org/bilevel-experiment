@@ -7,8 +7,10 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Queue;
 
 import javax.swing.JPanel;
 
@@ -23,10 +25,17 @@ public class ValuePanel extends JPanel {
 	private int myStrategy, partnerStrategy;
 	private int myDesign, partnerDesign;
 	private boolean hiddenStates = false;
-	private boolean[][] stateVisible = new boolean[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
+	private int maxStatesVisible = (int) Math.pow(Designer.NUM_DESIGNS,2)/4;
+	private final Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
+	private Queue<Object> stateHistory = new LinkedList<Object>();
 	
 	public ValuePanel(boolean hiddenStates) {
 		this.setOpaque(false);
+		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
+			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
+				states[i][j] = new Object();
+			}
+		}
 		this.hiddenStates = hiddenStates;
 	}
 	
@@ -37,12 +46,8 @@ public class ValuePanel extends JPanel {
 			public void update(Observable o, Object arg) {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					partnerDesign = 0;
-					for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
-						for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
-							stateVisible[i][j] = false;
-						}
-					}
-					stateVisible[0][0] = true;
+					stateHistory.clear();
+					stateHistory.add(states[0][0]);
 				}
 				repaint();
 			}
@@ -62,7 +67,12 @@ public class ValuePanel extends JPanel {
 							repaint();
 						}
 					}
-					stateVisible[myDesign][partnerDesign] = true;
+					if(stateHistory.contains(states[myDesign][partnerDesign])) {
+						stateHistory.remove(states[myDesign][partnerDesign]);
+					} else if(stateHistory.size() > maxStatesVisible) {
+						stateHistory.poll();
+					}
+					stateHistory.add(states[myDesign][partnerDesign]);
 				}
 			});
 		}
@@ -92,7 +102,7 @@ public class ValuePanel extends JPanel {
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
 				int value = app.getValue(myStrategy, i, partnerStrategy, j);
-				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || stateVisible[i][j])) {
+				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || stateHistory.contains(states[i][j]))) {
 					g2D.setColor(DesignerUI.VALUE_COLORS[value/5]);
 				} else {
 					g2D.setColor(Color.BLACK);

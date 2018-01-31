@@ -44,11 +44,11 @@
       name: "Task 3/3",
       tasks: [
         {
-          name: "NN0705_02",
+          name: "NN0705_04",
           designerIds: [0, 1]
         },
         {
-          name: "NN0705_02",
+          name: "NN0705_04",
           designerIds: [2, 3]
         }
       ]

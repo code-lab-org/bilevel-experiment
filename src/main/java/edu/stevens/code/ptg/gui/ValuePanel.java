@@ -7,10 +7,10 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.swing.JPanel;
 
@@ -26,8 +26,8 @@ public class ValuePanel extends JPanel {
 	private int myDesign, partnerDesign;
 	private boolean hiddenStates = false;
 	private int maxStatesVisible = (int) Math.pow(Designer.NUM_DESIGNS,2)/4;
-	private final Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
-	private Queue<Object> stateHistory = new LinkedList<Object>();
+	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
+	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	
 	public ValuePanel(boolean hiddenStates) {
 		this.setOpaque(false);
@@ -39,6 +39,16 @@ public class ValuePanel extends JPanel {
 		this.hiddenStates = hiddenStates;
 	}
 	
+	private void updateStates() {
+		if(visibleStates.contains(states[myDesign][partnerDesign])) {
+			visibleStates.remove(states[myDesign][partnerDesign]);
+		} else if(visibleStates.size() >= maxStatesVisible) {
+			visibleStates.poll();
+		}
+		visibleStates.add(states[myDesign][partnerDesign]);
+		repaint();
+	}
+	
 	public void bindTo(DesignerApp app, int myStrategy, int partnerStrategy) {
 		this.app = app;
 		this.app.getManager().addObserver(new Observer() {
@@ -46,10 +56,10 @@ public class ValuePanel extends JPanel {
 			public void update(Observable o, Object arg) {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					partnerDesign = 0;
-					stateHistory.clear();
-					stateHistory.add(states[0][0]);
+					visibleStates.clear();
+					visibleStates.add(states[0][0]);
+					repaint();
 				}
-				repaint();
 			}
 		});
 		for(Designer designer : app.getDesigners()) {
@@ -59,20 +69,14 @@ public class ValuePanel extends JPanel {
 					if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
 						if(partnerDesign != designer.getDesign(partnerStrategy)) {
 							partnerDesign = designer.getDesign(partnerStrategy);
-							repaint();
+							updateStates();
 						}
 					} else if(designer == app.getController()) {
 						if(myDesign != app.getController().getDesign(myStrategy)) {
 							myDesign = app.getController().getDesign(myStrategy);
-							repaint();
+							updateStates();
 						}
 					}
-					if(stateHistory.contains(states[myDesign][partnerDesign])) {
-						stateHistory.remove(states[myDesign][partnerDesign]);
-					} else if(stateHistory.size() > maxStatesVisible) {
-						stateHistory.poll();
-					}
-					stateHistory.add(states[myDesign][partnerDesign]);
 				}
 			});
 		}
@@ -102,7 +106,7 @@ public class ValuePanel extends JPanel {
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
 				int value = app.getValue(myStrategy, i, partnerStrategy, j);
-				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || stateHistory.contains(states[i][j]))) {
+				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || visibleStates.contains(states[i][j]))) {
 					g2D.setColor(DesignerUI.VALUE_COLORS[value/5]);
 				} else {
 					g2D.setColor(Color.BLACK);

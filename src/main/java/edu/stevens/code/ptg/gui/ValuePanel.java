@@ -22,9 +22,12 @@ public class ValuePanel extends JPanel {
 	private DesignerApp app;
 	private int myStrategy, partnerStrategy;
 	private int myDesign, partnerDesign;
+	private boolean hiddenStates = false;
+	private boolean[][] stateVisible = new boolean[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	
-	public ValuePanel() {
+	public ValuePanel(boolean hiddenStates) {
 		this.setOpaque(false);
+		this.hiddenStates = hiddenStates;
 	}
 	
 	public void bindTo(DesignerApp app, int myStrategy, int partnerStrategy) {
@@ -34,6 +37,12 @@ public class ValuePanel extends JPanel {
 			public void update(Observable o, Object arg) {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					partnerDesign = 0;
+					for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
+						for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
+							stateVisible[i][j] = false;
+						}
+					}
+					stateVisible[0][0] = true;
 				}
 				repaint();
 			}
@@ -53,6 +62,7 @@ public class ValuePanel extends JPanel {
 							repaint();
 						}
 					}
+					stateVisible[myDesign][partnerDesign] = true;
 				}
 			});
 		}
@@ -82,7 +92,7 @@ public class ValuePanel extends JPanel {
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
 				int value = app.getValue(myStrategy, i, partnerStrategy, j);
-				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100) {
+				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || stateVisible[i][j])) {
 					g2D.setColor(DesignerUI.VALUE_COLORS[value/5]);
 				} else {
 					g2D.setColor(Color.BLACK);

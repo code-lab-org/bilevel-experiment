@@ -108,7 +108,7 @@ public class StrategyUI extends JPanel {
 				if(i == j) {
 					valueContainers[i][j].setBackground(DesignerUI.STRATEGY_COLORS[j]);
 				}
-				valuePanels[i][j] = new ValuePanel();
+				valuePanels[i][j] = new ValuePanel(false);
 				valueLabels[i][j] = new ValueLabel();
 				valueContainers[i][j].add(valueLabels[i][j], BorderLayout.CENTER);
 				this.add(valueContainers[i][j], c);

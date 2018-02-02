@@ -179,13 +179,6 @@ public class ManagerApp implements App {
 		int[] scores = new int[Manager.NUM_DESIGNERS];
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			int j = manager.getDesignPartner(i);
-			/*
-			scores[i] = manager.getTaskByDesignerId(i).getValue(
-					i, designers[i].getStrategy(), 
-					designers[i].getDesign(designers[i].getStrategy()), 
-					j, designers[j].getStrategy(), 
-					designers[j].getDesign(designers[j].getStrategy()));
-			*/
 			Task task = manager.getTaskByDesignerId(i);
 			scores[i] = task.getValueMap().getValues(
 					task.getDesignerId(0)==i ? designers[i].getStrategy() : designers[j].getStrategy(), 
@@ -211,26 +204,9 @@ public class ManagerApp implements App {
 	 * Record scores.
 	 */
 	public void recordScores() {
-		for(int i = 0; i < Manager.NUM_TASKS; i++) {
-			int[] designerIds = manager.getTask(i).getDesignerIds();
-			int[] values = manager.getTask(i).getValueMap().getValues(
-					designers[designerIds[0]].getStrategy(), 
-					designers[designerIds[1]].getStrategy(), 
-					designers[designerIds[0]].getDesign(designers[designerIds[0]].getStrategy()), 
-					designers[designerIds[1]].getDesign(designers[designerIds[1]].getStrategy())
-			);
-			if(designers[designerIds[0]].getStrategy() != designers[designerIds[1]].getStrategy()) {
-				values = new FakeValueMap(manager.getTask(i).getValueMap()).getFakeValues(
-						designers[designerIds[0]].getStrategy(), 
-						designers[designerIds[1]].getStrategy(), 
-						designers[designerIds[0]].getDesign(designers[designerIds[0]].getStrategy()), 
-						designers[designerIds[1]].getDesign(designers[designerIds[1]].getStrategy()), 
-						designers[designerIds[0]].getDesign(designers[designerIds[1]].getStrategy()), 
-						designers[designerIds[1]].getDesign(designers[designerIds[0]].getStrategy()));
-			}
-			for(int j = 0; j < Task.NUM_DESIGNERS; j++) {
-				this.scores[designerIds[j]][this.roundIndex] = values[j];
-			}
+		int[] scores = getScores();
+		for(int i = 0; i < Task.NUM_DESIGNERS; i++) {
+			this.scores[i][this.roundIndex] = scores[i];
 		}
 		manager.setTimeRemaining(0);
 	}

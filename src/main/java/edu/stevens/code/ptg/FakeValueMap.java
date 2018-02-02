@@ -20,8 +20,8 @@ public class FakeValueMap {
 				is_inverse = true;
 			}
 			
-			double S = Sucker(realValueMap.getName().substring(0, 3), is_inverse);
-			double T = Temptation(realValueMap.getName().substring(0, 3), is_inverse);
+			double S = Sucker(realValueMap.getName().substring(0, 2), is_inverse);
+			double T = Temptation(realValueMap.getName().substring(0, 2), is_inverse);
 			
 			int[] values = new int[2];
 
@@ -42,7 +42,7 @@ public class FakeValueMap {
 				is_inverse = true;
 			}
 
-			double S = Sucker(realValueMap.getName().substring(0, 3), is_inverse);
+			double S = Sucker(realValueMap.getName().substring(0, 2), is_inverse);
 			double T = Temptation(realValueMap.getName().substring(0, 2), is_inverse);
 			
 			int[] values = new int[2];

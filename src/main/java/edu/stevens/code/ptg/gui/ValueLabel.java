@@ -66,7 +66,7 @@ public class ValueLabel extends JLabel {
 		int value = getValue();
 		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(getWidth()/4f,getHeight()/2f), 48), 12)));
 		if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100) {
-			this.setBackground(DesignerUI.VALUE_COLORS[value/5]);
+			this.setBackground(DesignerUI.VALUE_COLORS[ (int) Math.round(value/5.0) ]);
 			this.setText(new Integer(value).toString());
 			if (value > 45) {
 				this.setForeground(Color.BLACK);

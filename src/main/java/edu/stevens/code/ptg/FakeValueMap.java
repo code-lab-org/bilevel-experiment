@@ -11,43 +11,73 @@ public class FakeValueMap {
 		// design_ij = player i's design under player j's strategy
 		if(strategy0 == strategy1) {
 			return realValueMap.getValues(strategy0, strategy1, design00, design11);
-		} else {
+		} else if (strategy0 == 0) {
 			int[] values00 = realValueMap.getValues(strategy0, strategy0, design00, design10);
 			int[] values11 = realValueMap.getValues(strategy1, strategy1, design01, design11);
-			// fill in your function here
 			
-			// values00[0]: value for designer 0 under shared strategy 0
-			// values00[1]: value for designer 1 under shared strategy 0
-			// values11[0]: value for designer 0 under shared strategy 1
-			// values11[1]: value for designer 1 under shared strategy 1
+			boolean is_inverse = false;
+			if (realValueMap.getName().substring(realValueMap.getName().length() - 1).equals("i") ){
+				is_inverse = true;
+			}
 			
-			String SS = realValueMap.getName().substring(0, 2);
-
-			double S = 0;
-			double T = 0;
-			
-			if      (SS.equals("CH")) {S =  0.5; T = 1.5; }
-			else if (SS.equals("HA")) {S =  0.5; T = 0.5; }
-			else if (SS.equals("PD")) {S = -0.5; T = 1.5; }
-			else if (SS.equals("SH")) {S = -0.5; T = 0.5; }
+			double S = Sucker(realValueMap.getName().substring(0, 3), is_inverse);
+			double T = Temptation(realValueMap.getName().substring(0, 3), is_inverse);
 			
 			int[] values = new int[2];
 
-			// value[0]: value for designer 0 under mixed strategy (strategy0, strategy1)
-			// value[1]: value for designer 1 under mixed strategy (strategy0, strategy1)
+			values[0] = (int) Math.round(S*values00[0] + (1-S)*values11[0]);
+			values[1] = (int) Math.round(T*values00[1] + (1-T)*values11[1]);
 			
-			values[0] = (int) Math.round(strategy0==0 ? S*values00[0] + (1-S)*values11[0] : T*values00[0] + (1-T)*values11[0]);
-			values[1] = (int) Math.round(strategy0==0 ? S*values00[1] + (1-S)*values11[1] : T*values00[1] + (1-T)*values11[1]);
+			if (values[0] < 0){values[0] = 0;} else if (values[0] > 100){values[0] = 100;};
+			if (values[1] < 0){values[1] = 0;} else if (values[1] > 100){values[1] = 100;};
 			
-			if(strategy0 == 0) {
-				values[0] = 10;
-				values[1] = 20;
-			} else {
-				values[0] = 30;
-				values[1] = 40;
+			return values;
+			
+		} else if (strategy0 == 1) {
+			int[] values00 = realValueMap.getValues(strategy1, strategy1, design01, design11);
+			int[] values11 = realValueMap.getValues(strategy0, strategy0, design00, design10);
+			
+			boolean is_inverse = false;
+			if (realValueMap.getName().substring(realValueMap.getName().length() - 1).equals("i") ){
+				is_inverse = true;
 			}
+
+			double S = Sucker(realValueMap.getName().substring(0, 3), is_inverse);
+			double T = Temptation(realValueMap.getName().substring(0, 2), is_inverse);
+			
+			int[] values = new int[2];
+			
+			values[0] = (int) Math.round(T*values00[0] + (1-T)*values11[0]);
+			values[1] = (int) Math.round(S*values00[1] + (1-S)*values11[1]);
+			
+			if (values[0] < 0){values[0] = 0;} else if (values[0] > 100){values[0] = 100;};
+			if (values[1] < 0){values[1] = 0;} else if (values[1] > 100){values[1] = 100;};
 			
 			return values;
 		}
+		return new int[]{0,0};
 	}
+	
+	public double Sucker(String game_id, boolean is_inverse){
+		
+		if      (game_id.equals("CH") && is_inverse == false) { return  0.5; }
+		else if (game_id.equals("CH") && is_inverse == true)  { return -0.5; }
+		else if (game_id.equals("HA")) { return  0.5; }
+		else if (game_id.equals("PD")) { return -0.5; }
+		else if (game_id.equals("SH") && is_inverse == false) { return -0.5; }
+		else if (game_id.equals("SH") && is_inverse == true)  { return  0.5; }
+		else    { return 0.0; }
+	}
+	
+	public double Temptation(String game_id, boolean is_inverse){
+		
+		if      (game_id.equals("CH") && is_inverse == false) { return 1.5; }
+		else if (game_id.equals("CH") && is_inverse == true)  { return 0.5; }
+		else if (game_id.equals("HA")) { return 0.5; }
+		else if (game_id.equals("PD")) { return 1.5; }
+		else if (game_id.equals("SH") && is_inverse == false) { return 0.5; }
+		else if (game_id.equals("SH") && is_inverse == true)  { return 1.5; }
+		else    { return 1.0; }
+	}
+	
 }

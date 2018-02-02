@@ -25,7 +25,7 @@ public class ValuePanel extends JPanel {
 	private int myStrategy, partnerStrategy;
 	private int myDesign, partnerDesign;
 	private boolean hiddenStates = false;
-	private int maxStatesVisible = (int) Math.pow(Designer.NUM_DESIGNS,2)/4;
+	private int maxStatesVisible = (int) Math.pow(Designer.NUM_DESIGNS,2)/3;
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	

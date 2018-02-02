@@ -14,7 +14,7 @@ public class Designer extends Observable {
 	
 	public static final int NUM_STRATEGIES = 2;
 	public static final int MIN_DESIGN_VALUE = 0;
-	public static final int MAX_DESIGN_VALUE = 7; /* 9 */
+	public static final int MAX_DESIGN_VALUE = 6; /* 7 */
 	public static final int NUM_DESIGNS = MAX_DESIGN_VALUE - MIN_DESIGN_VALUE + 1;
 	
 	private int id = -1;

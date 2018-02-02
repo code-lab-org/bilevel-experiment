@@ -205,7 +205,7 @@ public class ManagerApp implements App {
 	 */
 	public void recordScores() {
 		int[] scores = getScores();
-		for(int i = 0; i < Task.NUM_DESIGNERS; i++) {
+		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			this.scores[i][this.roundIndex] = scores[i];
 		}
 		manager.setTimeRemaining(0);

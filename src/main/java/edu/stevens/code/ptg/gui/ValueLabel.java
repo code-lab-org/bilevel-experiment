@@ -14,9 +14,9 @@ import edu.stevens.code.ptg.Manager;
 public class ValueLabel extends JLabel {
 	private static final long serialVersionUID = -125874855243548180L;
 	
-	private DesignerApp app;
-	private int myStrategy, partnerStrategy;
-	private int myDesign, partnerDesign;
+	protected DesignerApp app;
+	protected int myStrategy, partnerStrategy;
+	protected int myDesign, partnerDesign;
 	
 	public ValueLabel() {
 		this.setPreferredSize(new Dimension(200,200));
@@ -58,8 +58,12 @@ public class ValueLabel extends JLabel {
 		this.partnerStrategy = partnerStrategy;
 	}
 	
-	private void updateLabel() {
-		int value = app.getValue(myStrategy, myDesign, partnerStrategy, partnerDesign);
+	protected int getValue() {
+		return app.getValue(myStrategy, myDesign, partnerStrategy, partnerDesign);
+	}
+	
+	protected void updateLabel() {
+		int value = getValue();
 		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(getWidth()/4f,getHeight()/2f), 48), 12)));
 		if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100) {
 			this.setBackground(DesignerUI.VALUE_COLORS[value/5]);

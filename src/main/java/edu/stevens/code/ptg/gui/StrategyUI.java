@@ -111,7 +111,11 @@ public class StrategyUI extends JPanel {
 					valueContainers[i][j].setBackground(DesignerUI.STRATEGY_COLORS[j]);
 				}
 				valuePanels[i][j] = new ValuePanel(false);
-				valueLabels[i][j] = new ValueLabel();
+				if(i == j) {
+					valueLabels[i][j] = new ValueLabel();
+				} else {
+					valueLabels[i][j] = new FakeValueLabel();
+				}
 				valueContainers[i][j].add(valueLabels[i][j], BorderLayout.CENTER);
 				this.add(valueContainers[i][j], c);
 				c.gridx++;

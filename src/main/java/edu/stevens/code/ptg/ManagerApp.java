@@ -179,11 +179,30 @@ public class ManagerApp implements App {
 		int[] scores = new int[Manager.NUM_DESIGNERS];
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			int j = manager.getDesignPartner(i);
+			/*
 			scores[i] = manager.getTaskByDesignerId(i).getValue(
 					i, designers[i].getStrategy(), 
 					designers[i].getDesign(designers[i].getStrategy()), 
 					j, designers[j].getStrategy(), 
 					designers[j].getDesign(designers[j].getStrategy()));
+			*/
+			Task task = manager.getTaskByDesignerId(i);
+			scores[i] = task.getValueMap().getValues(
+					task.getDesignerId(0)==i ? designers[i].getStrategy() : designers[j].getStrategy(), 
+					task.getDesignerId(0)==i ? designers[j].getStrategy() : designers[i].getStrategy(), 
+					task.getDesignerId(0)==i ? designers[i].getDesign(designers[i].getStrategy()) : designers[j].getDesign(designers[j].getStrategy()), 
+					task.getDesignerId(0)==i ? designers[j].getDesign(designers[j].getStrategy()) : designers[i].getDesign(designers[i].getStrategy())
+			)[task.getDesignerId(0)==i ? 0 : 1];
+			if(designers[i].getStrategy() != designers[j].getStrategy()) {
+				scores[i] = new FakeValueMap(task.getValueMap()).getFakeValues(
+						task.getDesignerId(0)==i ? designers[i].getStrategy() : designers[j].getStrategy(), 
+						task.getDesignerId(0)==i ? designers[j].getStrategy() : designers[i].getStrategy(), 
+						task.getDesignerId(0)==i ? designers[i].getDesign(designers[i].getStrategy()) : designers[j].getDesign(designers[j].getStrategy()), 
+						task.getDesignerId(0)==i ? designers[j].getDesign(designers[j].getStrategy()) : designers[i].getDesign(designers[i].getStrategy()),
+						task.getDesignerId(0)==i ? designers[i].getDesign(designers[j].getStrategy()) : designers[j].getDesign(designers[i].getStrategy()), 
+						task.getDesignerId(0)==i ? designers[j].getDesign(designers[i].getStrategy()) : designers[i].getDesign(designers[j].getStrategy())
+				)[task.getDesignerId(0)==i ? 0 : 1];
+			}
 		}
 		return scores;
 	}
@@ -200,6 +219,15 @@ public class ManagerApp implements App {
 					designers[designerIds[0]].getDesign(designers[designerIds[0]].getStrategy()), 
 					designers[designerIds[1]].getDesign(designers[designerIds[1]].getStrategy())
 			);
+			if(designers[designerIds[0]].getStrategy() != designers[designerIds[1]].getStrategy()) {
+				values = new FakeValueMap(manager.getTask(i).getValueMap()).getFakeValues(
+						designers[designerIds[0]].getStrategy(), 
+						designers[designerIds[1]].getStrategy(), 
+						designers[designerIds[0]].getDesign(designers[designerIds[0]].getStrategy()), 
+						designers[designerIds[1]].getDesign(designers[designerIds[1]].getStrategy()), 
+						designers[designerIds[0]].getDesign(designers[designerIds[1]].getStrategy()), 
+						designers[designerIds[1]].getDesign(designers[designerIds[0]].getStrategy()));
+			}
 			for(int j = 0; j < Task.NUM_DESIGNERS; j++) {
 				this.scores[designerIds[j]][this.roundIndex] = values[j];
 			}

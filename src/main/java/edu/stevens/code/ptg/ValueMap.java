@@ -22,6 +22,9 @@ public class ValueMap {
 	 */
 	public ValueMap(String name) {
 		this.name = name;
+		if(name == null || name.equals("")) {
+			return;
+		}
 		try(BufferedReader br = new BufferedReader(new FileReader("src/test/java/games/"+name+".csv"))) {
 			for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 				for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {

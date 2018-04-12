@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -53,10 +54,10 @@ public class DesignUI extends JPanel {
 		c.ipadx = 5;
 		c.ipady = 5;
 		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.NONE;
 		c.weightx = 1;
 		c.weighty = 0;
-		c.gridwidth = 2;
+		c.gridwidth = 3;
 		JPanel scorePanel = new JPanel(new FlowLayout());
 		scorePanel.add(new JLabel("Value:"));
 		{
@@ -78,7 +79,7 @@ public class DesignUI extends JPanel {
 			}
 		}
 		scorePanel.setOpaque(false);
-		this.add(scorePanel, c);
+		// this.add(scorePanel, c);
 		
 		c.gridx = 2;
 		c.gridwidth = 1;		
@@ -107,7 +108,7 @@ public class DesignUI extends JPanel {
 		comboPanel.setOpaque(false);
 		comboPanel.add(new JLabel("Partner:"));
 		comboPanel.add(strategyToggle);
-//		add(comboPanel, c);
+		// add(comboPanel, c);
 		
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -146,7 +147,7 @@ public class DesignUI extends JPanel {
 		c.weightx = 0;
 		c.weighty = 1;
 		c.gridwidth = 1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.VERTICAL;
 		this.add(new ColorBarPanel(), c);
 		
 		c.gridx = 1;
@@ -162,10 +163,11 @@ public class DesignUI extends JPanel {
 		this.add(mySlider, c);
 		
 		// set up listener to always keep value panels in correct aspect ratio
-		addComponentListener(new ComponentAdapter() {
+		valueContainer.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
-    			int size = Math.min(valueContainer.getWidth(), valueContainer.getHeight());
+				Insets insets = valueContainer.getInsets();
+    			int size = Math.min(valueContainer.getWidth() - insets.left - insets.right, valueContainer.getHeight() - insets.top - insets.bottom);
     			for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
         			valuePanels[i].setPreferredSize(new Dimension(size, size));
     			}
@@ -175,7 +177,7 @@ public class DesignUI extends JPanel {
 				mySlider.setBorder(BorderFactory.createEmptyBorder(
 						0, (valueContainer.getWidth() - size)/2 + 3*size/(2*(Designer.NUM_DESIGNS+1)), 
 						0, (valueContainer.getWidth() - size)/2 + size/(2*(Designer.NUM_DESIGNS+1))));
-				valueContainer.revalidate();
+				revalidate();
 			}
 		});
 	}

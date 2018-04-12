@@ -31,7 +31,8 @@ public class ValuePanel extends JPanel {
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	
 	public ValuePanel(boolean hiddenStates) {
-		this.setMinimumSize(new Dimension(200,200));
+		this.setMinimumSize(new Dimension(50,50));
+		this.setPreferredSize(new Dimension(200,200));
 		this.setOpaque(false);
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {

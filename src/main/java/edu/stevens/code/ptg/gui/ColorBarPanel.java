@@ -34,7 +34,6 @@ public class ColorBarPanel extends JPanel {
 		int width = this.getWidth() - insets.left - insets.right - textPadding - maxTextWidth;
 		int height = (this.getHeight() - insets.top - insets.bottom )/(100/increments + 1);
 		
-		
 		for(int value = 0; value <= 100; value+=increments) {
 			if(value >= 0 && value <= 100) {
 				g.setColor(DesignerUI.VALUE_COLORS[value/5]);

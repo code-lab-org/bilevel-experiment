@@ -146,7 +146,7 @@ public class DesignUI extends JPanel {
 		c.weightx = 0;
 		c.weighty = 1;
 		c.gridwidth = 1;
-		c.fill = GridBagConstraints.VERTICAL;
+		c.fill = GridBagConstraints.BOTH;
 		this.add(new ColorBarPanel(), c);
 		
 		c.gridx = 1;
@@ -175,7 +175,7 @@ public class DesignUI extends JPanel {
 				mySlider.setBorder(BorderFactory.createEmptyBorder(
 						0, (valueContainer.getWidth() - size)/2 + 3*size/(2*(Designer.NUM_DESIGNS+1)), 
 						0, (valueContainer.getWidth() - size)/2 + size/(2*(Designer.NUM_DESIGNS+1))));
-    			revalidate();
+				valueContainer.revalidate();
 			}
 		});
 	}

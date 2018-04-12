@@ -2,6 +2,7 @@ package edu.stevens.code.ptg.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -30,6 +31,7 @@ public class ValuePanel extends JPanel {
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	
 	public ValuePanel(boolean hiddenStates) {
+		this.setMinimumSize(new Dimension(200,200));
 		this.setOpaque(false);
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {

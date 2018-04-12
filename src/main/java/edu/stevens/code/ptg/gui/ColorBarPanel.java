@@ -16,7 +16,7 @@ public class ColorBarPanel extends JPanel {
 	 * Instantiates a new color bar panel.
 	 */
 	public ColorBarPanel() {
-		this.setPreferredSize(new Dimension(50,100));
+		this.setMinimumSize(new Dimension(50,100));
 		this.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 	}
 	

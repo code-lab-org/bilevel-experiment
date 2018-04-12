@@ -162,7 +162,7 @@ public class DesignUI extends JPanel {
 		this.add(mySlider, c);
 		
 		// set up listener to always keep value panels in correct aspect ratio
-		valueContainer.addComponentListener(new ComponentAdapter() {
+		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
     			int size = Math.min(valueContainer.getWidth(), valueContainer.getHeight());
@@ -175,7 +175,7 @@ public class DesignUI extends JPanel {
 				mySlider.setBorder(BorderFactory.createEmptyBorder(
 						0, (valueContainer.getWidth() - size)/2 + 3*size/(2*(Designer.NUM_DESIGNS+1)), 
 						0, (valueContainer.getWidth() - size)/2 + size/(2*(Designer.NUM_DESIGNS+1))));
-    			valueContainer.revalidate();
+    			revalidate();
 			}
 		});
 	}

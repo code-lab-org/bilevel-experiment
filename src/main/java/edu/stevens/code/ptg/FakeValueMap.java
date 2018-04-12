@@ -38,7 +38,7 @@ public class FakeValueMap {
 			int[] values11 = realValueMap.getValues(strategy0, strategy0, design00, design10);
 			
 			boolean is_inverse = false;
-			if (realValueMap.getName().substring(realValueMap.getName().length() - 1).equals("i") ){
+			if (realValueMap.getName().length() > 0 && realValueMap.getName().substring(realValueMap.getName().length() - 1).equals("i") ){
 				is_inverse = true;
 			}
 

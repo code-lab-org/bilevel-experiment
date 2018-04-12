@@ -168,9 +168,9 @@ public class DesignUI extends JPanel {
 			public void componentResized(ComponentEvent e) {
 				Insets insets = valueContainer.getInsets();
     			int size = Math.min(valueContainer.getWidth() - insets.left - insets.right, valueContainer.getHeight() - insets.top - insets.bottom);
-    			for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-        			valuePanels[i].setPreferredSize(new Dimension(size, size));
-    			}
+				for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+        			valuePanels[i].setPreferredSize(new Dimension(size - 5, size - 5)); // subtract 5 pixels due to flickering effects
+				}
 				partnerSlider.setBorder(BorderFactory.createEmptyBorder(
 						(valueContainer.getHeight() - size)/2 + size/(2*(Designer.NUM_DESIGNS+1)), 0, 
 						(valueContainer.getHeight() - size)/2 + 3*size/(2*(Designer.NUM_DESIGNS+1)), 0));

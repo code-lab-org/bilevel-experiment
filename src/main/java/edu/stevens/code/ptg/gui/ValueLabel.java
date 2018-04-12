@@ -2,6 +2,8 @@ package edu.stevens.code.ptg.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,6 +25,12 @@ public class ValueLabel extends JLabel {
 		this.setOpaque(true);
 		this.setVerticalAlignment(JLabel.CENTER);
 		this.setHorizontalAlignment(JLabel.CENTER);
+		this.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				setFont(getFont().deriveFont(Math.max(Math.min(Math.min(getWidth()/4f,getHeight()/2f), 48), 12)));
+			}
+		});
 	}
 	
 	public void bindTo(DesignerApp app, int myStrategy, int partnerStrategy) {
@@ -64,7 +72,6 @@ public class ValueLabel extends JLabel {
 	
 	protected void updateLabel() {
 		int value = getValue();
-		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(getWidth()/4f,getHeight()/2f), 48), 12)));
 		if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100) {
 			this.setBackground(DesignerUI.VALUE_COLORS[ (int) Math.round(value/5.0) ]);
 			this.setText(new Integer(value).toString());

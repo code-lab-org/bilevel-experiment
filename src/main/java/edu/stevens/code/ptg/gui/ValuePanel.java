@@ -31,7 +31,7 @@ public class ValuePanel extends JPanel {
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	
 	public ValuePanel(boolean hiddenStates) {
-		this.setMinimumSize(new Dimension(50,50));
+		this.setMinimumSize(new Dimension(100,100));
 		this.setPreferredSize(new Dimension(200,200));
 		this.setOpaque(false);
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
@@ -102,7 +102,7 @@ public class ValuePanel extends JPanel {
 		/* Number of cells = Number of designs + 1; Reason: adding tick labels */ 
 		int width = (this.getWidth() - insets.left - insets.right)/(Designer.NUM_DESIGNS + 1);
 		int height = (this.getHeight() - insets.top - insets.bottom)/(Designer.NUM_DESIGNS + 1);
-		
+
 		this.setFont(new Font("Arial", Font.BOLD, getFont().getSize()));
 		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(width/2f,height/1.0f), 48), 12)));
 		

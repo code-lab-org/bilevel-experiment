@@ -54,7 +54,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 	private JLabel timeLabel, infoLabel;
 	private InstructionUI instructionUI;
 	private DesignUI[] designUIs = new DesignUI[Designer.NUM_STRATEGIES];
-	private StrategyUI strategyUI;
+	private StrategyUI2 strategyUI;
 	private int[] partnerDesigns = new int[Designer.NUM_STRATEGIES];
 	private int managerTime;
 	
@@ -102,7 +102,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 		c2.gridy++;
 		c2.gridwidth = 2;
 		c2.weighty = .2;
-		strategyUI = new StrategyUI();
+		strategyUI = new StrategyUI2();
 		designPanel.add(strategyUI, c2);
 		tabbedPane.addTab("Design", designPanel);
 		this.add(tabbedPane, c);

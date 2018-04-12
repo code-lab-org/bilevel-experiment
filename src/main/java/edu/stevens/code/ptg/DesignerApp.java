@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.stevens.code.ptg.gui.DesignerAppPanel;
-import edu.stevens.code.ptg.gui.DesignerUI;
+import edu.stevens.code.ptg.gui.DesignerUI2;
 import edu.stevens.code.ptg.hla.Ambassador;
 import hla.rti1516e.exceptions.RTIexception;
 
@@ -87,7 +87,7 @@ public class DesignerApp implements App {
 				JFrame f = new JFrame();
 				f.setIconImages(App.ICONS);
 				// DesignerAppPanel panel = new DebugDesignerAppPanel();
-				DesignerAppPanel panel = new DesignerUI();
+				DesignerAppPanel panel = new DesignerUI2();
 				panel.bindTo(self);
 				f.setContentPane(panel);
 				f.setTitle(designer.toString());

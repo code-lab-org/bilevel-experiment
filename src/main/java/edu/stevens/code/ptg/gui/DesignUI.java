@@ -1,6 +1,7 @@
 package edu.stevens.code.ptg.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -137,9 +138,9 @@ public class DesignUI extends JPanel {
 				}
 			});
 		}
-		valueContainer = new JPanel(new BorderLayout());
+		valueContainer = new JPanel(new GridBagLayout());
 		valueContainer.setOpaque(false);
-		valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
+		valueContainer.add(valuePanels[strategy]);
 		this.add(valueContainer, c);
 		c.gridx+=2;
 		c.weightx = 0;
@@ -160,22 +161,23 @@ public class DesignUI extends JPanel {
 		mySlider.setOpaque(false);
 		this.add(mySlider, c);
 		
-		this.addComponentListener(new ResizeListener());
-	}
-	
-	class ResizeListener extends ComponentAdapter {
-		public void componentResized(ComponentEvent e) {
-			
-			int min_length = Math.min(valuePanels[strategy].getWidth(),
-							  	   	   valuePanels[strategy].getHeight());
-			
-			partnerSlider.setBorder(BorderFactory.createEmptyBorder(
-					1*min_length/(2*(Designer.NUM_DESIGNS+1)) + 0, 0, 
-					3*min_length/(2*(Designer.NUM_DESIGNS+1)) + 0, 0));
-			mySlider.setBorder(BorderFactory.createEmptyBorder(
-					0, 3*min_length/(2*(Designer.NUM_DESIGNS+1)) + 0, 
-					0, 1*min_length/(2*(Designer.NUM_DESIGNS+1)) + 0));
-		}
+		// set up listener to always keep value panels in correct aspect ratio
+		valueContainer.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+    			int size = Math.min(valueContainer.getWidth(), valueContainer.getHeight());
+    			for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+        			valuePanels[i].setPreferredSize(new Dimension(size, size));
+    			}
+				partnerSlider.setBorder(BorderFactory.createEmptyBorder(
+						(valueContainer.getHeight() - size)/2 + size/(2*(Designer.NUM_DESIGNS+1)), 0, 
+						(valueContainer.getHeight() - size)/2 + 3*size/(2*(Designer.NUM_DESIGNS+1)), 0));
+				mySlider.setBorder(BorderFactory.createEmptyBorder(
+						0, (valueContainer.getWidth() - size)/2 + 3*size/(2*(Designer.NUM_DESIGNS+1)), 
+						0, (valueContainer.getWidth() - size)/2 + size/(2*(Designer.NUM_DESIGNS+1))));
+    			valueContainer.revalidate();
+			}
+		});
 	}
 	
 	private void resetUI(DesignerApp app) {
@@ -184,7 +186,7 @@ public class DesignUI extends JPanel {
 		strategyToggle.setText("Agree");
 		strategyToggle.setSelected(false);
 		valueContainer.removeAll();
-		valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
+		valueContainer.add(valuePanels[strategy]);
 		valueContainer.validate();
 		valueContainer.repaint();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {

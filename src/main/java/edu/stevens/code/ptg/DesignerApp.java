@@ -1,11 +1,7 @@
 package edu.stevens.code.ptg;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
@@ -14,7 +10,6 @@ import java.util.Observer;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
@@ -91,12 +86,10 @@ public class DesignerApp implements App {
 			public void run() {								
 				JFrame f = new JFrame();
 				f.setIconImages(App.ICONS);
-				JPanel contentPane = new JPanel(new FlowLayout());
 				// DesignerAppPanel panel = new DebugDesignerAppPanel();
 				DesignerAppPanel panel = new DesignerUI();
 				panel.bindTo(self);
-				contentPane.add(panel);
-				f.setContentPane(contentPane);
+				f.setContentPane(panel);
 				f.setTitle(designer.toString());
 				f.setVisible(true);
 		        f.pack();
@@ -137,17 +130,8 @@ public class DesignerApp implements App {
 		    		}
 		    	};
 
-		    	contentPane.getInputMap(DesignerAppPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F11"), "toggleFullscreen");
-		    	contentPane.getActionMap().put("toggleFullscreen", toggleFullscreen);
-		    	contentPane.addComponentListener(new ComponentAdapter() {
-		    		@Override
-		    		public void componentResized(ComponentEvent e) {
-		    			int size = Math.min(contentPane.getWidth(), contentPane.getHeight());
-		    			panel.setPreferredSize(new Dimension(size, size));
-		    			contentPane.revalidate();
-		    		}
-		    	});
-		        
+		    	panel.getInputMap(DesignerAppPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F11"), "toggleFullscreen");
+		    	panel.getActionMap().put("toggleFullscreen", toggleFullscreen);
 			}
         });
 	}

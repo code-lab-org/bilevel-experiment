@@ -15,7 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -115,7 +114,7 @@ public class DesignUI extends JPanel {
 		c.gridy++;
 		c.anchor = GridBagConstraints.SOUTH;
 		c.fill = GridBagConstraints.VERTICAL;
-		partnerSlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE);
+		partnerSlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE, 3);
 		partnerSlider.setOrientation(JSlider.VERTICAL);
 		partnerSlider.setEnabled(false);
 		partnerSlider.setOpaque(false);
@@ -157,7 +156,7 @@ public class DesignUI extends JPanel {
 		c.gridwidth = 2;
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		mySlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE);
+		mySlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE, 3);
 		mySlider.setEnabled(false);
 		mySlider.setOpaque(false);
 		this.add(mySlider, c);
@@ -183,8 +182,8 @@ public class DesignUI extends JPanel {
 	}
 	
 	private void resetUI(DesignerApp app) {
-		mySlider.setValue(0);
-		partnerSlider.setValue(0);
+		mySlider.setValue(Designer.NUM_DESIGNS/2);
+		partnerSlider.setValue(Designer.NUM_DESIGNS/2);
 		strategyToggle.setText("Agree");
 		strategyToggle.setSelected(false);
 		valueContainer.removeAll();
@@ -212,7 +211,7 @@ public class DesignUI extends JPanel {
 				app.getController().setDesign(strategy, mySlider.getValue());
 			}
 		});
-		partnerSlider.setValue(0);
+		partnerSlider.setValue(Designer.NUM_DESIGNS/2);
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			valuePanels[i].bindTo(app, strategy, i);
 			int value = app.getValue(strategy, 0, i==0?strategy:1-strategy, 0);

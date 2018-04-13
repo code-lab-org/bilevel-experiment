@@ -23,6 +23,11 @@ public class Designer extends Observable {
 	private int strategy = 0;
 	private boolean readyToShare = false;
 	
+	public Designer(){
+		for(int i = 0; i < NUM_STRATEGIES; i++)
+			designs[i] = NUM_DESIGNS/2;
+	}
+	
 	/**
 	 * Gets the id.
 	 *

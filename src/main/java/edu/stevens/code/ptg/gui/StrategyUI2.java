@@ -41,7 +41,7 @@ public class StrategyUI2 extends JPanel {
 		ButtonGroup radios = new ButtonGroup();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			c.gridy = 0;
-			JLabel agreeLabel = new JLabel("Agree on " + DesignerUI.STRATEGY_LABELS[i], JLabel.CENTER);
+			JLabel agreeLabel = new JLabel("     Agree on " + DesignerUI.STRATEGY_LABELS[i] + "     ", JLabel.CENTER);
 			agreeLabel.setFont(agreeLabel.getFont().deriveFont(24f));
 			agreeLabel.setOpaque(true);
 			agreeLabel.setBackground(DesignerUI.STRATEGY_COLORS[i]);

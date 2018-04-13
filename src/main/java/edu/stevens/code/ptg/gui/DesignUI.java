@@ -114,7 +114,7 @@ public class DesignUI extends JPanel {
 		c.gridy++;
 		c.anchor = GridBagConstraints.SOUTH;
 		c.fill = GridBagConstraints.VERTICAL;
-		partnerSlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE, 3);
+		partnerSlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE, Designer.NUM_DESIGNS/2);
 		partnerSlider.setOrientation(JSlider.VERTICAL);
 		partnerSlider.setEnabled(false);
 		partnerSlider.setOpaque(false);
@@ -156,7 +156,7 @@ public class DesignUI extends JPanel {
 		c.gridwidth = 2;
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		mySlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE, 3);
+		mySlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE, Designer.NUM_DESIGNS/2);
 		mySlider.setEnabled(false);
 		mySlider.setOpaque(false);
 		this.add(mySlider, c);

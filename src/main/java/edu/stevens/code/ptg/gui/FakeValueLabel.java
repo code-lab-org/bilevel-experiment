@@ -11,7 +11,8 @@ import edu.stevens.code.ptg.Task;
 public class FakeValueLabel extends ValueLabel {
 	private static final long serialVersionUID = -125874855243548180L;
 	
-	private int myOtherDesign, partnerOtherDesign;
+	private int myOtherDesign = Designer.NUM_DESIGNS/2;
+	private int partnerOtherDesign = Designer.NUM_DESIGNS/2;
 	
 	public FakeValueLabel() {
 		super();

@@ -24,7 +24,8 @@ public class ValuePanel extends JPanel {
 	
 	private DesignerApp app;
 	private int myStrategy, partnerStrategy;
-	private int myDesign, partnerDesign;
+	private int myDesign = Designer.NUM_DESIGNS/2;
+	private int partnerDesign = Designer.NUM_DESIGNS/2;
 	private boolean hiddenStates = false;
 	private int maxStatesVisible = (int) Math.pow(Designer.NUM_DESIGNS,2)/3;
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];

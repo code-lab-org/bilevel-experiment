@@ -18,7 +18,8 @@ public class ValueLabel extends JLabel {
 	
 	protected DesignerApp app;
 	protected int myStrategy, partnerStrategy;
-	protected int myDesign, partnerDesign;
+	protected int myDesign = Designer.NUM_DESIGNS/2;
+	protected int partnerDesign = Designer.NUM_DESIGNS/2;;
 	
 	public ValueLabel() {
 		this.setPreferredSize(new Dimension(200,200));
@@ -39,7 +40,7 @@ public class ValueLabel extends JLabel {
 			@Override
 			public void update(Observable o, Object arg) {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
-					partnerDesign = 0;
+					partnerDesign = Designer.NUM_DESIGNS/2;
 				}
 				updateLabel();
 			}

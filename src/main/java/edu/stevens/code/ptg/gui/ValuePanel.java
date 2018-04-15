@@ -59,7 +59,7 @@ public class ValuePanel extends JPanel {
 			@Override
 			public void update(Observable o, Object arg) {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
-					partnerDesign = 0;
+					partnerDesign = Designer.NUM_DESIGNS/2;
 					visibleStates.clear();
 					visibleStates.add(states[0][0]);
 					repaint();

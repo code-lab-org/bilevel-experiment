@@ -27,7 +27,7 @@ public class ValuePanel extends JPanel {
 	private int myDesign = Designer.NUM_DESIGNS/2;
 	private int partnerDesign = Designer.NUM_DESIGNS/2;
 	private boolean hiddenStates = false;
-	private int maxStatesVisible = (int) Math.pow(Designer.NUM_DESIGNS,2)/3;
+	private int maxStatesVisible = (int) Math.pow(Designer.NUM_DESIGNS,2); /* All map can be visible */
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	
@@ -61,7 +61,9 @@ public class ValuePanel extends JPanel {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					partnerDesign = Designer.NUM_DESIGNS/2;
 					visibleStates.clear();
-					visibleStates.add(states[0][0]);
+					/* Next line would add cell (0,0) to the visible states.
+					 * I commented (removed) it! */
+					//visibleStates.add(states[0][0]);
 					repaint();
 				}
 			}

@@ -60,23 +60,23 @@ public class FakeValueMap {
 	
 	public double Sucker(String game_id, boolean is_inverse){
 		
-		if      (game_id.equals("CH") && is_inverse == false) { return  0.5; }
-		else if (game_id.equals("CH") && is_inverse == true)  { return -0.5; }
-		else if (game_id.equals("HA")) { return  0.5; }
-		else if (game_id.equals("PD")) { return -0.5; }
-		else if (game_id.equals("SH") && is_inverse == false) { return -0.5; }
-		else if (game_id.equals("SH") && is_inverse == true)  { return  0.5; }
+		if      (game_id.equals("CH") && is_inverse == false) { return  1.0; }
+		else if (game_id.equals("CH") && is_inverse == true)  { return -1.0; }
+		else if (game_id.equals("HA")) { return  1.0; }
+		else if (game_id.equals("PD")) { return -1.0; }
+		else if (game_id.equals("SH") && is_inverse == false) { return -1.0; }
+		else if (game_id.equals("SH") && is_inverse == true)  { return  1.0; }
 		else    { return -2/3.; }
 	}
 	
 	public double Temptation(String game_id, boolean is_inverse){
 		
-		if      (game_id.equals("CH") && is_inverse == false) { return 1.5; }
-		else if (game_id.equals("CH") && is_inverse == true)  { return 0.5; }
-		else if (game_id.equals("HA")) { return 0.5; }
-		else if (game_id.equals("PD")) { return 1.5; }
-		else if (game_id.equals("SH") && is_inverse == false) { return 0.5; }
-		else if (game_id.equals("SH") && is_inverse == true)  { return 1.5; }
+		if      (game_id.equals("CH") && is_inverse == false) { return 2.0; }
+		else if (game_id.equals("CH") && is_inverse == true)  { return 0.0; }
+		else if (game_id.equals("HA")) { return 0.0; }
+		else if (game_id.equals("PD")) { return 2.0; }
+		else if (game_id.equals("SH") && is_inverse == false) { return 0.0; }
+		else if (game_id.equals("SH") && is_inverse == true)  { return 2.0; }
 		else    { return 1/3.; }
 	}
 	

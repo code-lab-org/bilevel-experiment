@@ -132,7 +132,7 @@ public class StrategyUI2 extends JPanel {
 				}
 			});
 			for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
-				valueLabels[j][i].bindTo(app, i, j);
+				valueLabels[j][i].bindTo(app, j, i);
 			}
 		}
 		app.getManager().addObserver(new Observer() {

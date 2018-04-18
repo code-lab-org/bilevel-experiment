@@ -1,0 +1,113 @@
+{
+  name: "Timing Test",
+  rounds: [
+    {
+      name: "Timing Test 1/12",
+      Timing Tests: [
+        {
+          name: "CH0605_01o",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 2/12",
+      Timing Tests: [
+        {
+          name: "HA0605_02i",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 3/12",
+      Timing Tests: [
+        {
+          name: "SH0605_01o",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 4/12",
+      Timing Tests: [
+        {
+          name: "CH0605_03i",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 5/12",
+      Timing Tests: [
+        {
+          name: "PD0605_02i",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 6/12",
+      Timing Tests: [
+        {
+          name: "HA0605_01o",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 7/12",
+      Timing Tests: [
+        {
+          name: "PD0605_01o",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 8/12",
+      Timing Tests: [
+        {
+          name: "SH0605_03i",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 9/12",
+      Timing Tests: [
+        {
+          name: "CH0605_02o",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 10/12",
+      Timing Tests: [
+        {
+          name: "HA0605_03i",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 11/12",
+      Timing Tests: [
+        {
+          name: "SH0605_02o",
+          designerIds: [0, 1]
+        }
+      ]
+    },
+    {
+      name: "Timing Test 12/12",
+      Timing Tests: [
+        {
+          name: "PD0605_03i",
+          designerIds: [0, 1]
+        }
+      ]
+    }
+  ]
+}

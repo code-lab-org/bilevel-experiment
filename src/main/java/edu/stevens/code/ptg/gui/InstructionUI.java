@@ -22,7 +22,7 @@ public class InstructionUI extends JEditorPane {
 	
 	private String getText(Manager manager) {
 		String text = "<html><center><h1>" + manager.getRoundName() + "</h1>" +
-				"<p>Time Limit: " + Manager.MAX_TASK_TIME + " seconds</p>" +
+				"<p>Time Limit: " + String.format("%01d:%02d", Manager.MAX_TASK_TIME/60, Manager.MAX_TASK_TIME % 60) + "</p>" +
 				"<h2>Assignments</h2>" +
 				"<table><tr><th>Task</th><td><td><td><th>Designers</th></tr>";
 		for(int i = 0; i < Manager.NUM_TASKS; i++) {

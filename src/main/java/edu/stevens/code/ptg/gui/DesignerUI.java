@@ -75,7 +75,7 @@ public class DesignerUI extends DesignerAppPanel {
 		c.anchor = GridBagConstraints.NORTHEAST;
 		JPanel timePanel = new JPanel(new FlowLayout());
 		timePanel.add(new JLabel("Time Remaining:", JLabel.RIGHT));
-		timeLabel = new JLabel("0", JLabel.RIGHT);
+		timeLabel = new JLabel("0:00", JLabel.RIGHT);
 		timeLabel.setFont(timeLabel.getFont().deriveFont(20f));
 		timePanel.add(timeLabel);
 		this.add(timePanel, c);
@@ -156,7 +156,7 @@ public class DesignerUI extends DesignerAppPanel {
 				}
 				if(managerTime != app.getManager().getTimeRemaining()) {
 					managerTime = app.getManager().getTimeRemaining();
-					timeLabel.setText(new Integer(managerTime).toString());
+					timeLabel.setText(String.format("%01d:%02d", managerTime/60, managerTime % 60));
 					if(managerTime == Manager.MAX_TASK_TIME) {
 						tabbedPane.setSelectedIndex(0);
 					}

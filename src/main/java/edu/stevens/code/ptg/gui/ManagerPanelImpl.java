@@ -5,9 +5,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -143,6 +152,30 @@ public class ManagerPanelImpl extends ManagerPanel {
 			public void update(Observable o, Object arg) {
 				roundText.setText(manager.getRoundName());
 				timeText.setValue(manager.getTimeRemaining());
+				
+				if(manager.getTimeRemaining() == 30) {
+					try {
+						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/success-1.wav");
+						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);
+						Clip clip = AudioSystem.getClip();
+						clip.addLineListener(new LineListener() {
+							@Override
+							public void update(LineEvent e) {
+								if(e.getType() == LineEvent.Type.STOP) {
+									clip.close();
+								}
+							}
+						});
+						clip.open(inputStream);
+						clip.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (UnsupportedAudioFileException e) {
+						e.printStackTrace();
+					} catch (LineUnavailableException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 		for(int i = 0; i < Manager.NUM_TASKS; i++) {

@@ -1,12 +1,14 @@
 package edu.stevens.code.ptg.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -14,7 +16,6 @@ import javax.swing.JTabbedPane;
 import edu.stevens.code.ptg.Designer;
 import edu.stevens.code.ptg.DesignerApp;
 import edu.stevens.code.ptg.Manager;
-import edu.stevens.code.ptg.Task;
 
 public class DesignerUI2 extends DesignerAppPanel {
 	private static final long serialVersionUID = 1163389143406697128L;
@@ -51,7 +52,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 	};
 
 	private JTabbedPane tabbedPane;
-	private JLabel timeLabel, infoLabel;
+	private JLabel timeLabel;
 	private InstructionUI instructionUI;
 	private DesignUI[] designUIs = new DesignUI[Designer.NUM_STRATEGIES];
 	private StrategyUI2 strategyUI;
@@ -59,30 +60,9 @@ public class DesignerUI2 extends DesignerAppPanel {
 	private int managerTime;
 	
 	public DesignerUI2() {
-		this.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		JPanel infoPanel = new JPanel(new FlowLayout());
-		infoLabel = new JLabel("Initializing", JLabel.LEFT);
-		infoPanel.add(infoLabel);
-		this.add(infoPanel, c);
-		c.gridx++;
-		c.anchor = GridBagConstraints.NORTHEAST;
-		JPanel timePanel = new JPanel(new FlowLayout());
-		timePanel.add(new JLabel("Time Remaining:", JLabel.RIGHT));
-		timeLabel = new JLabel("0:00", JLabel.RIGHT);
-		timeLabel.setFont(timeLabel.getFont().deriveFont(20f));
-		timePanel.add(timeLabel);
-		this.add(timePanel, c);
-		c.gridx = 0;
-		c.gridwidth = 2;
-		c.gridy++;
-		c.fill = GridBagConstraints.BOTH;
-		c.weightx = 1;
-		c.weighty = 1;
+		this.setLayout(new BorderLayout());
 		tabbedPane = new JTabbedPane();
+		this.add(tabbedPane, BorderLayout.CENTER);
 		instructionUI = new InstructionUI();
 		tabbedPane.addTab("Instructions", instructionUI);
 		
@@ -93,19 +73,35 @@ public class DesignerUI2 extends DesignerAppPanel {
 		c2.weightx = 1;
 		c2.weighty = .8;
 		c2.fill = GridBagConstraints.BOTH;
+		c2.anchor = GridBagConstraints.CENTER;
+		
 		designUIs[0] = new DesignUI(0);
 		designPanel.add(designUIs[0], c2);
 		c2.gridx++;
+
+		c2.weightx = 0;
+		c2.fill = GridBagConstraints.HORIZONTAL;
+		JPanel timePanel = new JPanel();
+		timePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.Y_AXIS));
+		timePanel.add(new JLabel("Remaining:", JLabel.CENTER));
+		timeLabel = new JLabel("0:00", JLabel.CENTER);
+		timeLabel.setFont(timeLabel.getFont().deriveFont(32f));
+		timePanel.add(timeLabel);
+		designPanel.add(timePanel, c2);
+		c2.weightx = 1;
+		c2.fill = GridBagConstraints.BOTH;
+		c2.gridx++;
+		
 		designUIs[1] = new DesignUI(1);
 		designPanel.add(designUIs[1], c2);
 		c2.gridx = 0;
 		c2.gridy++;
-		c2.gridwidth = 2;
+		c2.gridwidth = 3;
 		c2.weighty = .2;
 		strategyUI = new StrategyUI2();
 		designPanel.add(strategyUI, c2);
 		tabbedPane.addTab("Design", designPanel);
-		this.add(tabbedPane, c);
 	}
 	
 	@Override
@@ -143,12 +139,6 @@ public class DesignerUI2 extends DesignerAppPanel {
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				Task task = app.getManager().getTaskByDesignerId(app.getController().getId());
-				if(task == null) {
-					infoLabel.setText(app.getManager().getRoundName());
-				} else {
-					infoLabel.setText(app.getManager().getRoundName() + ": " + task.getName());
-				}
 				if(managerTime != app.getManager().getTimeRemaining()) {
 					managerTime = app.getManager().getTimeRemaining();
 					timeLabel.setText(String.format("%01d:%02d", managerTime/60, managerTime % 60));

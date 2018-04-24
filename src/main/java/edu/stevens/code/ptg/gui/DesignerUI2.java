@@ -150,19 +150,19 @@ public class DesignerUI2 extends DesignerAppPanel {
 					managerTime = app.getManager().getTimeRemaining();
 					
 					if(managerTime < Manager.STRATEGY_TIME) {
-						timeLabelDesign.setText(String.format("%01d:%02d", 0, 0));
-						timeLabelStrategy.setText(String.format("%01d:%02d", managerTime/60, managerTime % 60));
+						timeLabelDesign.setText(String.format(" %01d:%02d", 0, 0));
+						timeLabelStrategy.setText(String.format(" %01d:%02d", managerTime/60, managerTime % 60));
 					} else {
-						timeLabelDesign.setText(String.format("%01d:%02d", (managerTime - Manager.STRATEGY_TIME)/60, (managerTime - Manager.STRATEGY_TIME) % 60));
-						timeLabelStrategy.setText(String.format("%01d:%02d", Manager.STRATEGY_TIME/60, Manager.STRATEGY_TIME % 60));
+						timeLabelDesign.setText(String.format(" %01d:%02d", (managerTime - Manager.STRATEGY_TIME)/60, (managerTime - Manager.STRATEGY_TIME) % 60));
+						timeLabelStrategy.setText(String.format(" %01d:%02d", Manager.STRATEGY_TIME/60, Manager.STRATEGY_TIME % 60));
 					}
 					
 					if(managerTime == Manager.MAX_TASK_TIME) {
 						tabbedPane.setSelectedIndex(0);
 					}
-					if((managerTime < Manager.MAX_TASK_TIME && managerTime % 60 == 0)
-							|| (managerTime <= 60 && managerTime % 15 == 0) 
-							|| (managerTime <= 10) ) {
+					if((managerTime < Manager.MAX_TASK_TIME && (managerTime - Manager.STRATEGY_TIME) % 60 == 0)
+							|| ((managerTime - Manager.STRATEGY_TIME) <= 60 && (managerTime - Manager.STRATEGY_TIME) % 15 == 0) 
+							|| ((managerTime - Manager.STRATEGY_TIME) <= 15) ) {
 						timeLabelDesign.setForeground(Color.RED);
 						timeLabelStrategy.setForeground(Color.RED);
 					} else {

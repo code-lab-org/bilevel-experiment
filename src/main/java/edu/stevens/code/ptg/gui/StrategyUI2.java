@@ -56,15 +56,17 @@ public class StrategyUI2 extends JPanel {
 				c.gridy = 0;
 				c.fill = GridBagConstraints.BOTH;
 				
+				float fontsize = 24f;
 				JLabel label;
 				if(i == j) {
-					label = new JLabel("     Agree on " + DesignerUI.STRATEGY_LABELS[i] + "     ", JLabel.CENTER);
+					label = new JLabel("Both choose " + DesignerUI.STRATEGY_LABELS[i], JLabel.CENTER);
 					label.setBackground(DesignerUI.STRATEGY_COLORS[i]);
 				} else {
-					label = new JLabel("Disagree (" + DesignerUI.STRATEGY_LABELS[i] + "/" + DesignerUI.STRATEGY_LABELS[1-i] + ")", JLabel.CENTER);
+					fontsize = 20f;
+					label = new JLabel("<html>&emsp;&emsp;You choose " + DesignerUI.STRATEGY_LABELS[i] + ",<br>your partner chooses " + DesignerUI.STRATEGY_LABELS[1-i] + "</html>", JLabel.CENTER);
 				}
 				
-				label.setFont(label.getFont().deriveFont(24f));
+				label.setFont(label.getFont().deriveFont(fontsize));
 				label.setOpaque(true);
 				strategyPanels[i].add(label, c);
 				c.gridy++;
@@ -86,7 +88,7 @@ public class StrategyUI2 extends JPanel {
 			c.gridx = 0;
 			c.gridwidth = Designer.NUM_STRATEGIES;
 			c.fill = GridBagConstraints.NONE;
-			strategyButtons[i] = new JToggleButton("Choose " + DesignerUI.STRATEGY_LABELS[i]);
+			strategyButtons[i] = new JToggleButton("I choose " + DesignerUI.STRATEGY_LABELS[i]);
 			strategyButtons[i].setFont(strategyButtons[i].getFont().deriveFont(24f));
 			strategyButtons[i].setHorizontalAlignment(JLabel.CENTER);
 			strategyButtons[i].setFocusable(false);

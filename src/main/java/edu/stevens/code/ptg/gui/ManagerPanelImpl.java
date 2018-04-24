@@ -153,7 +153,8 @@ public class ManagerPanelImpl extends ManagerPanel {
 				roundText.setText(manager.getRoundName());
 				timeText.setValue(manager.getTimeRemaining());
 				
-				if(manager.getTimeRemaining() == 30) {
+				if( ((manager.getTimeRemaining() - Manager.STRATEGY_TIME) % 30) == 0
+				  && (manager.getTimeRemaining() - Manager.STRATEGY_TIME) <= 60 ) {
 					try {
 						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/success-1.wav");
 						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);

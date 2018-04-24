@@ -33,8 +33,6 @@ public class StrategyUI2 extends JPanel {
 	
 	public StrategyUI2() {
 		this.setLayout(new GridLayout(1,0,5,5));
-		
-
 		ButtonGroup radios = new ButtonGroup();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			strategyPanels[i] = new JPanel();
@@ -91,6 +89,7 @@ public class StrategyUI2 extends JPanel {
 			strategyButtons[i] = new JToggleButton("Choose " + DesignerUI.STRATEGY_LABELS[i]);
 			strategyButtons[i].setFont(strategyButtons[i].getFont().deriveFont(24f));
 			strategyButtons[i].setHorizontalAlignment(JLabel.CENTER);
+			strategyButtons[i].setFocusable(false);
 			radios.add(strategyButtons[i]);
 			strategyPanels[i].add(strategyButtons[i], c);
 

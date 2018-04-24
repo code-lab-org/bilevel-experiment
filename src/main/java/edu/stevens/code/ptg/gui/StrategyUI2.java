@@ -38,7 +38,13 @@ public class StrategyUI2 extends JPanel {
 		ButtonGroup radios = new ButtonGroup();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			strategyPanels[i] = new JPanel();
-			strategyPanels[i].setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			if(i == 0) {
+				strategyPanels[i].setBorder(
+						BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK));
+			} else {
+				strategyPanels[i].setBorder(
+						BorderFactory.createEmptyBorder(5, 5, 5, 5));
+			}
 			strategyPanels[i].setLayout(new GridBagLayout());
 			
 			GridBagConstraints c = new GridBagConstraints();
@@ -100,8 +106,11 @@ public class StrategyUI2 extends JPanel {
 	}
 	
 	private void resetUI() {
+		// store enabled state to restore after clicking
+		boolean isEnabled = strategyButtons[0].isEnabled();
+		strategyButtons[0].setEnabled(true);
 		strategyButtons[0].doClick();
-		strategyPanels[0].setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK));
+		strategyButtons[0].setEnabled(isEnabled);
 	}
 	
 	@Override

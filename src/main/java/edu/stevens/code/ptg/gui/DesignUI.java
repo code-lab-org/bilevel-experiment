@@ -132,7 +132,8 @@ public class DesignUI extends JPanel {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					int design = ((ValuePanel)e.getSource()).getDesign(e.getX());
-					if (design >= 0){
+					if (design >= 0 && mySlider.isEnabled()){
+						mySlider.requestFocus();
 						mySlider.setValue(design);
 					}
 				}

@@ -2,12 +2,14 @@ package edu.stevens.code.ptg.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -52,7 +54,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 	};
 
 	private JTabbedPane tabbedPane;
-	private JLabel timeLabel;
+	private JLabel timeLabelDesign, timeLabelStrategy;
 	private InstructionUI instructionUI;
 	private DesignUI[] designUIs = new DesignUI[Designer.NUM_STRATEGIES];
 	private StrategyUI2 strategyUI;
@@ -84,10 +86,15 @@ public class DesignerUI2 extends DesignerAppPanel {
 		JPanel timePanel = new JPanel();
 		timePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.Y_AXIS));
-		timePanel.add(new JLabel("Remaining:", JLabel.CENTER));
-		timeLabel = new JLabel("0:00", JLabel.CENTER);
-		timeLabel.setFont(timeLabel.getFont().deriveFont(32f));
-		timePanel.add(timeLabel);
+		timePanel.add(new JLabel("<html><center>Design Time<br />Remaining:</center></html>", JLabel.CENTER));
+		timeLabelDesign = new JLabel("0:00", JLabel.CENTER);
+		timeLabelDesign.setFont(timeLabelDesign.getFont().deriveFont(32f));
+		timePanel.add(timeLabelDesign);
+		timePanel.add(Box.createRigidArea(new Dimension(1,50)));
+		timePanel.add(new JLabel("<html><center>Decision Time<br />Remaining:</center></html>", JLabel.CENTER));
+		timeLabelStrategy = new JLabel("0:00", JLabel.CENTER);
+		timeLabelStrategy.setFont(timeLabelStrategy.getFont().deriveFont(32f));
+		timePanel.add(timeLabelStrategy);
 		designPanel.add(timePanel, c2);
 		c2.weightx = 1;
 		c2.fill = GridBagConstraints.BOTH;
@@ -141,16 +148,26 @@ public class DesignerUI2 extends DesignerAppPanel {
 			public void update(Observable o, Object arg) {
 				if(managerTime != app.getManager().getTimeRemaining()) {
 					managerTime = app.getManager().getTimeRemaining();
-					timeLabel.setText(String.format("%01d:%02d", managerTime/60, managerTime % 60));
+					
+					if(managerTime < Manager.STRATEGY_TIME) {
+						timeLabelDesign.setText(String.format("%01d:%02d", 0, 0));
+						timeLabelStrategy.setText(String.format("%01d:%02d", managerTime/60, managerTime % 60));
+					} else {
+						timeLabelDesign.setText(String.format("%01d:%02d", (managerTime - Manager.STRATEGY_TIME)/60, (managerTime - Manager.STRATEGY_TIME) % 60));
+						timeLabelStrategy.setText(String.format("%01d:%02d", Manager.STRATEGY_TIME/60, Manager.STRATEGY_TIME % 60));
+					}
+					
 					if(managerTime == Manager.MAX_TASK_TIME) {
 						tabbedPane.setSelectedIndex(0);
 					}
 					if((managerTime < Manager.MAX_TASK_TIME && managerTime % 60 == 0)
 							|| (managerTime <= 60 && managerTime % 15 == 0) 
 							|| (managerTime <= 10) ) {
-						timeLabel.setForeground(Color.RED);
+						timeLabelDesign.setForeground(Color.RED);
+						timeLabelStrategy.setForeground(Color.RED);
 					} else {
-						timeLabel.setForeground(Color.BLACK);
+						timeLabelDesign.setForeground(Color.BLACK);
+						timeLabelStrategy.setForeground(Color.BLACK);
 					}
 				}
 				setEnabled(app.getManager().isDesignEnabled());

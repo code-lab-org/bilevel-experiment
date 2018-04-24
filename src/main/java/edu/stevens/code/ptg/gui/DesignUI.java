@@ -237,7 +237,11 @@ public class DesignUI extends JPanel {
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				setEnabled(app.getManager().isDesignEnabled());
+				if(app.getManager().getTimeRemaining() < Manager.STRATEGY_TIME) {
+					setEnabled(false);
+				} else {
+					setEnabled(app.getManager().isDesignEnabled());
+				}
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					resetUI(app);
 				}

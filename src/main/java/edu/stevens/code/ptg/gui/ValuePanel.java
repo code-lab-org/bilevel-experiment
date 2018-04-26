@@ -27,7 +27,7 @@ public class ValuePanel extends JPanel {
 	private int myDesign = Designer.NUM_DESIGNS/2;
 	private int partnerDesign = Designer.NUM_DESIGNS/2;
 	private boolean hiddenStates = false;
-	private int maxStatesVisible = (int) Math.pow(Designer.NUM_DESIGNS,2); /* All map can be visible */
+	private int maxStatesVisible = 9;//(int) Math.pow(Designer.NUM_DESIGNS,2); /* All map can be visible */
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	
@@ -44,12 +44,37 @@ public class ValuePanel extends JPanel {
 	}
 	
 	private void updateStates() {
-		if(visibleStates.contains(states[myDesign][partnerDesign])) {
-			visibleStates.remove(states[myDesign][partnerDesign]);
-		} else if(visibleStates.size() >= maxStatesVisible) {
-			visibleStates.poll();
-		}
+//		if(visibleStates.contains(states[myDesign][partnerDesign])) {
+		visibleStates.clear();
+//			visibleStates.remove(states[myDesign][partnerDesign]);
+//		} else if(visibleStates.size() >= maxStatesVisible) {
+//			visibleStates.poll();
+//		}
 		visibleStates.add(states[myDesign][partnerDesign]);
+		if ((partnerDesign - 1) >= 0){
+			visibleStates.add(states[myDesign][partnerDesign - 1]);
+		}
+		if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
+			visibleStates.add(states[myDesign][partnerDesign + 1]);
+		}
+			if ((myDesign - 1) >= 0){
+				visibleStates.add(states[myDesign - 1][partnerDesign]);
+				if ((partnerDesign - 1) >= 0){
+					visibleStates.add(states[myDesign - 1][partnerDesign - 1]);
+				}
+				if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
+					visibleStates.add(states[myDesign - 1][partnerDesign + 1]);
+				}
+			}
+			if ((myDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
+				visibleStates.add(states[myDesign + 1][partnerDesign]);
+				if ((partnerDesign - 1) >= 0){
+					visibleStates.add(states[myDesign + 1][partnerDesign - 1]);
+				}
+				if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
+					visibleStates.add(states[myDesign + 1][partnerDesign + 1]);
+				}
+			}
 		repaint();
 	}
 	

@@ -73,6 +73,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 	public DesignerUI2() {
 		this.setLayout(new BorderLayout());
 		tabbedPane = new JTabbedPane();
+		tabbedPane.setFocusable(false);
 		this.add(tabbedPane, BorderLayout.CENTER);
 		instructionUI = new InstructionUI();
 		tabbedPane.addTab("Instructions", instructionUI);

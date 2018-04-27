@@ -5,9 +5,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -171,6 +180,80 @@ public class DesignerUI2 extends DesignerAppPanel {
 					}
 				}
 				setEnabled(app.getManager().isDesignEnabled());
+			
+				if((app.getManager().getTimeRemaining() - Manager.STRATEGY_TIME) == 10
+				 || app.getManager().getTimeRemaining() == 10) {
+					try {
+						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/10s_countdown.wav");
+						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);
+						Clip clip = AudioSystem.getClip();
+						clip.addLineListener(new LineListener() {
+							@Override
+							public void update(LineEvent e) {
+								if(e.getType() == LineEvent.Type.STOP) {
+									clip.close();
+								}
+							}
+						});
+						clip.open(inputStream);
+						clip.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (UnsupportedAudioFileException e) {
+						e.printStackTrace();
+					} catch (LineUnavailableException e) {
+						e.printStackTrace();
+					}
+				}
+
+				if( ((app.getManager().getTimeRemaining() - Manager.STRATEGY_TIME) % 30) == 0
+				  && (app.getManager().getTimeRemaining() - Manager.STRATEGY_TIME) <= 90) {
+					try {
+						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/metronome.wav");
+						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);
+						Clip clip = AudioSystem.getClip();
+						clip.addLineListener(new LineListener() {
+							@Override
+							public void update(LineEvent e) {
+								if(e.getType() == LineEvent.Type.STOP) {
+									clip.close();
+								}
+							}
+						});
+						clip.open(inputStream);
+						clip.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (UnsupportedAudioFileException e) {
+						e.printStackTrace();
+					} catch (LineUnavailableException e) {
+						e.printStackTrace();
+					}
+				}
+
+				if(app.getManager().getTimeRemaining() == 0) {
+					try {
+						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/success-1.wav");
+						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);
+						Clip clip = AudioSystem.getClip();
+						clip.addLineListener(new LineListener() {
+							@Override
+							public void update(LineEvent e) {
+								if(e.getType() == LineEvent.Type.STOP) {
+									clip.close();
+								}
+							}
+						});
+						clip.open(inputStream);
+						clip.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (UnsupportedAudioFileException e) {
+						e.printStackTrace();
+					} catch (LineUnavailableException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 	}

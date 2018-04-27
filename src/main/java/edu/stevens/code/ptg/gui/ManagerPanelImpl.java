@@ -152,9 +152,58 @@ public class ManagerPanelImpl extends ManagerPanel {
 			public void update(Observable o, Object arg) {
 				roundText.setText(manager.getRoundName());
 				timeText.setValue(manager.getTimeRemaining());
-				
+
+				if((manager.getTimeRemaining() - Manager.STRATEGY_TIME) == 10
+				 || manager.getTimeRemaining() == 10) {
+					try {
+						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/10s_countdown.wav");
+						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);
+						Clip clip = AudioSystem.getClip();
+						clip.addLineListener(new LineListener() {
+							@Override
+							public void update(LineEvent e) {
+								if(e.getType() == LineEvent.Type.STOP) {
+									clip.close();
+								}
+							}
+						});
+						clip.open(inputStream);
+						clip.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (UnsupportedAudioFileException e) {
+						e.printStackTrace();
+					} catch (LineUnavailableException e) {
+						e.printStackTrace();
+					}
+				}
+
 				if( ((manager.getTimeRemaining() - Manager.STRATEGY_TIME) % 30) == 0
-				  && (manager.getTimeRemaining() - Manager.STRATEGY_TIME) <= 60 ) {
+				  && (manager.getTimeRemaining() - Manager.STRATEGY_TIME) <= 90) {
+					try {
+						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/metronome.wav");
+						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);
+						Clip clip = AudioSystem.getClip();
+						clip.addLineListener(new LineListener() {
+							@Override
+							public void update(LineEvent e) {
+								if(e.getType() == LineEvent.Type.STOP) {
+									clip.close();
+								}
+							}
+						});
+						clip.open(inputStream);
+						clip.start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (UnsupportedAudioFileException e) {
+						e.printStackTrace();
+					} catch (LineUnavailableException e) {
+						e.printStackTrace();
+					}
+				}
+
+				if(manager.getTimeRemaining() == 0) {
 					try {
 						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/success-1.wav");
 						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);

@@ -203,7 +203,7 @@ public class ManagerPanelImpl extends ManagerPanel {
 					}
 				}
 
-				if(manager.getTimeRemaining() == 0) {
+				if(manager.getTimeRemaining() == 0 && arg == Manager.PROPERTY_TIME) {
 					try {
 						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/success-1.wav");
 						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);

@@ -232,7 +232,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 					}
 				}
 
-				if(app.getManager().getTimeRemaining() == 0) {
+				if(app.getManager().getTimeRemaining() == 0 && arg == Manager.PROPERTY_TIME) {
 					try {
 						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/success-1.wav");
 						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);

@@ -14,7 +14,7 @@ public class InstructionUI extends JEditorPane {
 	
 	public InstructionUI() {
 		this.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-		this.setFont(new Font("Helvetica", Font.PLAIN, getFont().getSize()+4));
+		this.setFont(new Font("Helvetica", Font.PLAIN, getFont().getSize()+8));
 		this.setContentType("text/html");
 		this.setEditable(false);
 		this.setFocusable(false);

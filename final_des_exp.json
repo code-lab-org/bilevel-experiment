@@ -2,7 +2,7 @@
   name: "Pilot",
   rounds: [
     {
-      name: "Training 1/3",
+      name: "Task <i>k</i>/<i>K</i>",
       tasks: [
         {
           name: "NN0605_04e",

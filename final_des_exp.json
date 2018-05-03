@@ -2,7 +2,7 @@
   name: "Pilot",
   rounds: [
     {
-      name: "Task <i>k</i>/<i>K</i>",
+      name: "Training 1/3",
       tasks: [
         {
           name: "NN0605_04e",
@@ -18,12 +18,12 @@
       name: "Training 2/3",
       tasks: [
         {
-          name: "NN0605_04e",
+          name: "NN0605_01e",
           designerIds: [0, 2]
         },
         {
-          name: "NN0605_04e",
-          designerIds: [3, 1]
+          name: "NN0605_01e",
+          designerIds: [1, 3]
         }
       ]
     },
@@ -31,11 +31,11 @@
       name: "Training 3/3",
       tasks: [
         {
-          name: "NN0605_04e",
-          designerIds: [2, 1]
+          name: "NN0605_02e",
+          designerIds: [1, 2]
         },
         {
-          name: "NN0605_04e",
+          name: "NN0605_02e",
           designerIds: [3, 0]
         }
       ]
@@ -45,11 +45,11 @@
       tasks: [
         {
           name: "CH0605_01o",
-          designerIds: [0, 1]
+          designerIds: [1, 3]
         },
         {
           name: "CH0605_01o",
-          designerIds: [2, 3]
+          designerIds: [0, 2]
         }
       ]
     },
@@ -58,11 +58,11 @@
       tasks: [
         {
           name: "HA0605_02i",
-          designerIds: [0, 2]
+          designerIds: [1, 0]
         },
         {
           name: "HA0605_02i",
-          designerIds: [3, 1]
+          designerIds: [3, 2]
         }
       ]
     },
@@ -71,11 +71,11 @@
       tasks: [
         {
           name: "SH0605_01o",
-          designerIds: [2, 1]
+          designerIds: [3, 0]
         },
         {
           name: "SH0605_01o",
-          designerIds: [3, 0]
+          designerIds: [1, 2]
         }
       ]
     },
@@ -97,7 +97,7 @@
       tasks: [
         {
           name: "PD0605_02i",
-          designerIds: [3, 2]
+          designerIds: [2, 3]
         },
         {
           name: "PD0605_02i",
@@ -110,11 +110,11 @@
       tasks: [
         {
           name: "HA0605_01o",
-          designerIds: [3, 0]
+          designerIds: [2, 1]
         },
         {
           name: "HA0605_01o",
-          designerIds: [2, 1]
+          designerIds: [3, 0]
         }
       ]
     },
@@ -123,11 +123,11 @@
       tasks: [
         {
           name: "PD0605_01o",
-          designerIds: [1, 3]
+          designerIds: [0, 1]
         },
         {
           name: "PD0605_01o",
-          designerIds: [0, 2]
+          designerIds: [3, 2]
         }
       ]
     },
@@ -136,11 +136,11 @@
       tasks: [
         {
           name: "SH0605_03i",
-          designerIds: [1, 0]
+          designerIds: [0, 2]
         },
         {
           name: "SH0605_03i",
-          designerIds: [2, 3]
+          designerIds: [3, 1]
         }
       ]
     },
@@ -166,7 +166,7 @@
         },
         {
           name: "HA0605_03i",
-          designerIds: [3, 2]
+          designerIds: [2, 3]
         }
       ]
     },
@@ -175,11 +175,11 @@
       tasks: [
         {
           name: "SH0605_02o",
-          designerIds: [2, 0]
+          designerIds: [3, 1]
         },
         {
           name: "SH0605_02o",
-          designerIds: [3, 1]
+          designerIds: [2, 0]
         }
       ]
     },
@@ -192,7 +192,7 @@
         },
         {
           name: "PD0605_03i",
-          designerIds: [0, 3]
+          designerIds: [3, 0]
         }
       ]
     }

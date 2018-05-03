@@ -208,7 +208,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 				}
 
 				if( ((app.getManager().getTimeRemaining() - Manager.STRATEGY_TIME) % 30) == 0
-				  && (app.getManager().getTimeRemaining() - Manager.STRATEGY_TIME) <= 90) {
+				  && (app.getManager().getTimeRemaining() - Manager.STRATEGY_TIME) <= 60) {
 					try {
 						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/metronome.wav");
 						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);

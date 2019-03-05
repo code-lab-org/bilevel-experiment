@@ -9,6 +9,8 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import edu.stevens.code.ptg.Designer;
+
 public class ColorBarPanel extends JPanel {
 	private static final long serialVersionUID = -1241763890892204288L;
 
@@ -28,21 +30,20 @@ public class ColorBarPanel extends JPanel {
 	public void paint(Graphics g) {
 		Insets insets = this.getInsets();
 		
-		int increments = 5;
 		int textPadding = 5;
 		FontMetrics fm = getFontMetrics(getFont());
 		int maxTextWidth = (int) fm.getStringBounds("100", g).getWidth();
 		int width = this.getWidth() - insets.left - insets.right - textPadding - maxTextWidth;
-		int height = (this.getHeight() - insets.top - insets.bottom )/(100/increments + 1);
+		int height = (this.getHeight() - insets.top - insets.bottom )/(100/Designer.VALUE_DELTA + 1);
 		
-		for(int value = 0; value <= 100; value+=increments) {
+		for(int value = 0; value <= 100; value+=Designer.VALUE_DELTA) {
 			if(value >= 0 && value <= 100) {
-				g.setColor(DesignerUI.VALUE_COLORS[value/5]);
+				g.setColor(DesignerUI.VALUE_COLORS[value/Designer.VALUE_DELTA]);
 			} else {
 				g.setColor(Color.BLACK);
 			}
 			int x = insets.left;
-			int y = insets.top + ((100-value)/increments)*height;
+			int y = insets.top + ((100-value)/Designer.VALUE_DELTA)*height;
 			g.fillRect(x, y, width, height);
 
 			g.setColor(Color.BLACK);

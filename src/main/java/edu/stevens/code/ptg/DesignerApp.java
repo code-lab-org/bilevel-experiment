@@ -206,4 +206,27 @@ public class DesignerApp implements App {
 	public int getValue(int myStrategy, int myDesign, int partnerStrategy, int partnerDesign) {
 		return getManager().getValue(designer.getId(), myStrategy, myDesign, partnerStrategy, partnerDesign);
 	}
+	
+	/**
+	 * Gets the fake value
+	 * @param myStrategy
+	 * @param myDesign
+	 * @param partnerStrategy
+	 * @param partnerDesign
+	 * @param myOtherDesign
+	 * @param partnerOtherDesign
+	 * @return the value
+	 */
+	public int getFakeValue(int myStrategy, int myDesign, int partnerStrategy, int partnerDesign, int myOtherDesign, int partnerOtherDesign) {
+		int i = getController().getId();
+		Task task = getManager().getTaskByDesignerId(i);
+		return new FakeValueMap(task.getValueMap()).getFakeValues(
+				task.getDesignerId(0)==i ? myStrategy : partnerStrategy, 
+				task.getDesignerId(0)==i ? partnerStrategy : myStrategy, 
+				task.getDesignerId(0)==i ? myDesign : partnerDesign, 
+				task.getDesignerId(0)==i ? partnerDesign : myDesign,
+				task.getDesignerId(0)==i ? myOtherDesign : partnerOtherDesign, 
+				task.getDesignerId(0)==i ? partnerOtherDesign : myOtherDesign
+		)[task.getDesignerId(0)==i ? 0 : 1];
+	}
 }

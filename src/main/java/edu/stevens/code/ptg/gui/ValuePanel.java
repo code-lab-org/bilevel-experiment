@@ -26,10 +26,13 @@ public class ValuePanel extends JPanel {
 	private int myStrategy, partnerStrategy;
 	private int myDesign = Designer.NUM_DESIGNS/2;
 	private int partnerDesign = Designer.NUM_DESIGNS/2;
+	private int myOtherDesign = Designer.NUM_DESIGNS/2;
+	private int partnerOtherDesign = Designer.NUM_DESIGNS/2;
 	private boolean hiddenStates = false;
 	private int maxStatesVisible = 9;//(int) Math.pow(Designer.NUM_DESIGNS,2); /* All map can be visible */
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
+	private boolean shiftStates = false;
 	
 	public ValuePanel(boolean hiddenStates) {
 		this.setMinimumSize(new Dimension(100,100));
@@ -41,6 +44,37 @@ public class ValuePanel extends JPanel {
 			}
 		}
 		this.hiddenStates = hiddenStates;
+
+		/*
+		this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed X"), "shiftStates");
+		this.getActionMap().put("shiftStates", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(shiftStates != true) {
+					shiftStates = true;
+					repaint();
+				}
+			}
+		});
+		this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("released X"), "unshiftStates");
+		this.getActionMap().put("unshiftStates", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(shiftStates != false) {
+					shiftStates = false;
+					repaint();
+				}
+			}
+		});
+		*/
+	}
+	
+	public void shiftStates(boolean shiftStates) {
+		if(this.shiftStates != shiftStates) {
+			this.shiftStates = shiftStates;
+			repaint();
+			System.out.println(myStrategy + " " + shiftStates);
+		}
 	}
 	
 	private void updateStates() {
@@ -57,24 +91,24 @@ public class ValuePanel extends JPanel {
 		if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
 			visibleStates.add(states[myDesign][partnerDesign + 1]);
 		}
-			if ((myDesign - 1) >= 0){
-				visibleStates.add(states[myDesign - 1][partnerDesign]);
-				if ((partnerDesign - 1) >= 0){
-					visibleStates.add(states[myDesign - 1][partnerDesign - 1]);
-				}
-				if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
-					visibleStates.add(states[myDesign - 1][partnerDesign + 1]);
-				}
+		if ((myDesign - 1) >= 0){
+			visibleStates.add(states[myDesign - 1][partnerDesign]);
+			if ((partnerDesign - 1) >= 0){
+				visibleStates.add(states[myDesign - 1][partnerDesign - 1]);
 			}
-			if ((myDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
-				visibleStates.add(states[myDesign + 1][partnerDesign]);
-				if ((partnerDesign - 1) >= 0){
-					visibleStates.add(states[myDesign + 1][partnerDesign - 1]);
-				}
-				if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
-					visibleStates.add(states[myDesign + 1][partnerDesign + 1]);
-				}
+			if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
+				visibleStates.add(states[myDesign - 1][partnerDesign + 1]);
 			}
+		}
+		if ((myDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
+			visibleStates.add(states[myDesign + 1][partnerDesign]);
+			if ((partnerDesign - 1) >= 0){
+				visibleStates.add(states[myDesign + 1][partnerDesign - 1]);
+			}
+			if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
+				visibleStates.add(states[myDesign + 1][partnerDesign + 1]);
+			}
+		}
 		repaint();
 	}
 	
@@ -85,6 +119,7 @@ public class ValuePanel extends JPanel {
 			public void update(Observable o, Object arg) {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					partnerDesign = Designer.NUM_DESIGNS/2;
+					partnerOtherDesign = Designer.NUM_DESIGNS/2;
 					visibleStates.clear();
 					/* Next line would add cell (0,0) to the visible states.
 					 * I commented (removed) it! */
@@ -102,9 +137,17 @@ public class ValuePanel extends JPanel {
 							partnerDesign = designer.getDesign(partnerStrategy);
 							updateStates();
 						}
+						if(partnerOtherDesign != designer.getDesign(1 - partnerStrategy)) {
+							partnerOtherDesign = designer.getDesign(1 - partnerStrategy);
+							updateStates();
+						}
 					} else if(designer == app.getController()) {
 						if(myDesign != app.getController().getDesign(myStrategy)) {
 							myDesign = app.getController().getDesign(myStrategy);
+							updateStates();
+						}
+						if(myOtherDesign != app.getController().getDesign(1 - myStrategy)) {
+							myOtherDesign = app.getController().getDesign(1 - myStrategy);
 							updateStates();
 						}
 					}
@@ -136,7 +179,12 @@ public class ValuePanel extends JPanel {
 		
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
-				int value = app.getValue(myStrategy, i, partnerStrategy, j);
+				int value = 0;
+				if(shiftStates) {
+					value = app.getFakeValue(myStrategy, i, 1 - partnerStrategy, j, myOtherDesign, partnerOtherDesign);
+				} else {
+					value = app.getValue(myStrategy, i, partnerStrategy, j);
+				}
 				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || visibleStates.contains(states[i][j]))) {
 					g2D.setColor(DesignerUI.VALUE_COLORS[value/5]);
 				} else {
@@ -178,7 +226,12 @@ public class ValuePanel extends JPanel {
 			g2D.setColor(Color.MAGENTA);
 			g2D.setStroke(new BasicStroke(t+2));
 			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
-			int value = app.getValue(myStrategy, myDesign, partnerStrategy, partnerDesign);
+			int value = 0;
+			if(shiftStates) {
+				value = app.getFakeValue(myStrategy, myDesign, 1 - partnerStrategy, partnerDesign, myOtherDesign, partnerOtherDesign);
+			} else {
+				value = app.getValue(myStrategy, myDesign, partnerStrategy, partnerDesign);
+			}
 			if (value > 45) {
 				g2D.setColor(Color.BLACK);
 			} else {

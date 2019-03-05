@@ -15,11 +15,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -34,7 +37,7 @@ public class DesignUI extends JPanel {
 	private JLabel[] valueLabels = new JLabel[Designer.NUM_STRATEGIES];
 	private JToggleButton strategyToggle;
 	private JPanel valueContainer;
-	private ValuePanel[] valuePanels = new ValuePanel[Designer.NUM_STRATEGIES];
+	protected ValuePanel[] valuePanels = new ValuePanel[Designer.NUM_STRATEGIES];
 	private JSlider mySlider;
 	private JSlider partnerSlider;
 	
@@ -139,6 +142,21 @@ public class DesignUI extends JPanel {
 				}
 			});
 		}
+		String key = strategy == 1 ? "N" : "V";
+		this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed " + key), "shiftStates");
+		this.getActionMap().put("shiftStates", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				valuePanels[strategy].shiftStates(true);
+			}
+		});
+		this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("released " + key), "unshiftStates");
+		this.getActionMap().put("unshiftStates", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				valuePanels[strategy].shiftStates(false);
+			}
+		});
 		valueContainer = new JPanel(new GridBagLayout());
 		valueContainer.setOpaque(false);
 		valueContainer.add(valuePanels[strategy]);

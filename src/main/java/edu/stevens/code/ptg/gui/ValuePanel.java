@@ -158,8 +158,8 @@ public class ValuePanel extends JPanel {
 				_myDesigns[myStrategy] = i;
 				_myDesigns[1-myStrategy] = myDesigns[1-myStrategy];
 				int[] _partnerDesigns = new int[2];
-				_partnerDesigns[myStrategy] = j;
-				_partnerDesigns[1-myStrategy] = partnerDesigns[1-myStrategy];
+				_partnerDesigns[partnerStrategy] = j;
+				_partnerDesigns[1-partnerStrategy] = partnerDesigns[1-partnerStrategy];
 				if(shiftStates) {
 					value = app.getValue(myStrategy, _myDesigns, 1-partnerStrategy, _partnerDesigns);
 				} else {

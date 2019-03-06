@@ -114,7 +114,7 @@ public class StrategyUI extends JPanel {
 				if(i == j) {
 					valueLabels[i][j] = new ValueLabel();
 				} else {
-					valueLabels[i][j] = new FakeValueLabel();
+					valueLabels[i][j] = new ValueLabel();
 				}
 				valueContainers[i][j].add(valueLabels[i][j], BorderLayout.CENTER);
 				this.add(valueContainers[i][j], c);

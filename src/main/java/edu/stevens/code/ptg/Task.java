@@ -69,7 +69,7 @@ public class Task {
 	 *
 	 * @return the value map
 	 */
-	public ValueMap getValueMap() {
+	private ValueMap getValueMap() {
 		// simple cache to avoid re-loading value map
 		if(valueMap == null || !valueMap.getName().equals(getName())) {
 			valueMap = new ValueMap(getName());
@@ -78,35 +78,24 @@ public class Task {
 	}
 	
 	/**
-	 * Gets the value.
-	 *
-	 * @param id0 the designer id 0
-	 * @param strategy0 the strategy0
-	 * @param design0 the design0
-	 * @param id1 the designer id 1
-	 * @param strategy1 the strategy1
-	 * @param design1 the design1
+	 * Gets the task value.
+	 * 
+	 * @param designerId
+	 * @param myStrategy
+	 * @param myDesigns
+	 * @param partnerStrategy
+	 * @param partnerDesigns
 	 * @return the value
 	 */
-	public int getValue(int id0, int strategy0, int design0, int id1, int strategy1, int design1) {
-		if(id0 < 0 || id0 >= Manager.NUM_DESIGNERS) {
+	public int getValue(int designerId, int myStrategy, int[] myDesigns, int partnerStrategy, int[] partnerDesigns) {
+		if(designerId < 0 || designerId >= Manager.NUM_DESIGNERS) {
 			throw new IllegalArgumentException("invalid designer id");
 		}
-		if(id1 < 0 || id1 >= Manager.NUM_DESIGNERS) {
-			throw new IllegalArgumentException("invalid designer id");
-		}
-		if(id0 == id1) {
-			throw new IllegalArgumentException("invalid designer ids for task");
-		}
-		for(int id : designerIds) {
-			if(id != id0 && id != id1) {
-				throw new IllegalArgumentException("invalid designer ids for task");
-			}
-		}
-		if(designerIds[0] == id0) {
-			return getValueMap().getValues(strategy0, strategy1, design0, design1)[0];
+		int index = designerIds[0] == designerId ? 0 : 1;
+		if(myStrategy == partnerStrategy) {
+			return getValueMap().getValues(myStrategy, partnerStrategy, myDesigns[myStrategy], partnerDesigns[partnerStrategy])[index];
 		} else {
-			return getValueMap().getValues(strategy1, strategy0, design1, design0)[1];
+			return new FakeValueMap(getValueMap()).getFakeValues(myStrategy, partnerStrategy, myDesigns, partnerDesigns)[index];
 		}
 	}
 	

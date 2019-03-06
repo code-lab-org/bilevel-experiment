@@ -8,6 +8,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Queue;
@@ -24,10 +25,8 @@ public class ValuePanel extends JPanel {
 	
 	private DesignerApp app;
 	private int myStrategy, partnerStrategy;
-	private int myDesign = Designer.NUM_DESIGNS/2;
-	private int partnerDesign = Designer.NUM_DESIGNS/2;
-	private int myOtherDesign = Designer.NUM_DESIGNS/2;
-	private int partnerOtherDesign = Designer.NUM_DESIGNS/2;
+	private int[] myDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
+	private int[] partnerDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
 	private boolean hiddenStates = false;
 	private int maxStatesVisible = 9;//(int) Math.pow(Designer.NUM_DESIGNS,2); /* All map can be visible */
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
@@ -73,11 +72,12 @@ public class ValuePanel extends JPanel {
 		if(this.shiftStates != shiftStates) {
 			this.shiftStates = shiftStates;
 			repaint();
-			System.out.println(myStrategy + " " + shiftStates);
 		}
 	}
 	
 	private void updateStates() {
+		int myDesign = myDesigns[myStrategy];
+		int partnerDesign = partnerDesigns[partnerStrategy];
 //		if(visibleStates.contains(states[myDesign][partnerDesign])) {
 		visibleStates.clear();
 //			visibleStates.remove(states[myDesign][partnerDesign]);
@@ -118,8 +118,8 @@ public class ValuePanel extends JPanel {
 			@Override
 			public void update(Observable o, Object arg) {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
-					partnerDesign = Designer.NUM_DESIGNS/2;
-					partnerOtherDesign = Designer.NUM_DESIGNS/2;
+					partnerDesigns[0] = Designer.NUM_DESIGNS/2;
+					partnerDesigns[1] = Designer.NUM_DESIGNS/2;
 					visibleStates.clear();
 					/* Next line would add cell (0,0) to the visible states.
 					 * I commented (removed) it! */
@@ -133,21 +133,15 @@ public class ValuePanel extends JPanel {
 				@Override
 				public void update(Observable o, Object arg) {
 					if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
-						if(partnerDesign != designer.getDesign(partnerStrategy)) {
-							partnerDesign = designer.getDesign(partnerStrategy);
-							updateStates();
-						}
-						if(partnerOtherDesign != designer.getDesign(1 - partnerStrategy)) {
-							partnerOtherDesign = designer.getDesign(1 - partnerStrategy);
+						if(!Arrays.equals(partnerDesigns, designer.getDesigns())) {
+							partnerDesigns[0] = designer.getDesign(0);
+							partnerDesigns[1] = designer.getDesign(1);
 							updateStates();
 						}
 					} else if(designer == app.getController()) {
-						if(myDesign != app.getController().getDesign(myStrategy)) {
-							myDesign = app.getController().getDesign(myStrategy);
-							updateStates();
-						}
-						if(myOtherDesign != app.getController().getDesign(1 - myStrategy)) {
-							myOtherDesign = app.getController().getDesign(1 - myStrategy);
+						if(!Arrays.equals(myDesigns, app.getController().getDesigns())) {
+							myDesigns[0] = app.getController().getDesign(0);
+							myDesigns[1] = app.getController().getDesign(1);
 							updateStates();
 						}
 					}
@@ -166,6 +160,9 @@ public class ValuePanel extends JPanel {
 	
 	public void paint(Graphics g) {
 		super.paint(g);
+		
+		int myDesign = myDesigns[myStrategy];
+		int partnerDesign = partnerDesigns[partnerStrategy];
 			
 		Graphics2D g2D = (Graphics2D) g;
 		
@@ -180,10 +177,16 @@ public class ValuePanel extends JPanel {
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
 				int value = 0;
+				int[] _myDesigns = new int[2];
+				_myDesigns[myStrategy] = i;
+				_myDesigns[1-myStrategy] = myDesigns[1-myStrategy];
+				int[] _partnerDesigns = new int[2];
+				_partnerDesigns[myStrategy] = j;
+				_partnerDesigns[1-myStrategy] = partnerDesigns[1-myStrategy];
 				if(shiftStates) {
-					value = app.getFakeValue(myStrategy, i, 1 - partnerStrategy, j, myOtherDesign, partnerOtherDesign);
+					value = app.getValue(myStrategy, _myDesigns, 1-partnerStrategy, _partnerDesigns);
 				} else {
-					value = app.getValue(myStrategy, i, partnerStrategy, j);
+					value = app.getValue(myStrategy, _myDesigns, partnerStrategy, _partnerDesigns);
 				}
 				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || visibleStates.contains(states[i][j]))) {
 					if(Designer.VALUE_DELTA == 5) {
@@ -232,9 +235,9 @@ public class ValuePanel extends JPanel {
 			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
 			int value = 0;
 			if(shiftStates) {
-				value = app.getFakeValue(myStrategy, myDesign, 1 - partnerStrategy, partnerDesign, myOtherDesign, partnerOtherDesign);
+				value = app.getValue(myStrategy, myDesigns, 1-partnerStrategy, partnerDesigns);
 			} else {
-				value = app.getValue(myStrategy, myDesign, partnerStrategy, partnerDesign);
+				value = app.getValue(myStrategy, myDesigns, partnerStrategy, partnerDesigns);
 			}
 			if (value > 45) {
 				g2D.setColor(Color.BLACK);

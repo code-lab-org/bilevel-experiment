@@ -214,8 +214,8 @@ public class DebugDesignerPanel extends DesignerPanel {
 			for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 				for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
 					scoreLabels[i][j].setText(new Integer(app.getValue(
-							i, controller.getDesign(i), 
-							j, partnerDesigns[j])).toString());
+							i, controller.getDesigns(), 
+							j, partnerDesigns)).toString());
 				}
 			}
 		}

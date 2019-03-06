@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -16,10 +17,10 @@ import edu.stevens.code.ptg.Manager;
 public class ValueLabel extends JLabel {
 	private static final long serialVersionUID = -125874855243548180L;
 	
-	protected DesignerApp app;
-	protected int myStrategy, partnerStrategy;
-	protected int myDesign = Designer.NUM_DESIGNS/2;
-	protected int partnerDesign = Designer.NUM_DESIGNS/2;;
+	private DesignerApp app;
+	private int myStrategy, partnerStrategy;
+	private int[] myDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
+	private int[] partnerDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
 	
 	public ValueLabel() {
 		this.setPreferredSize(new Dimension(200,200));
@@ -40,7 +41,8 @@ public class ValueLabel extends JLabel {
 			@Override
 			public void update(Observable o, Object arg) {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
-					partnerDesign = Designer.NUM_DESIGNS/2;
+					partnerDesigns[0] = Designer.NUM_DESIGNS/2;
+					partnerDesigns[1] = Designer.NUM_DESIGNS/2;
 				}
 				updateLabel();
 			}
@@ -50,13 +52,15 @@ public class ValueLabel extends JLabel {
 				@Override
 				public void update(Observable o, Object arg) {
 					if(designer == app.getDesignPartner() && designer.isReadyToShare()) {
-						if(partnerDesign != designer.getDesign(partnerStrategy)) {
-							partnerDesign = designer.getDesign(partnerStrategy);
+						if(!Arrays.equals(partnerDesigns, designer.getDesigns())) {
+							partnerDesigns[0] = designer.getDesign(0);
+							partnerDesigns[1] = designer.getDesign(1);
 							updateLabel();
 						}
 					} else if(designer == app.getController()) {
-						if(myDesign != app.getController().getDesign(myStrategy)) {
-							myDesign = app.getController().getDesign(myStrategy);
+						if(!Arrays.equals(myDesigns, app.getController().getDesigns())) {
+							myDesigns[0] = app.getController().getDesign(0);
+							myDesigns[1] = app.getController().getDesign(1);
 							updateLabel();
 						}
 					}
@@ -67,12 +71,8 @@ public class ValueLabel extends JLabel {
 		this.partnerStrategy = partnerStrategy;
 	}
 	
-	protected int getValue() {
-		return app.getValue(myStrategy, myDesign, partnerStrategy, partnerDesign);
-	}
-	
 	protected void updateLabel() {
-		int value = getValue();
+		int value = app.getValue(myStrategy, myDesigns, partnerStrategy, partnerDesigns);
 		if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100) {
 			if(Designer.VALUE_DELTA == 5) {
 				this.setBackground(DesignerUI.VALUE_COLORS_21[ (int) Math.round(value/Designer.VALUE_DELTA) ]);

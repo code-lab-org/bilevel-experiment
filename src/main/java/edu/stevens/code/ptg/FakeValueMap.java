@@ -7,13 +7,13 @@ public class FakeValueMap {
 		this.realValueMap = realValueMap;
 	}
 	
-	public int[] getFakeValues(int strategy0, int strategy1, int design00, int design11, int design01, int design10) {
+	public int[] getFakeValues(int strategy0, int strategy1, int[] designs0, int[] designs1) {
 		// design_ij = player i's design under player j's strategy
 		if(strategy0 == strategy1) {
-			return realValueMap.getValues(strategy0, strategy1, design00, design11);
+			return realValueMap.getValues(strategy0, strategy1, designs0[strategy0], designs1[strategy1]);
 		} else if (strategy0 == 0) {
-			int[] values00 = realValueMap.getValues(strategy0, strategy0, design00, design10);
-			int[] values11 = realValueMap.getValues(strategy1, strategy1, design01, design11);
+			int[] values00 = realValueMap.getValues(strategy0, strategy0, designs0[strategy0], designs1[strategy0]);
+			int[] values11 = realValueMap.getValues(strategy1, strategy1, designs0[1-strategy0], designs1[1-strategy0]);
 			
 			boolean is_inverse = false;
 			if (realValueMap.getName().substring(realValueMap.getName().length() - 1).equals("i") ){
@@ -34,8 +34,8 @@ public class FakeValueMap {
 			return values;
 			
 		} else if (strategy0 == 1) {
-			int[] values00 = realValueMap.getValues(strategy1, strategy1, design01, design11);
-			int[] values11 = realValueMap.getValues(strategy0, strategy0, design00, design10);
+			int[] values00 = realValueMap.getValues(strategy1, strategy1, designs0[strategy0], designs1[strategy0]);
+			int[] values11 = realValueMap.getValues(strategy0, strategy0, designs0[1-strategy0], designs1[1-strategy0]);
 			
 			boolean is_inverse = false;
 			if (realValueMap.getName().length() > 0 && realValueMap.getName().substring(realValueMap.getName().length() - 1).equals("i") ){

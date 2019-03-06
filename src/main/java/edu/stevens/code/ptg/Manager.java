@@ -179,20 +179,8 @@ public class Manager extends Observable {
 	 * @return the value
 	 */
 	public synchronized int getValue(int designerId, int strategy, 
-			int design, int partnerStrategy, int partnerDesign) {
-		if(designerId < 0 || designerId >= NUM_DESIGNERS) {
-			throw new IllegalArgumentException("invalid designer id");
-		}
-		for(Task task : tasks) {
-			// hard code only two designers per task
-			if(task.getDesignerId(0) == designerId) {
-				return task.getValueMap().getValues(strategy, partnerStrategy, design, partnerDesign)[0];
-			}
-			if(task.getDesignerId(1) == designerId) {
-				return task.getValueMap().getValues(partnerStrategy, strategy, partnerDesign, design)[1];
-			}
-		}
-		return -1;
+			int[] design, int partnerStrategy, int[] partnerDesign) {
+		return getTaskByDesignerId(designerId).getValue(designerId, strategy, design, partnerStrategy, partnerDesign);
 	}
 	
 	/**

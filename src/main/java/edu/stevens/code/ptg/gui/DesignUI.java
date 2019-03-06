@@ -210,7 +210,7 @@ public class DesignUI extends JPanel {
 		valueContainer.validate();
 		valueContainer.repaint();
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-			int value = app.getValue(strategy, 0, i==0?strategy:1-strategy, 0);
+			int value = app.getValue(strategy, new int[2], i, new int[2]);
 			valueLabels[i].setText(new Integer(value).toString());
 		}
 	}
@@ -233,7 +233,7 @@ public class DesignUI extends JPanel {
 		partnerSlider.setValue(Designer.NUM_DESIGNS/2);
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			valuePanels[i].bindTo(app, strategy, i);
-			int value = app.getValue(strategy, 0, i==0?strategy:1-strategy, 0);
+			int value = app.getValue(strategy, new int[2], i, new int[2]);
 			valueLabels[i].setText(new Integer(value).toString());
 		}
 		for(Designer designer : app.getDesigners()) {
@@ -242,13 +242,10 @@ public class DesignUI extends JPanel {
 				public void update(Observable o, Object arg) {
 					if(designer.getDesign(strategy) >= 0 && designer == app.getDesignPartner() && designer.isReadyToShare()) {
 						partnerSlider.setValue(designer.getDesign(strategy));
-					}
-					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-						int value = app.getValue(
-							strategy, app.getController().getDesign(strategy), 
-							i, partnerSlider.getValue()
-						);
-						valueLabels[i].setText(new Integer(value).toString());
+						for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
+							int value = app.getValue(strategy, app.getController().getDesigns(), i, designer.getDesigns());
+							valueLabels[i].setText(new Integer(value).toString());
+						}
 					}
 				}
 			});

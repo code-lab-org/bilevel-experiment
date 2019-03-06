@@ -183,22 +183,7 @@ public class ManagerApp implements App {
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			int j = manager.getDesignPartner(i);
 			Task task = manager.getTaskByDesignerId(i);
-			scores[i] = task.getValueMap().getValues(
-					task.getDesignerId(0)==i ? designers[i].getStrategy() : designers[j].getStrategy(), 
-					task.getDesignerId(0)==i ? designers[j].getStrategy() : designers[i].getStrategy(), 
-					task.getDesignerId(0)==i ? designers[i].getDesign(designers[i].getStrategy()) : designers[j].getDesign(designers[j].getStrategy()), 
-					task.getDesignerId(0)==i ? designers[j].getDesign(designers[j].getStrategy()) : designers[i].getDesign(designers[i].getStrategy())
-			)[task.getDesignerId(0)==i ? 0 : 1];
-			if(designers[i].getStrategy() != designers[j].getStrategy()) {
-				scores[i] = new FakeValueMap(task.getValueMap()).getFakeValues(
-						task.getDesignerId(0)==i ? designers[i].getStrategy() : designers[j].getStrategy(), 
-						task.getDesignerId(0)==i ? designers[j].getStrategy() : designers[i].getStrategy(), 
-						task.getDesignerId(0)==i ? designers[i].getDesign(designers[i].getStrategy()) : designers[j].getDesign(designers[j].getStrategy()), 
-						task.getDesignerId(0)==i ? designers[j].getDesign(designers[j].getStrategy()) : designers[i].getDesign(designers[i].getStrategy()),
-						task.getDesignerId(0)==i ? designers[i].getDesign(designers[j].getStrategy()) : designers[j].getDesign(designers[i].getStrategy()), 
-						task.getDesignerId(0)==i ? designers[j].getDesign(designers[i].getStrategy()) : designers[i].getDesign(designers[j].getStrategy())
-				)[task.getDesignerId(0)==i ? 0 : 1];
-			}
+			scores[i] = task.getValue(i, designers[i].getStrategy(), designers[i].getDesigns(), designers[j].getStrategy(), designers[j].getDesigns());
 		}
 		return scores;
 	}

@@ -157,9 +157,9 @@ public class DesignUI extends JPanel {
 				valuePanels[strategy].shiftStates(false);
 			}
 		});
-		valueContainer = new JPanel(new GridBagLayout());
+		valueContainer = new JPanel(new BorderLayout());
 		valueContainer.setOpaque(false);
-		valueContainer.add(valuePanels[strategy]);
+		valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
 		this.add(valueContainer, c);
 		c.gridx+=2;
 		c.weightx = 0;

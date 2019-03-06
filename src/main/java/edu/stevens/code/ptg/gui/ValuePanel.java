@@ -31,7 +31,6 @@ public class ValuePanel extends JPanel {
 	private int maxStatesVisible = 9;//(int) Math.pow(Designer.NUM_DESIGNS,2); /* All map can be visible */
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
-	private boolean shiftStates = false;
 	
 	public ValuePanel(boolean hiddenStates) {
 		this.setMinimumSize(new Dimension(100,100));
@@ -43,13 +42,6 @@ public class ValuePanel extends JPanel {
 			}
 		}
 		this.hiddenStates = hiddenStates;
-	}
-	
-	public void shiftStates(boolean shiftStates) {
-		if(this.shiftStates != shiftStates) {
-			this.shiftStates = shiftStates;
-			repaint();
-		}
 	}
 	
 	private void updateStates() {
@@ -160,11 +152,7 @@ public class ValuePanel extends JPanel {
 				int[] _partnerDesigns = new int[2];
 				_partnerDesigns[myStrategy] = j;
 				_partnerDesigns[1-myStrategy] = partnerDesigns[1-myStrategy];
-				if(shiftStates) {
-					value = app.getValue(myStrategy, _myDesigns, 1-partnerStrategy, _partnerDesigns);
-				} else {
-					value = app.getValue(myStrategy, _myDesigns, partnerStrategy, _partnerDesigns);
-				}
+				value = app.getValue(myStrategy, _myDesigns, partnerStrategy, _partnerDesigns);
 				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || visibleStates.contains(states[i][j]))) {
 					if(Designer.VALUE_DELTA == 5) {
 						g2D.setColor(DesignerUI.VALUE_COLORS_21[value/Designer.VALUE_DELTA]);
@@ -211,11 +199,7 @@ public class ValuePanel extends JPanel {
 			g2D.setStroke(new BasicStroke(t+2));
 			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
 			int value = 0;
-			if(shiftStates) {
-				value = app.getValue(myStrategy, myDesigns, 1-partnerStrategy, partnerDesigns);
-			} else {
-				value = app.getValue(myStrategy, myDesigns, partnerStrategy, partnerDesigns);
-			}
+			value = app.getValue(myStrategy, myDesigns, partnerStrategy, partnerDesigns);
 			if (value > 45) {
 				g2D.setColor(Color.BLACK);
 			} else {

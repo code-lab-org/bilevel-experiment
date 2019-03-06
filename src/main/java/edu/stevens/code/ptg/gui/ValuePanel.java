@@ -43,29 +43,6 @@ public class ValuePanel extends JPanel {
 			}
 		}
 		this.hiddenStates = hiddenStates;
-
-		/*
-		this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed X"), "shiftStates");
-		this.getActionMap().put("shiftStates", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(shiftStates != true) {
-					shiftStates = true;
-					repaint();
-				}
-			}
-		});
-		this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("released X"), "unshiftStates");
-		this.getActionMap().put("unshiftStates", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(shiftStates != false) {
-					shiftStates = false;
-					repaint();
-				}
-			}
-		});
-		*/
 	}
 	
 	public void shiftStates(boolean shiftStates) {

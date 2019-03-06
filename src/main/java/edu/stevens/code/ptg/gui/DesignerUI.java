@@ -29,7 +29,7 @@ public class DesignerUI extends DesignerAppPanel {
 			Color.decode("#ffcccc"),
 			Color.decode("#ccccff")
 	};
-	public static final Color[] VALUE_COLORS = new Color[] {
+	public static final Color[] VALUE_COLORS_21 = new Color[] {
 			
 			/** Parula 21 */
 //			Color.decode("#352a87"),
@@ -55,27 +55,31 @@ public class DesignerUI extends DesignerAppPanel {
 //			Color.decode("#f9fb0e")
 			
 			/** Cividis 21 */
-//			Color.decode("#00204D"),
-//			Color.decode("#002963"),
-//			Color.decode("#00326F"),
-//			Color.decode("#1B3B6D"),
-//			Color.decode("#31446B"),
-//			Color.decode("#414D6B"),
-//			Color.decode("#4E566C"),
-//			Color.decode("#5B5F6E"),
-//			Color.decode("#666970"),
-//			Color.decode("#717274"),
-//			Color.decode("#7C7B78"),
-//			Color.decode("#898579"),
-//			Color.decode("#958F78"),
-//			Color.decode("#A29976"),
-//			Color.decode("#AFA473"),
-//			Color.decode("#BDAF6F"),
-//			Color.decode("#CBBA69"),
-//			Color.decode("#D9C562"),
-//			Color.decode("#E7D159"),
-//			Color.decode("#F6DD4D"),
-//			Color.decode("#FFEA46")
+			Color.decode("#00204D"),
+			Color.decode("#002963"),
+			Color.decode("#00326F"),
+			Color.decode("#1B3B6D"),
+			Color.decode("#31446B"),
+			Color.decode("#414D6B"),
+			Color.decode("#4E566C"),
+			Color.decode("#5B5F6E"),
+			Color.decode("#666970"),
+			Color.decode("#717274"),
+			Color.decode("#7C7B78"),
+			Color.decode("#898579"),
+			Color.decode("#958F78"),
+			Color.decode("#A29976"),
+			Color.decode("#AFA473"),
+			Color.decode("#BDAF6F"),
+			Color.decode("#CBBA69"),
+			Color.decode("#D9C562"),
+			Color.decode("#E7D159"),
+			Color.decode("#F6DD4D"),
+			Color.decode("#FFEA46")
+	};
+	public static final Color[] VALUE_COLORS_51 = new Color[] {
+			
+			/** Parula 51 */
 			
 			/** Cividis 51 */
 			Color.decode("#00204D"),

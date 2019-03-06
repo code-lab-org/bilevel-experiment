@@ -186,7 +186,11 @@ public class ValuePanel extends JPanel {
 					value = app.getValue(myStrategy, i, partnerStrategy, j);
 				}
 				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || visibleStates.contains(states[i][j]))) {
-					g2D.setColor(DesignerUI.VALUE_COLORS[value/Designer.VALUE_DELTA]);
+					if(Designer.VALUE_DELTA == 5) {
+						g2D.setColor(DesignerUI.VALUE_COLORS_21[value/Designer.VALUE_DELTA]);
+					} else {
+						g2D.setColor(DesignerUI.VALUE_COLORS_51[value/Designer.VALUE_DELTA]);
+					}
 				} else {
 					g2D.setColor(Color.BLACK);
 				}

@@ -38,7 +38,11 @@ public class ColorBarPanel extends JPanel {
 		
 		for(int value = 0; value <= 100; value+=Designer.VALUE_DELTA) {
 			if(value >= 0 && value <= 100) {
-				g.setColor(DesignerUI.VALUE_COLORS[value/Designer.VALUE_DELTA]);
+				if(Designer.VALUE_DELTA == 5) {
+					g.setColor(DesignerUI.VALUE_COLORS_21[value/Designer.VALUE_DELTA]);
+				} else {
+					g.setColor(DesignerUI.VALUE_COLORS_51[value/Designer.VALUE_DELTA]);
+				}
 			} else {
 				g.setColor(Color.BLACK);
 			}

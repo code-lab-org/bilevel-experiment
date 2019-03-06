@@ -73,9 +73,10 @@ public class ValueMap {
 	 * @return the values
 	 */
 	public int[] getValues(int strategy0, int strategy1, int design0, int design1) {
+		// return value array, taking care to flip the design space for designer index 1
 		return new int[] {
 			values[0][strategy0][strategy1][design0][design1],
-			values[1][strategy0][strategy1][design0][design1]
+			values[1][strategy0][strategy1][design1][design0]
 		};
 	}
 }

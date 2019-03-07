@@ -23,7 +23,8 @@ public class FakeValueMap {
 			int[] values = new int[2];
 
 			values[0] = Math.min(Math.max((int) Math.round(S*values00[0] + (1-S)*values11[0]), 0), 100);
-			values[1] = Math.min(Math.max((int) Math.round(T*values00[1] + (1-T)*values11[1]), 0), 100);
+//			values[1] = Math.min(Math.max((int) Math.round(T*values00[1] + (1-T)*values11[1]), 0), 100);
+			values[1] = Math.min(Math.max((int) Math.round(S*values00[1] + (1-S)*values11[1]), 0), 100);
 			
 			return values;
 			
@@ -42,7 +43,8 @@ public class FakeValueMap {
 			int[] values = new int[2];
 			
 			values[0] = Math.min(Math.max((int) Math.round(T*values00[0] + (1-T)*values11[0]), 0), 100);
-			values[1] = Math.min(Math.max((int) Math.round(S*values00[1] + (1-S)*values11[1]), 0), 100);
+//			values[1] = Math.min(Math.max((int) Math.round(S*values00[1] + (1-S)*values11[1]), 0), 100);
+			values[1] = Math.min(Math.max((int) Math.round(T*values00[1] + (1-T)*values11[1]), 0), 100);
 			
 			return values;
 		}

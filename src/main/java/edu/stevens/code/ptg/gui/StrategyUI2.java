@@ -59,11 +59,11 @@ public class StrategyUI2 extends JPanel {
 				float fontsize = 24f;
 				JLabel label;
 				if(i == j) {
-					label = new JLabel("Both choose " + DesignerUI.STRATEGY_LABELS[i], JLabel.CENTER);
-					label.setBackground(DesignerUI.STRATEGY_COLORS[i]);
+					label = new JLabel("Partner Agrees", JLabel.CENTER);
+					//label.setBackground(DesignerUI.STRATEGY_COLORS[i]);
 				} else {
-					fontsize = 20f;
-					label = new JLabel("<html>&emsp;&emsp;You choose " + DesignerUI.STRATEGY_LABELS[i] + ",<br>your partner chooses " + DesignerUI.STRATEGY_LABELS[1-i] + "</html>", JLabel.CENTER);
+					label = new JLabel("Partner Disagrees", JLabel.CENTER);
+					//label.setBackground(DesignerUI.STRATEGY_COLORS[1-i]);
 				}
 				
 				label.setFont(label.getFont().deriveFont(fontsize));
@@ -74,7 +74,9 @@ public class StrategyUI2 extends JPanel {
 				valueContainers[i][j].setBorder(
 						BorderFactory.createEmptyBorder(10,20,10,20));
 				if(i == j) {
-					valueContainers[i][j].setBackground(DesignerUI.STRATEGY_COLORS[i]);
+					//valueContainers[i][j].setBackground(DesignerUI.STRATEGY_COLORS[i]);
+				} else {
+					//valueContainers[i][j].setBackground(DesignerUI.STRATEGY_COLORS[1-i]);
 				}
 				valueLabels[i][j] = new ValueLabel();
 				valueLabels[i][j].setPreferredSize(new Dimension(100,75));

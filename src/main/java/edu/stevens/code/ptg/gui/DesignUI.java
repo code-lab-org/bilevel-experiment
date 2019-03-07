@@ -88,7 +88,6 @@ public class DesignUI extends JPanel {
 		c.fill = GridBagConstraints.NONE;
 		c.anchor = GridBagConstraints.EAST;
 		strategyToggle = new JToggleButton("Agree", false);
-		strategyToggle.setEnabled(false);
 		strategyToggle.setFocusable(false);
 		strategyToggle.addActionListener(new ActionListener() {
 			@Override
@@ -223,8 +222,8 @@ public class DesignUI extends JPanel {
 	
 	@Override
 	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
-		strategyToggle.setEnabled(enabled);
+		//super.setEnabled(enabled);
+		//strategyToggle.setEnabled(enabled);
 		mySlider.setEnabled(enabled);
 	}
 	

@@ -166,11 +166,12 @@ public class ValuePanel extends JPanel {
 					value = app.getValue(myStrategy, _myDesigns, partnerStrategy, _partnerDesigns);
 				}
 				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || visibleStates.contains(states[i][j]))) {
-					if(Designer.VALUE_DELTA == 5) {
-						g2D.setColor(DesignerUI.VALUE_COLORS_21[value/Designer.VALUE_DELTA]);
-					} else {
-						g2D.setColor(DesignerUI.VALUE_COLORS_51[value/Designer.VALUE_DELTA]);
-					}
+					g2D.setColor(DesignerUI.VALUE_COLORS[value]);
+//					if(Designer.VALUE_DELTA == 5) {
+//						g2D.setColor(DesignerUI.VALUE_COLORS_21[value/Designer.VALUE_DELTA]);
+//					} else if(Designer.VALUE_DELTA == 2) {
+//						g2D.setColor(DesignerUI.VALUE_COLORS_51[value/Designer.VALUE_DELTA]);
+//					}
 				} else {
 					g2D.setColor(Color.BLACK);
 				}

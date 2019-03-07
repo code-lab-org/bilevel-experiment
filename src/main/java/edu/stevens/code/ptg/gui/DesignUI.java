@@ -1,6 +1,5 @@
 package edu.stevens.code.ptg.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -150,9 +149,9 @@ public class DesignUI extends JPanel {
 				updateValues();
 			}
 		});
-		valueContainer = new JPanel(new BorderLayout());
+		valueContainer = new JPanel(new GridBagLayout()); // GridBag needed to align sliders
 		valueContainer.setOpaque(false);
-		valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
+		valueContainer.add(valuePanels[strategy]);
 		this.add(valueContainer, c);
 		c.gridx+=2;
 		c.weightx = 0;

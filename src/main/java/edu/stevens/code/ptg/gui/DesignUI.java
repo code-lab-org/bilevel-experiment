@@ -119,7 +119,7 @@ public class DesignUI extends JPanel {
 		c.anchor = GridBagConstraints.SOUTH;
 		c.fill = GridBagConstraints.BOTH;
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
-			valuePanels[i] = new ValuePanel(true);
+			valuePanels[i] = new ValuePanel(false);
 			valuePanels[i].addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {

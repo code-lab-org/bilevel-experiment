@@ -68,7 +68,7 @@ public class StrategyUI2 extends JPanel {
 				
 				label.setFont(label.getFont().deriveFont(fontsize));
 				label.setOpaque(true);
-				strategyPanels[i].add(label, c);
+//				strategyPanels[i].add(label, c);
 				c.gridy++;
 				valueContainers[i][j] = new JPanel(new BorderLayout());
 				valueContainers[i][j].setBorder(
@@ -81,7 +81,7 @@ public class StrategyUI2 extends JPanel {
 				valueLabels[i][j] = new ValueLabel();
 				valueLabels[i][j].setPreferredSize(new Dimension(100,75));
 				valueContainers[i][j].add(valueLabels[i][j], BorderLayout.CENTER);
-				strategyPanels[i].add(valueContainers[i][j], c);
+//				strategyPanels[i].add(valueContainers[i][j], c);
 
 				c.gridx++;
 			}

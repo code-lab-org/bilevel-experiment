@@ -94,23 +94,14 @@ public class DesignUI extends JPanel {
 		strategyToggle.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				valueContainer.removeAll();
-				if(strategyToggle.isSelected()) {
-					strategyToggle.setText("Disagree");
-					valueContainer.add(valuePanels[1-strategy], BorderLayout.CENTER);
-				} else {
-					strategyToggle.setText("Agree");
-					valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
-				}
-				valueContainer.validate();
-				valueContainer.repaint();
+				updateValues();
 			}
 		});
 		JPanel comboPanel = new JPanel(new FlowLayout());
 		comboPanel.setOpaque(false);
 		comboPanel.add(new JLabel("Partner:"));
 		comboPanel.add(strategyToggle);
-		// add(comboPanel, c);
+		add(comboPanel, c);
 		
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -147,14 +138,16 @@ public class DesignUI extends JPanel {
 		this.getActionMap().put("shiftStates", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				valuePanels[strategy].shiftStates(true);
+				strategyToggle.setSelected(true);
+				updateValues();
 			}
 		});
 		this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("released " + key), "unshiftStates");
 		this.getActionMap().put("unshiftStates", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				valuePanels[strategy].shiftStates(false);
+				strategyToggle.setSelected(false);
+				updateValues();
 			}
 		});
 		valueContainer = new JPanel(new BorderLayout());
@@ -198,6 +191,20 @@ public class DesignUI extends JPanel {
 				revalidate();
 			}
 		});
+	}
+	
+	private void updateValues() {
+		//valueContainer.removeAll();
+		valuePanels[strategy].shiftStates(strategyToggle.isSelected());
+		if(strategyToggle.isSelected()) {
+			strategyToggle.setText("Disagree");
+			//valueContainer.add(valuePanels[1-strategy], BorderLayout.CENTER);
+		} else {
+			strategyToggle.setText("Agree");
+			//valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
+		}
+		//valueContainer.validate();
+		//valueContainer.repaint();
 	}
 	
 	private void resetUI(DesignerApp app) {

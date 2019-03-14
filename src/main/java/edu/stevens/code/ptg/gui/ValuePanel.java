@@ -28,7 +28,10 @@ public class ValuePanel extends JPanel {
 	private int[] myDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
 	private int[] partnerDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
 	private boolean hiddenStates = false;
-	private int maxStatesVisible = 9;//(int) Math.pow(Designer.NUM_DESIGNS,2); /* All map can be visible */
+	/* All map can be visible if line 122 in DesignUI.java
+	 * valuePanels[i] = new ValuePanel(true) is instead set to false
+	 */
+	private int maxStatesVisible = 9+4;//(int) Math.pow(Designer.NUM_DESIGNS,2);
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	private boolean shiftStates = false;
@@ -68,6 +71,12 @@ public class ValuePanel extends JPanel {
 		if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
 			visibleStates.add(states[myDesign][partnerDesign + 1]);
 		}
+		if ((partnerDesign - 2) >= 0){
+			visibleStates.add(states[myDesign][partnerDesign - 2]);
+		}
+		if ((partnerDesign + 2) <= (Designer.NUM_DESIGNS - 1)){
+			visibleStates.add(states[myDesign][partnerDesign + 2]);
+		}
 		if ((myDesign - 1) >= 0){
 			visibleStates.add(states[myDesign - 1][partnerDesign]);
 			if ((partnerDesign - 1) >= 0){
@@ -85,6 +94,12 @@ public class ValuePanel extends JPanel {
 			if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
 				visibleStates.add(states[myDesign + 1][partnerDesign + 1]);
 			}
+		}
+		if ((myDesign - 2) >= 0){
+			visibleStates.add(states[myDesign - 2][partnerDesign]);
+		}
+		if ((myDesign + 2) <= (Designer.NUM_DESIGNS - 1)){
+			visibleStates.add(states[myDesign + 2][partnerDesign]);
 		}
 		repaint();
 	}

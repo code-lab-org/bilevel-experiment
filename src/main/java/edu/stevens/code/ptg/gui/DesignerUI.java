@@ -26,8 +26,8 @@ public class DesignerUI extends DesignerAppPanel {
 			"the one on the right."
 	};
 	public static final Color[] STRATEGY_COLORS = new Color[] {
-			Color.decode("#fcb79c"),
-			Color.decode("#fdd6c5")
+			Color.decode("#fdd6c5"),
+			Color.decode("#ffece3")
 	};
 	public static final Color[] VALUE_COLORS = new Color[] {
 			

@@ -264,6 +264,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 //		tabbedPane.addTab("Instructions", instructionUI);
 		
 		JPanel designPanel = new JPanel(new GridBagLayout());
+		designPanel.setBackground(Color.WHITE);
 		GridBagConstraints c2 = new GridBagConstraints();
 		c2.gridx = 0;
 		c2.gridy = 0;
@@ -280,6 +281,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 		c2.fill = GridBagConstraints.HORIZONTAL;
 		JPanel timePanel = new JPanel();
 		timePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		timePanel.setBackground(Color.WHITE);
 		timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.Y_AXIS));
 		timePanel.add(new JLabel("<html><center>Task:</center></html>", JLabel.CENTER));
 		taskLabel = new JLabel("<html><center>k/K</center></html>", JLabel.CENTER);

@@ -72,7 +72,7 @@ public class StrategyUI2 extends JPanel {
 							            "</center></html>", JLabel.CENTER);
 //					label = new JLabel("Partner Disagrees", JLabel.CENTER);
 //					label.setBackground(DesignerUI.STRATEGY_COLORS[1-i]);
-//					label.setBackground(Color.decode("#fcb79c"));
+					label.setBackground(Color.decode("#fee3d7"));
 				}
 				
 				label.setFont(label.getFont().deriveFont(fontsize));
@@ -89,6 +89,8 @@ public class StrategyUI2 extends JPanel {
 				}
 				valueLabels[i][j] = new ValueLabel();
 				valueLabels[i][j].setPreferredSize(new Dimension(100,75));
+				valueLabels[i][j].setBorder(
+						BorderFactory.createMatteBorder(2,2,2,2,Color.BLACK));
 				valueContainers[i][j].add(valueLabels[i][j], BorderLayout.CENTER);
 				strategyPanels[i].add(valueContainers[i][j], c);
 
@@ -144,8 +146,9 @@ public class StrategyUI2 extends JPanel {
 					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 						if(i == strategy) {
 							strategyPanels[i].setBorder(
-									BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLACK));
-							strategyPanels[i].setBackground(DesignerUI.STRATEGY_COLORS[i]);
+									BorderFactory.createMatteBorder(8, 8, 8, 8, Color.BLACK));
+//							strategyPanels[i].setBackground(DesignerUI.STRATEGY_COLORS[i]);
+							strategyPanels[i].setBackground(Color.decode("#fee3d7"));
 						} else {
 							strategyPanels[i].setBorder(
 									BorderFactory.createEmptyBorder(10, 10, 10, 10));

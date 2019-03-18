@@ -38,10 +38,12 @@ public class StrategyUI2 extends JPanel {
 			strategyPanels[i] = new JPanel();
 			if(i == 0) {
 				strategyPanels[i].setBorder(
-						BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK));
+						BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLACK));
+				strategyPanels[i].setBackground(DesignerUI.STRATEGY_COLORS[i]);
 			} else {
 				strategyPanels[i].setBorder(
-						BorderFactory.createEmptyBorder(5, 5, 5, 5));
+						BorderFactory.createEmptyBorder(10, 10, 10, 10));
+				strategyPanels[i].setBackground(Color.WHITE);
 			}
 			strategyPanels[i].setLayout(new GridBagLayout());
 			
@@ -59,11 +61,18 @@ public class StrategyUI2 extends JPanel {
 				float fontsize = 24f;
 				JLabel label;
 				if(i == j) {
-					label = new JLabel("Partner Agrees", JLabel.CENTER);
-					//label.setBackground(DesignerUI.STRATEGY_COLORS[i]);
+					label = new JLabel("<html><center>&nbsp;&emsp;&emsp;Both choose this design.&emsp;"+
+				                        "&emsp;&nbsp;</center></html>", JLabel.CENTER);
+//					label = new JLabel("Partner Agrees", JLabel.CENTER);
+					label.setBackground(DesignerUI.STRATEGY_COLORS[i]);
 				} else {
-					label = new JLabel("Partner Disagrees", JLabel.CENTER);
-					//label.setBackground(DesignerUI.STRATEGY_COLORS[1-i]);
+					fontsize = 20f;
+					label = new JLabel("<html><center>You choose this design"+
+							            ",<br>your partner chooses "   +DesignerUI.STRATEGY_LABELS[1-i]+
+							            "</center></html>", JLabel.CENTER);
+//					label = new JLabel("Partner Disagrees", JLabel.CENTER);
+//					label.setBackground(DesignerUI.STRATEGY_COLORS[1-i]);
+//					label.setBackground(Color.decode("#fcb79c"));
 				}
 				
 				label.setFont(label.getFont().deriveFont(fontsize));
@@ -72,7 +81,7 @@ public class StrategyUI2 extends JPanel {
 				c.gridy++;
 				valueContainers[i][j] = new JPanel(new BorderLayout());
 				valueContainers[i][j].setBorder(
-						BorderFactory.createEmptyBorder(10,20,10,20));
+						BorderFactory.createMatteBorder(10,20,10,20,DesignerUI.STRATEGY_COLORS[i]));
 				if(i == j) {
 					//valueContainers[i][j].setBackground(DesignerUI.STRATEGY_COLORS[i]);
 				} else {
@@ -135,10 +144,12 @@ public class StrategyUI2 extends JPanel {
 					for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 						if(i == strategy) {
 							strategyPanels[i].setBorder(
-									BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK));
+									BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLACK));
+							strategyPanels[i].setBackground(DesignerUI.STRATEGY_COLORS[i]);
 						} else {
 							strategyPanels[i].setBorder(
-									BorderFactory.createEmptyBorder(5, 5, 5, 5));
+									BorderFactory.createEmptyBorder(10, 10, 10, 10));
+							strategyPanels[i].setBackground(Color.WHITE);
 						}
 					}
 				}

@@ -22,12 +22,12 @@ import edu.stevens.code.ptg.Task;
 public class DesignerUI extends DesignerAppPanel {
 	private static final long serialVersionUID = 1163389143406697128L;
 	public static final String[] STRATEGY_LABELS = new String[] {
-			"Red", 
-			"Blue"
+			"the one on the left.", 
+			"the one on the right."
 	};
 	public static final Color[] STRATEGY_COLORS = new Color[] {
-			Color.decode("#ffcccc"),
-			Color.decode("#ccccff")
+			Color.decode("#fcb79c"),
+			Color.decode("#fdd6c5")
 	};
 	public static final Color[] VALUE_COLORS = new Color[] {
 			

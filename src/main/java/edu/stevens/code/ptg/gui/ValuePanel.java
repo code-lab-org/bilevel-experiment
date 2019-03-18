@@ -31,7 +31,7 @@ public class ValuePanel extends JPanel {
 	/* All map can be visible if line 122 in DesignUI.java
 	 * valuePanels[i] = new ValuePanel(true) is instead set to false
 	 */
-	private int maxStatesVisible = 9+4;//(int) Math.pow(Designer.NUM_DESIGNS,2);
+	private int maxStatesVisible = 5;//9+4;//(int) Math.pow(Designer.NUM_DESIGNS,2);
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	private boolean shiftStates = false;
@@ -58,49 +58,78 @@ public class ValuePanel extends JPanel {
 	private void updateStates() {
 		int myDesign = myDesigns[myStrategy];
 		int partnerDesign = partnerDesigns[partnerStrategy];
+				
+		
+		/* SHOW EXPLORED CELLS ONLY */
 //		if(visibleStates.contains(states[myDesign][partnerDesign])) {
-		visibleStates.clear();
 //			visibleStates.remove(states[myDesign][partnerDesign]);
 //		} else if(visibleStates.size() >= maxStatesVisible) {
 //			visibleStates.poll();
 //		}
+		
+		/* REMOVE ALL */
+        visibleStates.clear(); /* Comment if showing explored cells (lines above) */
+		
+		/* CURRENT CELL */
 		visibleStates.add(states[myDesign][partnerDesign]);
+		
+		/* SOUTH 1 */
 		if ((partnerDesign - 1) >= 0){
 			visibleStates.add(states[myDesign][partnerDesign - 1]);
 		}
+		
+		/* NORTH 1 */
 		if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
 			visibleStates.add(states[myDesign][partnerDesign + 1]);
 		}
-		if ((partnerDesign - 2) >= 0){
-			visibleStates.add(states[myDesign][partnerDesign - 2]);
-		}
-		if ((partnerDesign + 2) <= (Designer.NUM_DESIGNS - 1)){
-			visibleStates.add(states[myDesign][partnerDesign + 2]);
-		}
+				
+		/* SOUTH 2 */
+//		if ((partnerDesign - 2) >= 0){
+//			visibleStates.add(states[myDesign][partnerDesign - 2]);
+//		}
+		
+		/* NORTH 2 */
+//		if ((partnerDesign + 2) <= (Designer.NUM_DESIGNS - 1)){
+//			visibleStates.add(states[myDesign][partnerDesign + 2]);
+//		}
+
+		/* WEST 1 */
 		if ((myDesign - 1) >= 0){
 			visibleStates.add(states[myDesign - 1][partnerDesign]);
-			if ((partnerDesign - 1) >= 0){
-				visibleStates.add(states[myDesign - 1][partnerDesign - 1]);
-			}
-			if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
-				visibleStates.add(states[myDesign - 1][partnerDesign + 1]);
-			}
+			
+		    /* SOUTHWEST 2 */
+//			if ((partnerDesign - 1) >= 0){
+//				visibleStates.add(states[myDesign - 1][partnerDesign - 1]);
+//			}
+	        /* NORTHWEST 2 */
+//			if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
+//				visibleStates.add(states[myDesign - 1][partnerDesign + 1]);
+//			}
 		}
+
+		/* EAST 1 */
 		if ((myDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
 			visibleStates.add(states[myDesign + 1][partnerDesign]);
-			if ((partnerDesign - 1) >= 0){
-				visibleStates.add(states[myDesign + 1][partnerDesign - 1]);
-			}
-			if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
-				visibleStates.add(states[myDesign + 1][partnerDesign + 1]);
-			}
+		
+	        /* SOUTHEAST 2 */
+//			if ((partnerDesign - 1) >= 0){
+//				visibleStates.add(states[myDesign + 1][partnerDesign - 1]);
+//			}
+        	/* NORTHEAST 2 */
+//			if ((partnerDesign + 1) <= (Designer.NUM_DESIGNS - 1)){
+//				visibleStates.add(states[myDesign + 1][partnerDesign + 1]);
+//			}
 		}
-		if ((myDesign - 2) >= 0){
-			visibleStates.add(states[myDesign - 2][partnerDesign]);
-		}
-		if ((myDesign + 2) <= (Designer.NUM_DESIGNS - 1)){
-			visibleStates.add(states[myDesign + 2][partnerDesign]);
-		}
+
+		/* WEST 2 */
+//		if ((myDesign - 2) >= 0){
+//			visibleStates.add(states[myDesign - 2][partnerDesign]);
+//		}
+
+		/* EAST 2 */
+//		if ((myDesign + 2) <= (Designer.NUM_DESIGNS - 1)){
+//			visibleStates.add(states[myDesign + 2][partnerDesign]);
+//		}
 		repaint();
 	}
 	

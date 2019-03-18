@@ -1,0 +1,200 @@
+{
+  name: "Pilot",
+  rounds: [
+    {
+      name: "T 1/3",
+      tasks: [
+        {
+          name: "NN0801_01e",
+          designerIds: [0, 1]
+        },
+        {
+          name: "NN0801_01e",
+          designerIds: [2, 3]
+        }
+      ]
+    },
+    {
+      name: "T 2/3",
+      tasks: [
+        {
+          name: "NN0801_02e",
+          designerIds: [0, 2]
+        },
+        {
+          name: "NN0801_02e",
+          designerIds: [1, 3]
+        }
+      ]
+    },
+    {
+      name: "T 3/3",
+      tasks: [
+        {
+          name: "NN0801_03e",
+          designerIds: [1, 2]
+        },
+        {
+          name: "NN0801_03e",
+          designerIds: [3, 0]
+        }
+      ]
+    },
+    {
+      name: "Task 1/12",
+      tasks: [
+        {
+          name: "CH0801_01o",
+          designerIds: [1, 3]
+        },
+        {
+          name: "CH0801_01o",
+          designerIds: [0, 2]
+        }
+      ]
+    },
+    {
+      name: "Task 2/12",
+      tasks: [
+        {
+          name: "HA0801_02i",
+          designerIds: [1, 0]
+        },
+        {
+          name: "HA0801_02i",
+          designerIds: [3, 2]
+        }
+      ]
+    },
+    {
+      name: "Task 3/12",
+      tasks: [
+        {
+          name: "SH0801_01o",
+          designerIds: [3, 0]
+        },
+        {
+          name: "SH0801_01o",
+          designerIds: [1, 2]
+        }
+      ]
+    },
+    {
+      name: "Task 4/12",
+      tasks: [
+        {
+          name: "PD0801_01o",
+          designerIds: [2, 0]
+        },
+        {
+          name: "PD0801_01o",
+          designerIds: [1, 3]
+        }
+      ]
+    },
+    {
+      name: "Task 5/12",
+      tasks: [
+        {
+          name: "CH0801_03i",
+          designerIds: [2, 3]
+        },
+        {
+          name: "CH0801_03i",
+          designerIds: [1, 0]
+        }
+      ]
+    },
+    {
+      name: "Task 6/12",
+      tasks: [
+        {
+          name: "HA0801_01o",
+          designerIds: [2, 1]
+        },
+        {
+          name: "HA0801_01o",
+          designerIds: [3, 0]
+        }
+      ]
+    },
+    {
+      name: "Task 7/12",
+      tasks: [
+        {
+          name: "PD0801_02i",
+          designerIds: [0, 1]
+        },
+        {
+          name: "PD0801_02i",
+          designerIds: [3, 2]
+        }
+      ]
+    },
+    {
+      name: "Task 8/12",
+      tasks: [
+        {
+          name: "SH0801_03i",
+          designerIds: [0, 2]
+        },
+        {
+          name: "SH0801_03i",
+          designerIds: [3, 1]
+        }
+      ]
+    },
+    {
+      name: "Task 9/12",
+      tasks: [
+        {
+          name: "PD0801_03i",
+          designerIds: [0, 3]
+        },
+        {
+          name: "PD0801_03i",
+          designerIds: [2, 1]
+        }
+      ]
+    },
+    {
+      name: "Task 10/12",
+      tasks: [
+        {
+          name: "SH0801_02o",
+          designerIds: [0, 1]
+        },
+        {
+          name: "SH0801_02o",
+          designerIds: [2, 3]
+        }
+      ]
+    },
+    {
+      name: "Task 11/12",
+      tasks: [
+        {
+          name: "HA0801_03i",
+          designerIds: [3, 1]
+        },
+        {
+          name: "HA0801_03i",
+          designerIds: [2, 0]
+        }
+      ]
+    },
+    {
+      name: "Task 12/12",
+      tasks: [
+        {
+          name: "CH0801_02o",
+          designerIds: [2, 1]
+        },
+        {
+          name: "CH0801_02o",
+          designerIds: [3, 0]
+        }
+      ]
+    }
+  ]
+}

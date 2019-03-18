@@ -248,8 +248,8 @@ public class DesignerUI2 extends DesignerAppPanel {
 	};
 
 	private JTabbedPane tabbedPane;
-	private JLabel timeLabelDesign, timeLabelStrategy;
-	private InstructionUI instructionUI;
+	private JLabel timeLabelDesign, timeLabelStrategy, taskLabel;
+//	private InstructionUI instructionUI;
 	private DesignUI[] designUIs = new DesignUI[Designer.NUM_STRATEGIES];
 	private StrategyUI2 strategyUI;
 	private int[] partnerDesigns = new int[Designer.NUM_STRATEGIES];
@@ -260,8 +260,8 @@ public class DesignerUI2 extends DesignerAppPanel {
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setFocusable(false);
 		this.add(tabbedPane, BorderLayout.CENTER);
-		instructionUI = new InstructionUI();
-		tabbedPane.addTab("Instructions", instructionUI);
+//		instructionUI = new InstructionUI();
+//		tabbedPane.addTab("Instructions", instructionUI);
 		
 		JPanel designPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints c2 = new GridBagConstraints();
@@ -281,13 +281,18 @@ public class DesignerUI2 extends DesignerAppPanel {
 		JPanel timePanel = new JPanel();
 		timePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.Y_AXIS));
+		timePanel.add(new JLabel("<html><center>Task:</center></html>", JLabel.CENTER));
+		taskLabel = new JLabel("<html><center>k/K</center></html>", JLabel.CENTER);
+		taskLabel.setFont(taskLabel.getFont().deriveFont(32f));
+		timePanel.add(taskLabel);
+		timePanel.add(Box.createRigidArea(new Dimension(1,100)));
 		timePanel.add(new JLabel("<html><center>Design Time<br />Remaining:</center></html>", JLabel.CENTER));
-		timeLabelDesign = new JLabel("0:00", JLabel.CENTER);
+		timeLabelDesign = new JLabel(String.format(" %01d:%02d", 0, 0), JLabel.CENTER);
 		timeLabelDesign.setFont(timeLabelDesign.getFont().deriveFont(32f));
 		timePanel.add(timeLabelDesign);
 		timePanel.add(Box.createRigidArea(new Dimension(1,50)));
 		timePanel.add(new JLabel("<html><center>Decision Time<br />Remaining:</center></html>", JLabel.CENTER));
-		timeLabelStrategy = new JLabel("0:00", JLabel.CENTER);
+		timeLabelStrategy = new JLabel(String.format(" %01d:%02d", 0, 0), JLabel.CENTER);
 		timeLabelStrategy.setFont(timeLabelStrategy.getFont().deriveFont(32f));
 		timePanel.add(timeLabelStrategy);
 		designPanel.add(timePanel, c2);
@@ -315,7 +320,7 @@ public class DesignerUI2 extends DesignerAppPanel {
 	@Override
 	public void bindTo(DesignerApp app) {
 		app.getController().setReadyToShare(true);
-		instructionUI.observe(app.getManager());
+//		instructionUI.observe(app.getManager());
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			designUIs[i].bindTo(app);
 		}
@@ -341,6 +346,10 @@ public class DesignerUI2 extends DesignerAppPanel {
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
+				String task = app.getManager().getRoundName();
+				taskLabel.setText("<html><center>"+
+			                       task.substring(task.length()-5, task.length())+
+			                       "</center></html>");
 				if(managerTime != app.getManager().getTimeRemaining()) {
 					managerTime = app.getManager().getTimeRemaining();
 					

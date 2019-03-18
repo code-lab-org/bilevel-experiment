@@ -54,8 +54,8 @@ public class FakeValueMap {
 	private double getSuckersPayoff(String game_id, boolean is_inverse){
 		if      (game_id.equals("CH") && is_inverse == false) { return  0.5; }// 1.0
 		else if (game_id.equals("CH") && is_inverse == true)  { return -0.5; }//-1.0
-		else if (game_id.equals("HA")) { return  0.5; }// 1.0
-		else if (game_id.equals("PD")) { return -0.5; }//-1.0
+		else if (game_id.equals("HA")) { return  1/3.; }// 1.0 ||  0.5
+		else if (game_id.equals("PD")) { return -1.0 ; }//-1.0 || -0.5
 		else if (game_id.equals("SH") && is_inverse == false) { return -0.5; }//-1.0
 		else if (game_id.equals("SH") && is_inverse == true)  { return  0.5; }// 1.0
 		else    { return 0.0; }//-2/3.
@@ -64,8 +64,8 @@ public class FakeValueMap {
 	private double getTemptationToDefect(String game_id, boolean is_inverse){
 		if      (game_id.equals("CH") && is_inverse == false) { return 1.5; }// 2.0
 		else if (game_id.equals("CH") && is_inverse == true)  { return 0.5; }// 0.0
-		else if (game_id.equals("HA")) { return 0.5; }// 0.0
-		else if (game_id.equals("PD")) { return 1.5; }// 2.0
+		else if (game_id.equals("HA")) { return 2/3.; }// 0.0
+		else if (game_id.equals("PD")) { return 2.0 ; }// 2.0 ||  1.5
 		else if (game_id.equals("SH") && is_inverse == false) { return 0.5; }// 0.0
 		else if (game_id.equals("SH") && is_inverse == true)  { return 1.5; }// 2.0
 		else    { return 1.0; }// 1/3.

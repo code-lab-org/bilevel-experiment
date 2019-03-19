@@ -32,6 +32,7 @@ public class ValuePanel extends JPanel {
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	private boolean shiftStates = false;
+	private boolean splitView = true;
 	
 	public ValuePanel() {
 		this.setMinimumSize(new Dimension(100,100));
@@ -247,26 +248,71 @@ public class ValuePanel extends JPanel {
 			/*  Horizontal ruler (vertical slider */
 			g2D.drawRect(insets.left + 0, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, (Designer.NUM_DESIGNS+1)*width, height);
 			
-			/** Selected cell */
-			g2D.setColor(Color.MAGENTA);
-			g2D.setStroke(new BasicStroke(t+2));
-			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
+			/* Selected cell */
 			int value = 0;
 			if(shiftStates) {
 				value = app.getValue(myStrategy, myDesigns, 1-partnerStrategy, partnerDesigns);
 			} else {
 				value = app.getValue(myStrategy, myDesigns, partnerStrategy, partnerDesigns);
 			}
-			if (value > 45) {
-				g2D.setColor(Color.BLACK);
-			} else {
-				g2D.setColor(Color.WHITE);
-			}
-			String text = new Integer(value).toString();
 			FontMetrics fm = getFontMetrics(getFont());
-			int x = (int) (insets.left + (myDesign+0.5+1)*width - fm.getStringBounds(text, g2D).getCenterX());
-			int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-0.5)*height - fm.getStringBounds(text, g2D).getCenterY());
-			g2D.drawString(text, x, y);
+			if(splitView) {
+				int shiftValue = 0;
+				if(shiftStates) {
+					shiftValue = app.getValue(myStrategy, myDesigns, partnerStrategy, partnerDesigns);
+				} else {
+					shiftValue = app.getValue(myStrategy, myDesigns, 1-partnerStrategy, partnerDesigns);
+				}
+				// split cell in half, recolor lower right triangle
+				int[] xPoints = new int[] {
+					insets.left + (myDesign+1)*width,
+					insets.left + (myDesign+1+1)*width,
+					insets.left + (myDesign+1+1)*width
+				};
+				int[] yPoints = new int[] {
+					insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1)*height,
+					insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1)*height,
+					insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height
+				};
+				g2D.setColor(DesignerUI.VALUE_COLORS[shiftValue]);
+				g2D.fillPolygon(xPoints, yPoints, 3);
+				// value label in upper left
+				if (value > 45) {
+					g2D.setColor(Color.BLACK);
+				} else {
+					g2D.setColor(Color.WHITE);
+				}
+				String text = new Integer(value).toString();
+				int x = (int) (insets.left + (myDesign+1+0.25)*width - fm.getStringBounds(text, g2D).getCenterX());
+				int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.25)*height - fm.getStringBounds(text, g2D).getCenterY());
+				g2D.drawString(text, x, y);
+				// shifted value label in lower right
+				if (shiftValue > 45) {
+					g2D.setColor(Color.BLACK);
+				} else {
+					g2D.setColor(Color.WHITE);
+				}
+				String shiftText = new Integer(shiftValue).toString();
+				int shiftX = (int) (insets.left + (myDesign+1+0.75)*width - fm.getStringBounds(text, g2D).getCenterX());
+				int shiftY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.75)*height - fm.getStringBounds(text, g2D).getCenterY());
+				g2D.drawString(text, shiftX, shiftY);
+			} else {
+				// value label in center
+				if (value > 45) {
+					g2D.setColor(Color.BLACK);
+				} else {
+					g2D.setColor(Color.WHITE);
+				}
+				String text = new Integer(value).toString();
+				int x = (int) (insets.left + (myDesign+1+0.5)*width - fm.getStringBounds(text, g2D).getCenterX());
+				int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.5)*height - fm.getStringBounds(text, g2D).getCenterY());
+				g2D.drawString(text, x, y);
+			}
+			// outline selected cell
+			g2D.setColor(Color.MAGENTA);
+			g2D.setStroke(new BasicStroke(t+2));
+			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
+
 			
 			g2D.setColor(Color.BLACK);
 			for (int i = Designer.MIN_DESIGN_VALUE; i < Designer.MAX_DESIGN_VALUE+1; i++){

@@ -283,8 +283,8 @@ public class ValuePanel extends JPanel {
 					g2D.setColor(Color.WHITE);
 				}
 				String text = new Integer(value).toString();
-				int x = (int) (insets.left + (myDesign+1+0.25)*width - fm.getStringBounds(text, g2D).getCenterX());
-				int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.25)*height - fm.getStringBounds(text, g2D).getCenterY());
+				int x = (int) (insets.left + (myDesign+1+0.25)*width - fm.getStringBounds(shiftText, g2D).getCenterX());
+				int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.25)*height - fm.getStringBounds(shiftText, g2D).getCenterY());
 				g2D.drawString(text, x, y);
 				// shifted value label in lower right
 				if (shiftValue > 45) {
@@ -293,8 +293,8 @@ public class ValuePanel extends JPanel {
 					g2D.setColor(Color.WHITE);
 				}
 				String shiftText = new Integer(shiftValue).toString();
-				int shiftX = (int) (insets.left + (myDesign+1+0.75)*width - fm.getStringBounds(text, g2D).getCenterX());
-				int shiftY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.75)*height - fm.getStringBounds(text, g2D).getCenterY());
+				int shiftX = (int) (insets.left + (myDesign+1+0.75)*width - fm.getStringBounds(shiftText, g2D).getCenterX());
+				int shiftY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.75)*height - fm.getStringBounds(shiftText, g2D).getCenterY());
 				g2D.drawString(text, shiftX, shiftY);
 			} else {
 				// value label in center

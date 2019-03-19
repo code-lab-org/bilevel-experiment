@@ -27,16 +27,13 @@ public class ValuePanel extends JPanel {
 	private int myStrategy, partnerStrategy;
 	private int[] myDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
 	private int[] partnerDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
-	private boolean hiddenStates = false;
-	/* All map can be visible if line 122 in DesignUI.java
-	 * valuePanels[i] = new ValuePanel(true) is instead set to false
-	 */
+	private boolean hiddenStates = true;
 	private int maxStatesVisible = 5;//9+4;//(int) Math.pow(Designer.NUM_DESIGNS,2);
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
 	private boolean shiftStates = false;
 	
-	public ValuePanel(boolean hiddenStates) {
+	public ValuePanel() {
 		this.setMinimumSize(new Dimension(100,100));
 		this.setPreferredSize(new Dimension(200,200));
 		this.setOpaque(false);
@@ -45,7 +42,6 @@ public class ValuePanel extends JPanel {
 				states[i][j] = new Object();
 			}
 		}
-		this.hiddenStates = hiddenStates;
 	}
 	
 	public void shiftStates(boolean shiftStates) {

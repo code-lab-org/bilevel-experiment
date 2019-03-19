@@ -295,7 +295,7 @@ public class ValuePanel extends JPanel {
 				String shiftText = new Integer(shiftValue).toString();
 				int shiftX = (int) (insets.left + (myDesign+1+0.75)*width - fm.getStringBounds(shiftText, g2D).getCenterX());
 				int shiftY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.75)*height - fm.getStringBounds(shiftText, g2D).getCenterY());
-				g2D.drawString(text, shiftX, shiftY);
+				g2D.drawString(shiftText, shiftX, shiftY);
 			} else {
 				// value label in center
 				if (value > 45) {

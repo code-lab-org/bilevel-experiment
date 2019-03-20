@@ -190,7 +190,11 @@ public class ValuePanel extends JPanel {
 		int height = (this.getHeight() - insets.top - insets.bottom)/(Designer.NUM_DESIGNS + 1);
 
 		this.setFont(new Font("Arial", Font.BOLD, getFont().getSize()));
-		this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(width/2f,height/1.0f), 48), 12)));
+		if(splitView) {
+			this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(width/2.6f,height/1.0f), 48), 12)));
+		} else {
+			this.setFont(getFont().deriveFont(Math.max(Math.min(Math.min(width/2f,height/1.0f), 48), 12)));
+		}
 		
 		for(int i = 0; i < Designer.NUM_DESIGNS; i++) {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
@@ -283,7 +287,7 @@ public class ValuePanel extends JPanel {
 					g2D.setColor(Color.WHITE);
 				}
 				String text = new Integer(value).toString();
-				int x = (int) (insets.left + (myDesign+1+0.25)*width - fm.getStringBounds(text, g2D).getCenterX());
+				int x = (int) (insets.left + (myDesign+1+1/3.)*width - fm.getStringBounds(text, g2D).getCenterX());
 				int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.25)*height - fm.getStringBounds(text, g2D).getCenterY());
 				g2D.drawString(text, x, y);
 				// shifted value label in lower right
@@ -293,7 +297,7 @@ public class ValuePanel extends JPanel {
 					g2D.setColor(Color.WHITE);
 				}
 				String shiftText = new Integer(shiftValue).toString();
-				int shiftX = (int) (insets.left + (myDesign+1+0.75)*width - fm.getStringBounds(shiftText, g2D).getCenterX());
+				int shiftX = (int) (insets.left + (myDesign+1+2/3.)*width - fm.getStringBounds(shiftText, g2D).getCenterX());
 				int shiftY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.75)*height - fm.getStringBounds(shiftText, g2D).getCenterY());
 				g2D.drawString(shiftText, shiftX, shiftY);
 			} else {

@@ -101,8 +101,8 @@ public class StrategyUI2 extends JPanel {
 			c.gridx = 0;
 			c.gridwidth = Designer.NUM_STRATEGIES;
 			c.fill = GridBagConstraints.NONE;
-			strategyButtons[i] = new JToggleButton("I choose " + DesignerUI.STRATEGY_LABELS[i]);
-			strategyButtons[i].setFont(strategyButtons[i].getFont().deriveFont(24f));
+			strategyButtons[i] = new JToggleButton("<html>"+DesignerUI.STRATEGY_LABELS[i]+"</html>");
+			strategyButtons[i].setFont(strategyButtons[i].getFont().deriveFont(36f));
 			strategyButtons[i].setHorizontalAlignment(JLabel.CENTER);
 			strategyButtons[i].setFocusable(false);
 			radios.add(strategyButtons[i]);

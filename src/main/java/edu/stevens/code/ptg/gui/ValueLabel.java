@@ -16,6 +16,7 @@ import edu.stevens.code.ptg.Manager;
 
 public class ValueLabel extends JLabel {
 	private static final long serialVersionUID = -125874855243548180L;
+	public static final int VCOLOR_SWITCH = 66;
 	
 	private DesignerApp app;
 	private int myStrategy, partnerStrategy;
@@ -81,7 +82,7 @@ public class ValueLabel extends JLabel {
 //				this.setBackground(DesignerUI.VALUE_COLORS_51[ (int) Math.round(value/Designer.VALUE_DELTA) ]);
 //			}
 			this.setText(new Integer(value).toString());
-			if (value > 45) {
+			if (value > VCOLOR_SWITCH) {
 				this.setForeground(Color.BLACK);
 			} else {
 				this.setForeground(Color.WHITE);

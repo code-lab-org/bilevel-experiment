@@ -8,6 +8,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.Stroke;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
@@ -245,6 +246,7 @@ public class ValuePanel extends JPanel {
 			
 			/** Rulers */
 			g2D.setColor(new Color(147, 93, 116));
+//			g2D.setColor(DesignerUI.VALUE_COLORS[ 50 ]);
 			int t = 1+(width*height/(80*80));
 			g2D.setStroke(new BasicStroke(t));
 			/*  Vertical ruler (horizontal slider */
@@ -281,7 +283,7 @@ public class ValuePanel extends JPanel {
 				g2D.setColor(DesignerUI.VALUE_COLORS[shiftValue]);
 				g2D.fillPolygon(xPoints, yPoints, 3);
 				// value label in upper left
-				if (value > 45) {
+				if (value > ValueLabel.VCOLOR_SWITCH) {
 					g2D.setColor(Color.BLACK);
 				} else {
 					g2D.setColor(Color.WHITE);
@@ -291,7 +293,7 @@ public class ValuePanel extends JPanel {
 				int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.25)*height - fm.getStringBounds(text, g2D).getCenterY());
 				g2D.drawString(text, x, y);
 				// shifted value label in lower right
-				if (shiftValue > 45) {
+				if (shiftValue > ValueLabel.VCOLOR_SWITCH) {
 					g2D.setColor(Color.BLACK);
 				} else {
 					g2D.setColor(Color.WHITE);
@@ -302,7 +304,7 @@ public class ValuePanel extends JPanel {
 				g2D.drawString(shiftText, shiftX, shiftY);
 			} else {
 				// value label in center
-				if (value > 45) {
+				if (value > ValueLabel.VCOLOR_SWITCH) {
 					g2D.setColor(Color.BLACK);
 				} else {
 					g2D.setColor(Color.WHITE);
@@ -313,8 +315,10 @@ public class ValuePanel extends JPanel {
 				g2D.drawString(text, x, y);
 			}
 			// outline selected cell
-			g2D.setColor(Color.MAGENTA);
-			g2D.setStroke(new BasicStroke(t+2));
+			g2D.setColor(DesignerUI.VALUE_COLORS[ (int) Math.round(value) ]);
+			Stroke dashed = new BasicStroke(t, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{t}, 0);
+			g2D.setStroke(dashed);
+//			g2D.setStroke(new BasicStroke(t+2));
 			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
 
 			

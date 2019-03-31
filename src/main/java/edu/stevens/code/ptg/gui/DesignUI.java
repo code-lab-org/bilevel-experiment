@@ -1,5 +1,6 @@
 package edu.stevens.code.ptg.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -46,6 +47,7 @@ public class DesignUI extends JPanel {
 		}
 		this.strategy = strategy;
 		this.setBackground(DesignerUI.STRATEGY_COLORS[strategy]);
+		this.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
 		
 		this.setLayout(new GridBagLayout());
 		
@@ -127,6 +129,9 @@ public class DesignUI extends JPanel {
 					if (design >= 0 && mySlider.isEnabled()){
 						mySlider.requestFocus();
 						mySlider.setValue(design);
+					} else {
+						// allow the design ui to process the click
+						processMouseEvent(e);
 					}
 				}
 			});
@@ -220,18 +225,46 @@ public class DesignUI extends JPanel {
 		}
 	}
 	
-	@Override
-	public void setEnabled(boolean enabled) {
-		//super.setEnabled(enabled);
-		//strategyToggle.setEnabled(enabled);
-		mySlider.setEnabled(enabled);
+	private void setState(int timeRemaining, boolean isDesignEnabled) {
+		if(timeRemaining == Manager.MAX_TASK_TIME) {
+			setEnabled(false);
+		}
+		if(timeRemaining < Manager.STRATEGY_TIME) {
+			mySlider.setEnabled(false);
+		} else if(timeRemaining > 0) {
+			mySlider.setEnabled(isDesignEnabled);
+		} else {
+			setEnabled(false);
+		}
 	}
 	
 	public void bindTo(DesignerApp app) {		
 		mySlider.setValue(app.getController().getDesign(strategy));
+		app.getController().addObserver(new Observer() {
+			@Override
+			public void update(Observable o, Object arg) {
+				if(app.getManager().getTimeRemaining() < Manager.MAX_TASK_TIME 
+						&& app.getController().getStrategy() == strategy) {
+					setBorder(BorderFactory.createMatteBorder(8, 8, 8, 8, Color.BLACK));
+				} else {
+					setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+				}
+			}
+		});
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(isEnabled()) {
+					app.getController().setStrategy(strategy);
+				}
+			}
+		});
 		mySlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
+				if(app.getController().getStrategy() != strategy) {
+					app.getController().setStrategy(strategy);
+				}
 				app.getController().setDesign(strategy, mySlider.getValue());
 			}
 		});
@@ -255,14 +288,12 @@ public class DesignUI extends JPanel {
 				}
 			});
 		}
+		setState(app.getManager().getTimeRemaining(), app.getManager().isDesignEnabled());
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				if(app.getManager().getTimeRemaining() < Manager.STRATEGY_TIME) {
-					setEnabled(false);
-				} else {
-					setEnabled(app.getManager().isDesignEnabled());
-				}
+				setState(app.getManager().getTimeRemaining(), app.getManager().isDesignEnabled());
+				
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					resetUI(app);
 				}

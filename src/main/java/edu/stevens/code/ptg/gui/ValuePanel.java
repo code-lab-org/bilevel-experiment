@@ -25,15 +25,17 @@ public class ValuePanel extends JPanel {
 	private static final long serialVersionUID = -125874855243548180L;
 	
 	private DesignerApp app;
-	private int myStrategy, partnerStrategy;
+	private int myRefStrategy, partnerRefStrategy;
+	private int partnerStrategy;
 	private int[] myDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
 	private int[] partnerDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
 	private boolean hiddenStates = true;
 	private int maxStatesVisible = 5;//9+4;//(int) Math.pow(Designer.NUM_DESIGNS,2);
 	private Object[][] states = new Object[Designer.NUM_DESIGNS][Designer.NUM_DESIGNS];
 	private Queue<Object> visibleStates = new LinkedBlockingQueue<Object>(maxStatesVisible);
-	private boolean shiftStates = false;
-	private boolean splitView = true;
+	private boolean shiftStates = false; // true: show values for matching strategy; false: show values for non-matching strategies
+	private boolean splitView = true; // split the display of the selected design for matching/non-matching strategies
+	private boolean strategyView = true; // show partner strategy for selected design
 	
 	public ValuePanel() {
 		this.setMinimumSize(new Dimension(100,100));
@@ -54,8 +56,8 @@ public class ValuePanel extends JPanel {
 	}
 	
 	private void updateStates() {
-		int myDesign = myDesigns[myStrategy];
-		int partnerDesign = partnerDesigns[partnerStrategy];
+		int myDesign = myDesigns[myRefStrategy];
+		int partnerDesign = partnerDesigns[partnerRefStrategy];
 				
 		
 		/* SHOW EXPLORED CELLS ONLY */
@@ -131,7 +133,7 @@ public class ValuePanel extends JPanel {
 		repaint();
 	}
 	
-	public void bindTo(DesignerApp app, int myStrategy, int partnerStrategy) {
+	public void bindTo(DesignerApp app, int myRefStrategy, int partnerRefStrategy) {
 		this.app = app;
 		this.app.getManager().addObserver(new Observer() {
 			@Override
@@ -139,6 +141,7 @@ public class ValuePanel extends JPanel {
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					partnerDesigns[0] = Designer.NUM_DESIGNS/2;
 					partnerDesigns[1] = Designer.NUM_DESIGNS/2;
+					partnerStrategy = -1;
 					visibleStates.clear();
 					/* Next line would add cell (0,0) to the visible states.
 					 * I commented (removed) it! */
@@ -157,6 +160,11 @@ public class ValuePanel extends JPanel {
 							partnerDesigns[1] = designer.getDesign(1);
 							updateStates();
 						}
+						if(app.getManager().getTimeRemaining() > Manager.STRATEGY_TIME 
+								&& partnerStrategy != designer.getStrategy()) {
+							partnerStrategy = designer.getStrategy();
+							repaint();
+						}
 					} else if(designer == app.getController()) {
 						if(!Arrays.equals(myDesigns, app.getController().getDesigns())) {
 							myDesigns[0] = app.getController().getDesign(0);
@@ -167,8 +175,19 @@ public class ValuePanel extends JPanel {
 				}
 			});
 		}
-		this.myStrategy = myStrategy;
-		this.partnerStrategy = partnerStrategy;
+		app.getManager().addObserver(new Observer() {
+			@Override
+			public void update(Observable o, Object arg) {
+				if(app.getManager().getTimeRemaining() <= Manager.STRATEGY_TIME) {
+					if(partnerStrategy != -1) {
+						partnerStrategy = -1;
+						repaint();
+					}
+				}
+			}
+		});
+		this.myRefStrategy = myRefStrategy;
+		this.partnerRefStrategy = partnerRefStrategy;
 	}
 	
 	public int getDesign(int x) {
@@ -180,8 +199,8 @@ public class ValuePanel extends JPanel {
 	public void paint(Graphics g) {
 		super.paint(g);
 		
-		int myDesign = myDesigns[myStrategy];
-		int partnerDesign = partnerDesigns[partnerStrategy];
+		int myDesign = myDesigns[myRefStrategy];
+		int partnerDesign = partnerDesigns[partnerRefStrategy];
 			
 		Graphics2D g2D = (Graphics2D) g;
 		
@@ -201,15 +220,15 @@ public class ValuePanel extends JPanel {
 			for(int j = 0; j < Designer.NUM_DESIGNS; j++) {
 				int value = 0;
 				int[] _myDesigns = new int[2];
-				_myDesigns[myStrategy] = i;
-				_myDesigns[1-myStrategy] = myDesigns[1-myStrategy];
+				_myDesigns[myRefStrategy] = i;
+				_myDesigns[1-myRefStrategy] = myDesigns[1-myRefStrategy];
 				int[] _partnerDesigns = new int[2];
-				_partnerDesigns[partnerStrategy] = j;
-				_partnerDesigns[1-partnerStrategy] = partnerDesigns[1-partnerStrategy];
+				_partnerDesigns[partnerRefStrategy] = j;
+				_partnerDesigns[1-partnerRefStrategy] = partnerDesigns[1-partnerRefStrategy];
 				if(shiftStates) {
-					value = app.getValue(myStrategy, _myDesigns, 1-partnerStrategy, _partnerDesigns);
+					value = app.getValue(myRefStrategy, _myDesigns, 1-partnerRefStrategy, _partnerDesigns);
 				} else {
-					value = app.getValue(myStrategy, _myDesigns, partnerStrategy, _partnerDesigns);
+					value = app.getValue(myRefStrategy, _myDesigns, partnerRefStrategy, _partnerDesigns);
 				}
 				if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100 && (!hiddenStates || visibleStates.contains(states[i][j]))) {
 					g2D.setColor(DesignerUI.VALUE_COLORS[value]);
@@ -257,57 +276,77 @@ public class ValuePanel extends JPanel {
 			/* Selected cell */
 			int value = 0;
 			if(shiftStates) {
-				value = app.getValue(myStrategy, myDesigns, 1-partnerStrategy, partnerDesigns);
+				value = app.getValue(myRefStrategy, myDesigns, 1-partnerRefStrategy, partnerDesigns);
 			} else {
-				value = app.getValue(myStrategy, myDesigns, partnerStrategy, partnerDesigns);
+				value = app.getValue(myRefStrategy, myDesigns, partnerRefStrategy, partnerDesigns);
 			}
-			Stroke dashed = new BasicStroke(t, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{t}, 0);
-			g2D.setStroke(dashed);
 			FontMetrics fm = getFontMetrics(getFont());
+			Stroke dashed = new BasicStroke(t, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{t}, 0);
 			if(splitView) {
-				int shiftValue = 0;
-				if(shiftStates) {
-					shiftValue = app.getValue(myStrategy, myDesigns, partnerStrategy, partnerDesigns);
-				} else {
-					shiftValue = app.getValue(myStrategy, myDesigns, 1-partnerStrategy, partnerDesigns);
-				}
-				// split cell in half, recolor lower right triangle
-				int[] xPoints = new int[] {
-					(int) (insets.left + (myDesign+1+0.065)*width),
-					(int) (insets.left + (myDesign+1+1-0.065)*width),
-					(int) (insets.left + (myDesign+1+1-0.065)*width)
+				// reference strategy value label in upper left
+				int[] upperLeftTriangleX = new int[] {
+						(int) (insets.left + (myDesign+1+1-0.065)*width),
+						(int) (insets.left + (myDesign+1+0.065)*width),
+						(int) (insets.left + (myDesign+1+0.065)*width)
+					};
+				int[] upperLeftTriangleY = new int[] {
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.065)*height),
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.065)*height),
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-0.065)*height)
 				};
-				int[] yPoints = new int[] {
-					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-0.065)*height),
-					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-0.065)*height),
-					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.065)*height)
-				};
-				g2D.setColor(DesignerUI.VALUE_COLORS[shiftValue]);
-				g2D.fillPolygon(xPoints, yPoints, 3);
-				g2D.setColor(new Color(147, 93, 116));
-				g2D.drawPolygon(xPoints, yPoints, 3);
-				// value label in upper left
 				if (value > ValueLabel.VCOLOR_SWITCH) {
 					g2D.setColor(Color.BLACK);
 				} else {
 					g2D.setColor(Color.WHITE);
 				}
 				String text = new Integer(value).toString();
-				int x = (int) (insets.left + (myDesign+1+1/3.)*width - fm.getStringBounds(text, g2D).getCenterX());
-				int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.22)*height - fm.getStringBounds(text, g2D).getCenterY());
-				g2D.drawString(text, x, y);
+				int textX = (int) (insets.left + (myDesign+1+1/3.)*width - fm.getStringBounds(text, g2D).getCenterX());
+				int textY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.22)*height - fm.getStringBounds(text, g2D).getCenterY());
+				g2D.drawString(text, textX, textY);
+
 				// shifted value label in lower right
+				int[] lowerRightTriangleX = new int[] {
+						(int) (insets.left + (myDesign+1+0.065)*width),
+						(int) (insets.left + (myDesign+1+1-0.065)*width),
+						(int) (insets.left + (myDesign+1+1-0.065)*width)
+					};
+				int[] lowerRightTriangleY = new int[] {
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-0.065)*height),
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-0.065)*height),
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.065)*height)
+				};
+				int shiftValue = 0;
+				if(shiftStates) {
+					shiftValue = app.getValue(myRefStrategy, myDesigns, partnerRefStrategy, partnerDesigns);
+				} else {
+					shiftValue = app.getValue(myRefStrategy, myDesigns, 1-partnerRefStrategy, partnerDesigns);
+				}
+				g2D.setColor(DesignerUI.VALUE_COLORS[shiftValue]);
+				g2D.fillPolygon(lowerRightTriangleX, lowerRightTriangleY, 3);
 				if (shiftValue > ValueLabel.VCOLOR_SWITCH) {
 					g2D.setColor(Color.BLACK);
 				} else {
 					g2D.setColor(Color.WHITE);
 				}
 				String shiftText = new Integer(shiftValue).toString();
+				int shiftTextX = (int) (insets.left + (myDesign+1+2/3.-0.035)*width - fm.getStringBounds(shiftText, g2D).getCenterX());
+				int shiftTextY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.78)*height - fm.getStringBounds(shiftText, g2D).getCenterY());
+				g2D.drawString(shiftText, shiftTextX, shiftTextY);
+				g2D.setStroke(dashed);
+				g2D.setColor(new Color(147, 93, 116));
+				g2D.drawPolygon(lowerRightTriangleX, lowerRightTriangleY, 3);
 				
-				int shiftX = (int) (insets.left + (myDesign+1+2/3.-0.035)*width - fm.getStringBounds(shiftText, g2D).getCenterX());
-				int shiftY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.78)*height - fm.getStringBounds(shiftText, g2D).getCenterY());
-				
-				g2D.drawString(shiftText, shiftX, shiftY);
+				if(strategyView && partnerStrategy == partnerRefStrategy) {
+					// partner agrees with reference strategy: highlight upper-left value
+					g2D.setColor(Color.white);
+					g2D.setStroke(new BasicStroke());
+					g2D.drawPolygon(upperLeftTriangleX, upperLeftTriangleY, 3);
+				} else if(strategyView && partnerStrategy == 1 - partnerRefStrategy) {
+					// partner disagrees with reference strategy: highlight lower-right value
+					g2D.setColor(Color.white);
+					g2D.setStroke(new BasicStroke());
+					g2D.drawPolygon(lowerRightTriangleX, lowerRightTriangleY, 3);
+				}
 			} else {
 				// value label in center
 				if (value > ValueLabel.VCOLOR_SWITCH) {
@@ -320,8 +359,10 @@ public class ValuePanel extends JPanel {
 				int y = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.5)*height - fm.getStringBounds(text, g2D).getCenterY());
 				g2D.drawString(text, x, y);
 			}
+			
 			// outline selected cell
 			g2D.setColor(DesignerUI.VALUE_COLORS[ (int) Math.round(value) ]);
+			g2D.setStroke(dashed);
 //			g2D.setStroke(new BasicStroke(t+2));
 			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
 

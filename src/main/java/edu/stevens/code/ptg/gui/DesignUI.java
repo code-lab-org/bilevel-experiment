@@ -225,16 +225,11 @@ public class DesignUI extends JPanel {
 		}
 	}
 	
-	private void setState(int timeRemaining, boolean isDesignEnabled) {
-		if(timeRemaining == Manager.MAX_TASK_TIME) {
-			setEnabled(false);
-		}
-		if(timeRemaining < Manager.STRATEGY_TIME) {
+	private void setSliderState(int timeRemaining, boolean isDesignEnabled) {
+		if(timeRemaining <= Manager.STRATEGY_TIME) {
 			mySlider.setEnabled(false);
 		} else if(timeRemaining > 0) {
 			mySlider.setEnabled(isDesignEnabled);
-		} else {
-			setEnabled(false);
 		}
 	}
 	
@@ -254,7 +249,8 @@ public class DesignUI extends JPanel {
 		this.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(isEnabled()) {
+				if(app.getManager().getTimeRemaining() < Manager.MAX_TASK_TIME 
+						&& app.getManager().getTimeRemaining() > 0) {
 					app.getController().setStrategy(strategy);
 				}
 			}
@@ -288,11 +284,11 @@ public class DesignUI extends JPanel {
 				}
 			});
 		}
-		setState(app.getManager().getTimeRemaining(), app.getManager().isDesignEnabled());
+		setSliderState(app.getManager().getTimeRemaining(), app.getManager().isDesignEnabled());
 		app.getManager().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				setState(app.getManager().getTimeRemaining(), app.getManager().isDesignEnabled());
+				setSliderState(app.getManager().getTimeRemaining(), app.getManager().isDesignEnabled());
 				
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					resetUI(app);

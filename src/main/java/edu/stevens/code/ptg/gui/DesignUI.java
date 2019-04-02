@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -46,8 +47,11 @@ public class DesignUI extends JPanel {
 			throw new IllegalArgumentException("invalid strategy index");
 		}
 		this.strategy = strategy;
-		this.setBackground(DesignerUI.STRATEGY_COLORS[strategy]);
-		this.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+//		this.setBackground(DesignerUI.STRATEGY_COLORS[strategy]);
+		this.setBackground(Color.WHITE);
+		this.setBorder(BorderFactory.createCompoundBorder(
+				       BorderFactory.createMatteBorder(1,1,1,1, Color.BLACK),
+				       BorderFactory.createEmptyBorder(12, 12, 12, 12)));
 		
 		this.setLayout(new GridBagLayout());
 		
@@ -166,6 +170,7 @@ public class DesignUI extends JPanel {
 		c.weightx = 0.26;
 		c.weighty = 1;
 		c.gridwidth = 1;
+		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.VERTICAL;
 		this.add(new ColorBarPanel(), c);
 		
@@ -245,9 +250,20 @@ public class DesignUI extends JPanel {
 			public void update(Observable o, Object arg) {
 				if(app.getManager().getTimeRemaining() < Manager.MAX_TASK_TIME 
 						&& app.getController().getStrategy() == strategy) {
-					setBorder(BorderFactory.createMatteBorder(8, 8, 8, 8, Color.BLACK));
+					Border empty_b = BorderFactory.createMatteBorder(1,1,1,1, Color.BLACK);
+					empty_b = BorderFactory.createCompoundBorder(empty_b,BorderFactory.createEmptyBorder(4,4,4,4));
+					Border black_b = BorderFactory.createMatteBorder(3,3,3,3, Color.BLACK);
+					Border white_b = BorderFactory.createMatteBorder(2,2,2,2, Color.WHITE);
+					Border bandw_b = BorderFactory.createCompoundBorder(black_b,white_b);
+					empty_b = BorderFactory.createCompoundBorder(empty_b,bandw_b);
+//					setBorder(BorderFactory.createMatteBorder(11, 11, 11, 11, Color.BLACK));
+					setBorder(BorderFactory.createCompoundBorder(empty_b,black_b));
+					setBackground(Color.decode("#ffcca2"));
 				} else {
-					setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+					setBorder(BorderFactory.createCompoundBorder(
+							  BorderFactory.createMatteBorder(1,1,1,1, Color.BLACK),
+							  BorderFactory.createEmptyBorder(12, 12, 12, 12)));
+					setBackground(Color.WHITE);
 				}
 			}
 		});

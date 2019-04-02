@@ -20,7 +20,7 @@ public class ColorBarPanel extends JPanel {
 	public ColorBarPanel() {
 		this.setMinimumSize(new Dimension(52,100));
 		this.setPreferredSize(new Dimension(52,100));
-		this.setBorder(BorderFactory.createEmptyBorder(72,4,88,10));
+		this.setBorder(BorderFactory.createEmptyBorder(50,4,48,10));
 	}
 	
 	/* (non-Javadoc)
@@ -53,10 +53,10 @@ public class ColorBarPanel extends JPanel {
 			g.fillRect(x, y, width, height);
 
 			g.setColor(Color.BLACK);
-			String text = new Integer(value).toString();
-			int textX = (int) (x + width + textPadding);
-			int textY = (int) (y+0.5*height - fm.getStringBounds(text, g).getCenterY());
 			if (value%10 == 0) {
+				String text = new Integer(value).toString();
+				int textX = (int) (x + width + textPadding);
+				int textY = (int) (y+0.5*height - fm.getStringBounds(text, g).getCenterY());
 				g.drawString(text, textX, textY);
 			}
 		}

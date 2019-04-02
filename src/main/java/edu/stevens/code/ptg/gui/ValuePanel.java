@@ -281,18 +281,20 @@ public class ValuePanel extends JPanel {
 				value = app.getValue(myRefStrategy, myDesigns, partnerRefStrategy, partnerDesigns);
 			}
 			FontMetrics fm = getFontMetrics(getFont());
-			Stroke dashed = new BasicStroke(t, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{t}, 0);
+			Stroke dashed = new BasicStroke(t+1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{t+1}, 0);
 			if(splitView) {
+				double gap = 0;
+				
 				// reference strategy value label in upper left
 				int[] upperLeftTriangleX = new int[] {
-						(int) (insets.left + (myDesign+1+1-0.065)*width),
-						(int) (insets.left + (myDesign+1+0.065)*width),
-						(int) (insets.left + (myDesign+1+0.065)*width)
+						(int) (insets.left + (myDesign+1+1-gap)*width),
+						(int) (insets.left + (myDesign+1+gap)*width),
+						(int) (insets.left + (myDesign+1+gap)*width)
 					};
 				int[] upperLeftTriangleY = new int[] {
-					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.065)*height),
-					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.065)*height),
-					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-0.065)*height)
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+gap)*height),
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+gap)*height),
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-gap)*height)
 				};
 				if (value > ValueLabel.VCOLOR_SWITCH) {
 					g2D.setColor(Color.BLACK);
@@ -300,20 +302,20 @@ public class ValuePanel extends JPanel {
 					g2D.setColor(Color.WHITE);
 				}
 				String text = new Integer(value).toString();
-				int textX = (int) (insets.left + (myDesign+1+1/3.)*width - fm.getStringBounds(text, g2D).getCenterX());
-				int textY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.22)*height - fm.getStringBounds(text, g2D).getCenterY());
+				int textX = (int) (insets.left + (myDesign+1+1/3.+0.035)*width - fm.getStringBounds(text, g2D).getCenterX());
+				int textY = (int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.22)*height - fm.getStringBounds(text, g2D).getCenterY() + t/2);
 				g2D.drawString(text, textX, textY);
 
 				// shifted value label in lower right
 				int[] lowerRightTriangleX = new int[] {
-						(int) (insets.left + (myDesign+1+0.065)*width),
-						(int) (insets.left + (myDesign+1+1-0.065)*width),
-						(int) (insets.left + (myDesign+1+1-0.065)*width)
+						(int) (insets.left + (myDesign+1+gap)*width - t/2),
+						(int) (insets.left + (myDesign+1+1-gap)*width - t/2),
+						(int) (insets.left + (myDesign+1+1-gap)*width - t/2)
 					};
 				int[] lowerRightTriangleY = new int[] {
-					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-0.065)*height),
-					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-0.065)*height),
-					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+0.065)*height)
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-gap)*height - t/2),
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+1-gap)*height - t/2),
+					(int) (insets.top + (Designer.NUM_DESIGNS-partnerDesign-1+gap)*height - t/2)
 				};
 				int shiftValue = 0;
 				if(shiftStates) {
@@ -334,18 +336,28 @@ public class ValuePanel extends JPanel {
 				g2D.drawString(shiftText, shiftTextX, shiftTextY);
 				g2D.setStroke(dashed);
 				g2D.setColor(new Color(147, 93, 116));
-				g2D.drawPolygon(lowerRightTriangleX, lowerRightTriangleY, 3);
+				g2D.drawLine(upperLeftTriangleX[0], upperLeftTriangleY[0], upperLeftTriangleX[2], upperLeftTriangleY[2]);
+//				g2D.drawPolygon(lowerRightTriangleX, lowerRightTriangleY, 3);
 				
+				int uLTX[] = {-3,  3,  3};
+			    Arrays.setAll(uLTX, i -> upperLeftTriangleX[i] + uLTX[i]);
+				int uLTY[] = { 3,  3, -3};
+			    Arrays.setAll(uLTY, i -> upperLeftTriangleY[i] + uLTY[i]);
+				
+				int lRTX[] = { 3, -2, -2};
+			    Arrays.setAll(lRTX, i -> lowerRightTriangleX[i] + lRTX[i]);
+				int lRTY[] = {-2, -2,  3};
+			    Arrays.setAll(lRTY, i -> lowerRightTriangleY[i] + lRTY[i]);
+				
+				g2D.setStroke(new BasicStroke(t+2f));
+//				g2D.setColor(Color.decode("#a61736"));
+				g2D.setColor(Color.MAGENTA);
 				if(strategyView && partnerStrategy == partnerRefStrategy) {
-					// partner agrees with reference strategy: highlight upper-left value
-					g2D.setColor(Color.white);
-					g2D.setStroke(new BasicStroke());
-					g2D.drawPolygon(upperLeftTriangleX, upperLeftTriangleY, 3);
+					// partner agrees with reference strategy: highlight upper-left value;
+					g2D.drawPolygon(uLTX, uLTY, 3);
 				} else if(strategyView && partnerStrategy == 1 - partnerRefStrategy) {
 					// partner disagrees with reference strategy: highlight lower-right value
-					g2D.setColor(Color.white);
-					g2D.setStroke(new BasicStroke());
-					g2D.drawPolygon(lowerRightTriangleX, lowerRightTriangleY, 3);
+					g2D.drawPolygon(lRTX, lRTY, 3);
 				}
 			} else {
 				// value label in center
@@ -361,10 +373,10 @@ public class ValuePanel extends JPanel {
 			}
 			
 			// outline selected cell
-			g2D.setColor(DesignerUI.VALUE_COLORS[ (int) Math.round(value) ]);
-			g2D.setStroke(dashed);
+//			g2D.setColor(DesignerUI.VALUE_COLORS[ (int) Math.round(value) ]);
+//			g2D.setStroke(dashed);
 //			g2D.setStroke(new BasicStroke(t+2));
-			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
+//			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + (Designer.NUM_DESIGNS-partnerDesign-1)*height, width, height);
 
 			g2D.setColor(Color.BLACK);
 			for (int i = Designer.MIN_DESIGN_VALUE; i < Designer.MAX_DESIGN_VALUE+1; i++){

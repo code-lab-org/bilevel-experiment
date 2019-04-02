@@ -82,7 +82,11 @@ public class DesignUI extends JPanel {
 			}
 		}
 		scorePanel.setOpaque(false);
-		// this.add(scorePanel, c);
+//		this.add(scorePanel, c);
+		
+		JLabel strategyID = new JLabel("<html>&nbsp;&nbsp;&emsp;"+DesignerUI.STRATEGY_LABELS[strategy]+"</html>");
+		strategyID.setFont(new Font("Arial", Font.BOLD, 72));
+		this.add(strategyID, c);
 		
 		c.gridx = 2;
 		c.gridwidth = 1;		
@@ -106,6 +110,7 @@ public class DesignUI extends JPanel {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy++;
+		c.weighty = 0;
 		c.anchor = GridBagConstraints.SOUTH;
 		c.fill = GridBagConstraints.VERTICAL;
 		partnerSlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE, Designer.NUM_DESIGNS/2);
@@ -158,7 +163,7 @@ public class DesignUI extends JPanel {
 		valueContainer.add(valuePanels[strategy]);
 		this.add(valueContainer, c);
 		c.gridx+=2;
-		c.weightx = 0;
+		c.weightx = 0.26;
 		c.weighty = 1;
 		c.gridwidth = 1;
 		c.fill = GridBagConstraints.VERTICAL;
@@ -167,7 +172,7 @@ public class DesignUI extends JPanel {
 		c.gridx = 1;
 		c.gridy++;
 		c.weightx = 0;
-		c.weighty = 0;
+		c.weighty = 0.7;
 		c.gridwidth = 2;
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.HORIZONTAL;

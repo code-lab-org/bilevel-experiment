@@ -264,10 +264,13 @@ public class ValuePanel extends JPanel {
 			*/
 			
 			/** Rulers */
-			g2D.setColor(new Color(147, 93, 116));
+//			g2D.setColor(new Color(147, 93, 116));
+			g2D.setColor(Color.decode("#7c7b78"));
 //			g2D.setColor(DesignerUI.VALUE_COLORS[ 50 ]);
 			int t = 1+(width*height/(80*80));
-			g2D.setStroke(new BasicStroke(t));
+//			g2D.setStroke(new BasicStroke(t));
+			Stroke dashed = new BasicStroke(t, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{t}, 0);
+			g2D.setStroke(dashed);
 			/*  Vertical ruler (horizontal slider */
 			g2D.drawRect(insets.left + (myDesign+1)*width, insets.top + 0, width, (Designer.NUM_DESIGNS+1)*height);
 			/*  Horizontal ruler (vertical slider */
@@ -281,7 +284,7 @@ public class ValuePanel extends JPanel {
 				value = app.getValue(myRefStrategy, myDesigns, partnerRefStrategy, partnerDesigns);
 			}
 			FontMetrics fm = getFontMetrics(getFont());
-			Stroke dashed = new BasicStroke(t+1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{t+1}, 0);
+			dashed = new BasicStroke(t+1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{t+1}, 0);
 			if(splitView) {
 				double gap = 0;
 				
@@ -349,17 +352,29 @@ public class ValuePanel extends JPanel {
 				int lRTY[] = {-2, -2,  3};
 			    Arrays.setAll(lRTY, i -> lowerRightTriangleY[i] + lRTY[i]);
 				
-				g2D.setStroke(new BasicStroke(t+2f));
+				g2D.setStroke(new BasicStroke(t+3f));
 //				g2D.setColor(Color.decode("#a61736"));
 				g2D.setColor(Color.MAGENTA);
 				if(strategyView && partnerStrategy == partnerRefStrategy) {
 					// partner agrees with reference strategy: highlight upper-left value;
 					g2D.drawPolygon(uLTX, uLTY, 3);
+//					g2D.setStroke(new BasicStroke(t+0.4f));
+//					g2D.setColor(Color.WHITE);
+//					g2D.drawPolygon(uLTX, uLTY, 3);
+					g2D.setStroke(new BasicStroke(1.5f));
+					g2D.setColor(Color.WHITE);
+					g2D.drawPolygon(uLTX, uLTY, 3);
 				} else if(strategyView && partnerStrategy == 1 - partnerRefStrategy) {
 					// partner disagrees with reference strategy: highlight lower-right value
 					g2D.drawPolygon(lRTX, lRTY, 3);
+//					g2D.setStroke(new BasicStroke(t+0.4f));
+//					g2D.setColor(Color.WHITE);
+//					g2D.drawPolygon(lRTX, lRTY, 3);
+					g2D.setStroke(new BasicStroke(1.5f));
+					g2D.setColor(Color.WHITE);
+					g2D.drawPolygon(lRTX, lRTY, 3);
 				}
-			} else {
+			} else { 
 				// value label in center
 				if (value > ValueLabel.VCOLOR_SWITCH) {
 					g2D.setColor(Color.BLACK);

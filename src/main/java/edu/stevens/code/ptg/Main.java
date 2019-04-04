@@ -84,7 +84,7 @@ public class Main {
 			if(!(cmd.hasOption("d") || cmd.hasOption("m"))) {
 				// print the help menu and quit
 				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("CoDE", options);
+				formatter.printHelp("CoDe", options);
 				System.exit(0);
 			}
 		} catch (ParseException e) {

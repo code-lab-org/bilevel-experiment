@@ -1,5 +1,6 @@
 package edu.stevens.code.ptg;
 
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -88,6 +89,7 @@ public class DesignerApp implements App {
 				f.setIconImages(App.ICONS);
 				// DesignerAppPanel panel = new DebugDesignerAppPanel();
 				DesignerAppPanel panel = new DesignerUI3();
+//				panel.setPreferredSize(new Dimension(1920,1080));
 				panel.bindTo(self);
 				f.setContentPane(panel);
 				f.setTitle(designer.toString());

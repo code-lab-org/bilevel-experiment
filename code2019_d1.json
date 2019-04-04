@@ -41,7 +41,7 @@
       ]
     },
     {
-      name: "Task 1/12",
+      name: "R 1/12",
       tasks: [
         {
           name: "CH0801_01o",
@@ -54,7 +54,7 @@
       ]
     },
     {
-      name: "Task 2/12",
+      name: "R 2/12",
       tasks: [
         {
           name: "HA0801_02i",
@@ -67,7 +67,7 @@
       ]
     },
     {
-      name: "Task 3/12",
+      name: "R 3/12",
       tasks: [
         {
           name: "SH0801_01o",
@@ -80,7 +80,7 @@
       ]
     },
     {
-      name: "Task 4/12",
+      name: "R 4/12",
       tasks: [
         {
           name: "PD0801_01o",
@@ -93,7 +93,7 @@
       ]
     },
     {
-      name: "Task 5/12",
+      name: "R 5/12",
       tasks: [
         {
           name: "CH0801_03i",
@@ -106,7 +106,7 @@
       ]
     },
     {
-      name: "Task 6/12",
+      name: "R 6/12",
       tasks: [
         {
           name: "HA0801_01o",
@@ -119,7 +119,7 @@
       ]
     },
     {
-      name: "Task 7/12",
+      name: "R 7/12",
       tasks: [
         {
           name: "PD0801_02i",
@@ -132,7 +132,7 @@
       ]
     },
     {
-      name: "Task 8/12",
+      name: "R 8/12",
       tasks: [
         {
           name: "SH0801_03i",
@@ -145,7 +145,7 @@
       ]
     },
     {
-      name: "Task 9/12",
+      name: "R 9/12",
       tasks: [
         {
           name: "PD0801_03i",
@@ -158,7 +158,7 @@
       ]
     },
     {
-      name: "Task 10/12",
+      name: "R 10/12",
       tasks: [
         {
           name: "SH0801_02o",
@@ -171,7 +171,7 @@
       ]
     },
     {
-      name: "Task 11/12",
+      name: "R 11/12",
       tasks: [
         {
           name: "HA0801_03i",
@@ -184,7 +184,7 @@
       ]
     },
     {
-      name: "Task 12/12",
+      name: "R 12/12",
       tasks: [
         {
           name: "CH0801_02o",

@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
@@ -182,7 +185,6 @@ public class DesignUI extends JPanel {
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		mySlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE, Designer.NUM_DESIGNS/2);
-		mySlider.setEnabled(false);
 		mySlider.setOpaque(false);
 		this.add(mySlider, c);
 		
@@ -235,16 +237,14 @@ public class DesignUI extends JPanel {
 		}
 	}
 	
-	private void setSliderState(int timeRemaining, boolean isDesignEnabled) {
-		if(timeRemaining <= Manager.STRATEGY_TIME) {
-			mySlider.setEnabled(false);
-		} else if(timeRemaining > 0) {
-			mySlider.setEnabled(isDesignEnabled);
-		}
-	}
-	
 	public void bindTo(DesignerApp app) {		
 		mySlider.setValue(app.getController().getDesign(strategy));
+		mySlider.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				app.getController().setStrategy(strategy);
+			}
+		});
 		app.getController().addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
@@ -273,16 +273,22 @@ public class DesignUI extends JPanel {
 				if(app.getManager().getTimeRemaining() < Manager.MAX_TASK_TIME 
 						&& app.getManager().getTimeRemaining() > 0) {
 					app.getController().setStrategy(strategy);
+					mySlider.requestFocus();
 				}
 			}
 		});
 		mySlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				if(app.getController().getStrategy() != strategy) {
-					app.getController().setStrategy(strategy);
+				if(app.getManager().getTimeRemaining() > Manager.STRATEGY_TIME 
+						&& app.getManager().isDesignEnabled()) {
+					if(app.getController().getStrategy() != strategy) {
+						app.getController().setStrategy(strategy);
+					}
+					app.getController().setDesign(strategy, mySlider.getValue());
+				} else {
+					mySlider.setValue(app.getController().getDesign(strategy));
 				}
-				app.getController().setDesign(strategy, mySlider.getValue());
 			}
 		});
 		partnerSlider.setValue(Designer.NUM_DESIGNS/2);
@@ -305,12 +311,9 @@ public class DesignUI extends JPanel {
 				}
 			});
 		}
-		setSliderState(app.getManager().getTimeRemaining(), app.getManager().isDesignEnabled());
 		app.getManager().addObserver(new Observer() {
 			@Override
-			public void update(Observable o, Object arg) {
-				setSliderState(app.getManager().getTimeRemaining(), app.getManager().isDesignEnabled());
-				
+			public void update(Observable o, Object arg) {				
 				if(app.getManager().getTimeRemaining() == Manager.MAX_TASK_TIME) {
 					resetUI(app);
 				}

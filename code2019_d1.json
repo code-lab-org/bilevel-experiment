@@ -2,40 +2,53 @@
   name: "Pilot",
   rounds: [
     {
-      name: "T 1/3",
+      name: "T 1/4",
       tasks: [
         {
-          name: "NN0801_01e",
+          name: "T10801_01e",
           designerIds: [0, 1]
         },
         {
-          name: "NN0801_01e",
+          name: "T10801_01e",
           designerIds: [2, 3]
         }
       ]
     },
     {
-      name: "T 2/3",
+      name: "T 2/4",
       tasks: [
         {
-          name: "NN0801_02e",
+          name: "T20801_02e",
+          designerIds: [0, 1]
+        },
+        {
+          name: "T20801_02e",
+          designerIds: [2, 3]
+        }
+      ]
+    },
+    {
+      name: "T 3/4",
+      tasks: [
+        {
+          name: "T30801_03e",
           designerIds: [0, 2]
         },
         {
-          name: "NN0801_02e",
+          name: "T30801_03e",
           designerIds: [1, 3]
         }
       ]
     },
     {
-      name: "T 3/3",
+      name: "T 4/4",
       tasks: [
         {
-          name: "NN0801_03e",
+          name: "T40801_03e",
           designerIds: [1, 2]
         },
         {
-          name: "NN0801_03e",
+          name: "T40801_03e",
           designerIds: [3, 0]
         }
       ]

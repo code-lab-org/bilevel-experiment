@@ -58,6 +58,10 @@ public class FakeValueMap {
 		else if (game_id.equals("PD")) { return -1.0 ; }//-1.0 || -0.5
 		else if (game_id.equals("SH") && is_inverse == false) { return -0.5; }//-1.0
 		else if (game_id.equals("SH") && is_inverse == true)  { return  0.5; }// 1.0
+		else if (game_id.equals("T1")) { return  1/3.; }// 1.0 ||  0.5
+		else if (game_id.equals("T2")) { return  0.5 ; }// 1.0 ||  0.5
+		else if (game_id.equals("T3")) { return -0.5 ; }// 1.0 ||  0.5
+		else if (game_id.equals("T4")) { return -1.0 ; }// 1.0 ||  0.5
 		else    { return 0.0; }//-2/3.
 	}
 	
@@ -68,6 +72,10 @@ public class FakeValueMap {
 		else if (game_id.equals("PD")) { return 2.0 ; }// 2.0 ||  1.5
 		else if (game_id.equals("SH") && is_inverse == false) { return 0.5; }// 0.0
 		else if (game_id.equals("SH") && is_inverse == true)  { return 1.5; }// 2.0
+		else if (game_id.equals("T1")) { return  2/3.; }// 1.0 ||  0.5
+		else if (game_id.equals("T2")) { return  1.5 ; }// 1.0 ||  0.5
+		else if (game_id.equals("T3")) { return  0.5 ; }// 1.0 ||  0.5
+		else if (game_id.equals("T4")) { return  2.0 ; }// 1.0 ||  0.5
 		else    { return 1.0; }// 1/3.
 	}
 	

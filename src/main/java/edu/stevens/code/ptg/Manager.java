@@ -11,7 +11,7 @@ public class Manager extends Observable {
 	public static final Object PROPERTY_TIME = new Object();
 	public static final Object PROPERTY_TASKS = new Object();
 	public static final int STRATEGY_TIME = 15; /* 0.25 minutes (previously 1/3 minutes) */
-	public static final int MAX_TASK_TIME = 45 + STRATEGY_TIME; /* 1.75 minutes (previously 2.0) + STRATEGY_TIME */
+	public static final int MAX_TASK_TIME = 105 + STRATEGY_TIME; /* 1.75 minutes (previously 2.0) + STRATEGY_TIME */
 	public static final int NUM_DESIGNERS = 4;
 	public static final int NUM_TASKS = 2;
 	

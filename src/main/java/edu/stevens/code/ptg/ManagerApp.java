@@ -136,7 +136,7 @@ public class ManagerApp implements App {
 		int score = 0;
 		for(int i = 0; i < session.getRounds().length; i++) {
 			// do not include training tasks in total score
-			if(!session.getRound(i).getName().toLowerCase().contains("training")) {
+			if(!session.getRound(i).getName().contains("T")) { // .getName().toLowerCase().contains("training"))
 				score += this.scores[designerId][i];
 			}
 		}

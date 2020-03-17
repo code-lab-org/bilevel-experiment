@@ -15,8 +15,8 @@ import javax.swing.SwingUtilities;
 
 import edu.stevens.code.ptg.gui.DesignerAppPanel;
 import edu.stevens.code.ptg.gui.DesignerUI3;
-import edu.stevens.code.ptg.hla.Ambassador;
-import edu.stevens.code.ptg.hla.ZmqAmbassador;
+import edu.stevens.code.ptg.io.Ambassador;
+import edu.stevens.code.ptg.io.ZmqAmbassador;
 
 /**
  * The Class DesignerApp.

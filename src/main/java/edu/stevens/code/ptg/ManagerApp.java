@@ -12,8 +12,8 @@ import javax.swing.SwingUtilities;
 import edu.stevens.code.ptg.gui.ManagerAppMenuBar;
 import edu.stevens.code.ptg.gui.ManagerAppPanel;
 import edu.stevens.code.ptg.gui.ManagerUI;
-import edu.stevens.code.ptg.hla.Ambassador;
-import edu.stevens.code.ptg.hla.ZmqAmbassador;
+import edu.stevens.code.ptg.io.Ambassador;
+import edu.stevens.code.ptg.io.ZmqAmbassador;
 
 /**
  * The Class ManagerApp.

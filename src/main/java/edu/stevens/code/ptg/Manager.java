@@ -180,7 +180,12 @@ public class Manager extends Observable {
 	 */
 	public synchronized int getValue(int designerId, int strategy, 
 			int[] design, int partnerStrategy, int[] partnerDesign) {
-		return getTaskByDesignerId(designerId).getValue(designerId, strategy, design, partnerStrategy, partnerDesign);
+		Task task = getTaskByDesignerId(designerId);
+		if(task == null || task.getName().contentEquals("")) {
+			return 0;
+		} else {
+			return task.getValue(designerId, strategy, design, partnerStrategy, partnerDesign);
+		}
 	}
 	
 	/**

@@ -88,7 +88,7 @@ public class Main {
 				System.exit(0);
 			}
 		} catch (ParseException e) {
-			logger.error("Unexpected exception: " + e.getMessage());
+			logger.fatal("Unexpected exception: " + e.getMessage());
 			System.exit(1);
 		};
 	}

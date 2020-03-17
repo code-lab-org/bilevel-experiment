@@ -13,7 +13,7 @@ import edu.stevens.code.ptg.gui.ManagerAppMenuBar;
 import edu.stevens.code.ptg.gui.ManagerAppPanel;
 import edu.stevens.code.ptg.gui.ManagerUI;
 import edu.stevens.code.ptg.hla.Ambassador;
-import edu.stevens.code.ptg.hla.HlaAmbassador;
+import edu.stevens.code.ptg.hla.ZmqAmbassador;
 
 /**
  * The Class ManagerApp.
@@ -226,7 +226,7 @@ public class ManagerApp implements App {
 	@Override
 	public void init(String federationName) {
 		if(ambassador == null) {
-			ambassador = new HlaAmbassador();
+			ambassador = new ZmqAmbassador();
 		}
 
 		ambassador.connectManager(this, federationName);

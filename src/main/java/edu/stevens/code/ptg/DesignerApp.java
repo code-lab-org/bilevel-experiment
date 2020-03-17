@@ -16,7 +16,7 @@ import javax.swing.SwingUtilities;
 import edu.stevens.code.ptg.gui.DesignerAppPanel;
 import edu.stevens.code.ptg.gui.DesignerUI3;
 import edu.stevens.code.ptg.hla.Ambassador;
-import edu.stevens.code.ptg.hla.HlaAmbassador;
+import edu.stevens.code.ptg.hla.ZmqAmbassador;
 
 /**
  * The Class DesignerApp.
@@ -50,7 +50,7 @@ public class DesignerApp implements App {
 	@Override
 	public void init(String federationName) {
 		if(ambassador == null) {
-			ambassador = new HlaAmbassador();
+			ambassador = new ZmqAmbassador();
 		}
 
 		ambassador.connectDesigner(this, federationName);
@@ -143,7 +143,7 @@ public class DesignerApp implements App {
 	@Override
 	public Designer getDesigner(int index) {
 		if(index < 0 || index >= Manager.NUM_DESIGNERS) {
-			throw new IllegalArgumentException("invalid designer index");
+			throw new IllegalArgumentException(String.format("invalid designer index (%d)", index));
 		}
 		return designers[index];
 	}

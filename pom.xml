@@ -26,9 +26,9 @@
     <dependency>
     	<groupId>com.pitch</groupId>
     	<artifactId>prti1516e</artifactId>
-    	<version>5.3.1.0</version>
+    	<version>5.4.5.0</version>
     	<scope>system</scope>
-    	<systemPath>${env.PRTI1516E_HOME}/lib/prti1516e.jar</systemPath>
+    	<systemPath>C:/Program Files/prti1516e/lib/prti1516e.jar</systemPath>
     </dependency>
     <dependency>
     	<groupId>org.apache.logging.log4j</groupId>
@@ -49,6 +49,11 @@
     	<groupId>com.google.code.gson</groupId>
     	<artifactId>gson</artifactId>
     	<version>2.8.2</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.zeromq</groupId>
+    	<artifactId>jeromq</artifactId>
+    	<version>0.5.2</version>
     </dependency>
   </dependencies>
 </project>

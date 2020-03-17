@@ -25,7 +25,7 @@ public class ValueMap {
 		if(name == null || name.equals("")) {
 			return;
 		}
-		try(BufferedReader br = new BufferedReader(new FileReader("src/test/java/games/"+name+".csv"))) {
+		try(BufferedReader br = new BufferedReader(new FileReader("src/main/java/resources/games/"+name+".csv"))) {
 			for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 				for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
 					for(int k = 0; k < Designer.NUM_DESIGNS; k++) {

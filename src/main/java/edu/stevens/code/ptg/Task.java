@@ -16,7 +16,7 @@ public class Task {
 	 */
 	public Task() {
 		this.name = "";
-		this.designerIds = new int[Manager.NUM_DESIGNERS];
+		this.designerIds = new int[Task.NUM_DESIGNERS];
 	}
 	
 	/**

@@ -1,6 +1,5 @@
 package edu.stevens.code.ptg;
 
-import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -14,20 +13,15 @@ import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import edu.stevens.code.ptg.gui.DesignerAppPanel;
 import edu.stevens.code.ptg.gui.DesignerUI3;
 import edu.stevens.code.ptg.hla.Ambassador;
-import hla.rti1516e.exceptions.RTIexception;
+import edu.stevens.code.ptg.hla.HlaAmbassador;
 
 /**
  * The Class DesignerApp.
  */
 public class DesignerApp implements App {
-    private static final Logger logger = LogManager.getLogger(DesignerApp.class);
-
 	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
 	private Designer designer = null;
 	private Manager manager = new Manager();
@@ -56,27 +50,15 @@ public class DesignerApp implements App {
 	@Override
 	public void init(String federationName) {
 		if(ambassador == null) {
-			try {
-				ambassador = new Ambassador();
-			} catch (RTIexception ex) {
-				logger.error(ex);
-			}
+			ambassador = new HlaAmbassador();
 		}
-		
-		try {
-			ambassador.connectDesigner(this, federationName);
-		} catch (RTIexception ex) {
-			logger.error(ex);
-		}
+
+		ambassador.connectDesigner(this, federationName);
 		
 		designer.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
-				try {
-					ambassador.updateDesigner(designer, arg);
-				} catch (RTIexception e) {
-					logger.error(e);
-				}
+				ambassador.updateDesigner(designer, arg);
 			}
 		});
 		
@@ -143,11 +125,7 @@ public class DesignerApp implements App {
 	 */
 	@Override
 	public void kill() {
-		try {
-			ambassador.disconnect();
-		} catch (RTIexception ex) {
-			logger.error(ex);
-		}
+		ambassador.disconnect();
 		System.exit(0);
 	}
 

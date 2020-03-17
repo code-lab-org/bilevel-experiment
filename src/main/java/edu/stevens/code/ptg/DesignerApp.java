@@ -34,7 +34,7 @@ public class DesignerApp implements App {
 	 */
 	public DesignerApp(int id) {
 		if(id < 0 || id >= Manager.NUM_DESIGNERS) {
-			throw new IllegalArgumentException("invalid designer id");
+			throw new IllegalArgumentException(String.format("invalid designer id (%d)", id));
 		}
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			Designer d = new Designer();
@@ -171,7 +171,11 @@ public class DesignerApp implements App {
 	 */
 	public Designer getDesignPartner() {
 		int partnerId = getManager().getDesignPartner(getController().getId());
-		return getDesigner(partnerId);
+		if(partnerId >= 0) {
+			return getDesigner(partnerId);
+		} else {
+			return null;
+		}
 	}
 	
 	/**
@@ -184,6 +188,6 @@ public class DesignerApp implements App {
 	 * @return the value
 	 */
 	public int getValue(int myStrategy, int[] myDesign, int partnerStrategy, int[] partnerDesign) {
-		return getManager().getValue(designer.getId(), myStrategy, myDesign, partnerStrategy, partnerDesign);
+		return manager.getValue(designer.getId(), myStrategy, myDesign, partnerStrategy, partnerDesign);
 	}
 }

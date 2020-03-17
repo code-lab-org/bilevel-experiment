@@ -14,6 +14,11 @@ import edu.stevens.code.eager.gui.ManagerAppPanel;
 import edu.stevens.code.eager.gui.ManagerUI;
 import edu.stevens.code.eager.io.Ambassador;
 import edu.stevens.code.eager.io.ZmqAmbassador;
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
+import edu.stevens.code.eager.model.Round;
+import edu.stevens.code.eager.model.Session;
+import edu.stevens.code.eager.model.Task;
 
 /**
  * The Class ManagerApp.

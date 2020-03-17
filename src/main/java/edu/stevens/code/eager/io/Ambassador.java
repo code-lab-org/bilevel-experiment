@@ -1,9 +1,9 @@
 package edu.stevens.code.eager.io;
 
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
-import edu.stevens.code.eager.Manager;
 import edu.stevens.code.eager.ManagerApp;
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
 
 public interface Ambassador {
 	public void connectManager(ManagerApp managerApp, String federationName);

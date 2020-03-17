@@ -2,8 +2,8 @@ package edu.stevens.code.eager.gui;
 
 import javax.swing.JPanel;
 
-import edu.stevens.code.eager.Manager;
 import edu.stevens.code.eager.ManagerApp;
+import edu.stevens.code.eager.model.Manager;
 
 /**
  * The Class ManagerPanel.

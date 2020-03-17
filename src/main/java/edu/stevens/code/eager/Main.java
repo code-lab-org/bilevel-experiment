@@ -16,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import edu.stevens.code.eager.model.Session;
+
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
     

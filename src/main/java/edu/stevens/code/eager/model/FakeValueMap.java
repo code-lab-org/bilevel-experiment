@@ -1,4 +1,4 @@
-package edu.stevens.code.eager;
+package edu.stevens.code.eager.model;
 
 public class FakeValueMap {
 	private final ValueMap realValueMap;

@@ -32,8 +32,8 @@ import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import edu.stevens.code.eager.Manager;
 import edu.stevens.code.eager.ManagerApp;
+import edu.stevens.code.eager.model.Manager;
 
 /**
  * The Class ManagerPanelImpl.

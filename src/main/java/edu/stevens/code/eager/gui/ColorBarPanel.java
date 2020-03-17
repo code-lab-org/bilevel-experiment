@@ -9,7 +9,7 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import edu.stevens.code.eager.Designer;
+import edu.stevens.code.eager.model.Designer;
 
 public class ColorBarPanel extends JPanel {
 	private static final long serialVersionUID = -1241763890892204288L;

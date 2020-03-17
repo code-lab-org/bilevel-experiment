@@ -13,8 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.stevens.code.eager.Manager;
-import edu.stevens.code.eager.Task;
+import edu.stevens.code.eager.model.Manager;
+import edu.stevens.code.eager.model.Task;
 
 public class TaskPanel extends JPanel {
 	private static final long serialVersionUID = -8972417442465106162L;

@@ -17,9 +17,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.swing.JPanel;
 
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
-import edu.stevens.code.eager.Manager;
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
 
 public class ValuePanel extends JPanel {
 	private static final long serialVersionUID = -125874855243548180L;

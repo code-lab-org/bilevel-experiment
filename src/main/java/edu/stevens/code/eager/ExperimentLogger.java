@@ -14,6 +14,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
+
 public class ExperimentLogger {
     private static final Logger logger = LogManager.getLogger(ExperimentLogger.class);
     

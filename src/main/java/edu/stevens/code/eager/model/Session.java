@@ -1,4 +1,4 @@
-package edu.stevens.code.eager;
+package edu.stevens.code.eager.model;
 
 import java.util.Arrays;
 

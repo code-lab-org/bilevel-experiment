@@ -21,7 +21,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 
 import edu.stevens.code.eager.ManagerApp;
-import edu.stevens.code.eager.Session;
+import edu.stevens.code.eager.model.Session;
 
 public class ManagerAppMenuBar extends JMenuBar {
 	private static final long serialVersionUID = -8166334008886803755L;

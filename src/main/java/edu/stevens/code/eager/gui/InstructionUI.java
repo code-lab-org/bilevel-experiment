@@ -6,8 +6,8 @@ import java.util.Observer;
 
 import javax.swing.JEditorPane;
 
-import edu.stevens.code.eager.Manager;
-import edu.stevens.code.eager.Task;
+import edu.stevens.code.eager.model.Manager;
+import edu.stevens.code.eager.model.Task;
 
 public class InstructionUI extends JEditorPane {
 	private static final long serialVersionUID = -5921608043683745782L;

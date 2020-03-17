@@ -20,8 +20,8 @@ import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
+import edu.stevens.code.eager.model.Designer;
 
 /**
  * The Class DebugDesignerPanel.

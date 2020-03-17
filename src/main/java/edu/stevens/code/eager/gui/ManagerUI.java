@@ -5,8 +5,8 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.ManagerApp;
+import edu.stevens.code.eager.model.Designer;
 
 /**
  * The Class ManagerUI.

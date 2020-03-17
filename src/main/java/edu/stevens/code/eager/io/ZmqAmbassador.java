@@ -20,11 +20,11 @@ import org.zeromq.ZThread.IDetachedRunnable;
 import com.google.gson.Gson;
 
 import edu.stevens.code.eager.App;
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
-import edu.stevens.code.eager.Manager;
 import edu.stevens.code.eager.ManagerApp;
-import edu.stevens.code.eager.Task;
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
+import edu.stevens.code.eager.model.Task;
 
 public class ZmqAmbassador implements Ambassador {
 	private static Logger logger = LogManager.getLogger(ZmqAmbassador.class);

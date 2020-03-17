@@ -2,8 +2,8 @@ package edu.stevens.code.eager.gui;
 
 import javax.swing.JPanel;
 
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
+import edu.stevens.code.eager.model.Designer;
 
 /**
  * The Class DesignerPanel.

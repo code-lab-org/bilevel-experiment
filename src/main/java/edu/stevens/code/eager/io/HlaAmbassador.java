@@ -10,11 +10,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.stevens.code.eager.App;
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
-import edu.stevens.code.eager.Manager;
 import edu.stevens.code.eager.ManagerApp;
-import edu.stevens.code.eager.Task;
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
+import edu.stevens.code.eager.model.Task;
 import hla.rti1516e.AttributeHandleSet;
 import hla.rti1516e.AttributeHandleValueMap;
 import hla.rti1516e.CallbackModel;

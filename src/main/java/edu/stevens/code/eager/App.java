@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 import javax.swing.ImageIcon;
 
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
+
 /**
  * The Interface App.
  */

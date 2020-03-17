@@ -14,10 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
-import edu.stevens.code.eager.Manager;
-import edu.stevens.code.eager.Task;
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
+import edu.stevens.code.eager.model.Task;
 
 public class DesignerUI extends DesignerAppPanel {
 	private static final long serialVersionUID = 1163389143406697128L;

@@ -23,9 +23,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
-import edu.stevens.code.eager.Manager;
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
 
 public class DesignerUI3 extends DesignerAppPanel {
 	private static final long serialVersionUID = 1163389143406697128L;

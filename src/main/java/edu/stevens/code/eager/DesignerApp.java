@@ -17,6 +17,8 @@ import edu.stevens.code.eager.gui.DesignerAppPanel;
 import edu.stevens.code.eager.gui.DesignerUI3;
 import edu.stevens.code.eager.io.Ambassador;
 import edu.stevens.code.eager.io.ZmqAmbassador;
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
 
 /**
  * The Class DesignerApp.

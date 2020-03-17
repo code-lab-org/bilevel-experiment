@@ -19,9 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
-import edu.stevens.code.eager.Manager;
+import edu.stevens.code.eager.model.Designer;
+import edu.stevens.code.eager.model.Manager;
 
 public class StrategyUI2 extends JPanel {
 	private static final long serialVersionUID = -4318471579781451005L;

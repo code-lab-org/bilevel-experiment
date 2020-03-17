@@ -5,8 +5,8 @@ import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import edu.stevens.code.eager.Designer;
 import edu.stevens.code.eager.DesignerApp;
+import edu.stevens.code.eager.model.Designer;
 
 /**
  * The Class DebugDesignerAppPanel.

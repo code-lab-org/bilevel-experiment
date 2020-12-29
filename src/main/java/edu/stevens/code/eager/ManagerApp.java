@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager;
 
 import java.awt.event.WindowAdapter;
@@ -21,7 +36,10 @@ import edu.stevens.code.eager.model.Session;
 import edu.stevens.code.eager.model.Task;
 
 /**
- * The Class ManagerApp.
+ * The software application used by managers.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
+ * @author Ambrosio Valencia-Romero <avalenci@stevens.edu>
  */
 public class ManagerApp implements App {
 	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
@@ -31,11 +49,14 @@ public class ManagerApp implements App {
 	private int roundIndex = -1;
 	private int[][] scores = new int[Manager.NUM_DESIGNERS][0];
 	private final ExperimentLogger expLogger;
+	
 	/**
-	 * Instantiates a new manager app.
+	 * Instantiates a new manager application.
 	 */
 	public ManagerApp() {
+		// initialize a logger
 		expLogger = new ExperimentLogger();
+		// add an observer to the manager to trigger log messages
 		manager.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
@@ -52,10 +73,12 @@ public class ManagerApp implements App {
 				}
 			}
 		});
+		// initialize the designer objects
 		for(int i = 0; i < Manager.NUM_DESIGNERS; i++) {
 			Designer designer = new Designer();
 			designer.setId(i);
 			designers[i] = designer;
+			// add an observer to the designer trigger log messages
 			designer.addObserver(new Observer() {
 				@Override
 				public void update(Observable o, Object arg) {
@@ -70,7 +93,7 @@ public class ManagerApp implements App {
 	}
 	
 	/**
-	 * Instantiates a new manager app.
+	 * Instantiates a new manager application.
 	 *
 	 * @param session the session
 	 */
@@ -136,7 +159,8 @@ public class ManagerApp implements App {
 		int score = 0;
 		for(int i = 0; i < session.getRounds().length; i++) {
 			// do not include training tasks in total score
-			if(!session.getRound(i).getName().contains("T")) { // .getName().toLowerCase().contains("training"))
+			// training tasks are identified by the character 'T' in the round name
+			if(!session.getRound(i).getName().contains("T")) {
 				score += this.scores[designerId][i];
 			}
 		}
@@ -225,26 +249,23 @@ public class ManagerApp implements App {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#init(java.lang.String)
-	 */
 	@Override
 	public void init(String federationName) {
+		// initialize the ambassador
 		if(ambassador == null) {
 			ambassador = new ZmqAmbassador();
 		}
-
+		// connect the ambassador
 		ambassador.connectManager(this, federationName);
-		
+		// add an observer to the manager to process ambassador updates
 		manager.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
 				ambassador.updateManager(manager, arg);
 			}
 		});
-		
+		// launch the graphical user interface
 		ManagerApp self = this;
-
         SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -268,26 +289,17 @@ public class ManagerApp implements App {
         });
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#kill()
-	 */
 	@Override
 	public void kill() {
 		ambassador.disconnect();
 		System.exit(0);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getSelf()
-	 */
 	@Override
 	public Manager getController() {
 		return manager;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getDesigner(int)
-	 */
 	@Override
 	public Designer getDesigner(int index) {
 		if(index < 0 || index >= Manager.NUM_DESIGNERS) {
@@ -296,17 +308,11 @@ public class ManagerApp implements App {
 		return designers[index];
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getDesigners()
-	 */
 	@Override
 	public Designer[] getDesigners() {
 		return Arrays.copyOf(designers, Manager.NUM_DESIGNERS);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getManager()
-	 */
 	@Override
 	public Manager getManager() {
 		return manager;

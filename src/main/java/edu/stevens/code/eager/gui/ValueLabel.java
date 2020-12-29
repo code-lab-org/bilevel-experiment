@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.gui;
 
 import java.awt.Color;
@@ -14,6 +29,12 @@ import edu.stevens.code.eager.DesignerApp;
 import edu.stevens.code.eager.model.Designer;
 import edu.stevens.code.eager.model.Manager;
 
+/**
+ * A label that displays the color-coded value of a decision.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
+ * @author Ambrosio Valencia-Romero <avalenci@stevens.edu>
+ */
 public class ValueLabel extends JLabel {
 	private static final long serialVersionUID = -125874855243548180L;
 	public static final int VCOLOR_SWITCH = 66;
@@ -23,6 +44,9 @@ public class ValueLabel extends JLabel {
 	private int[] myDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
 	private int[] partnerDesigns = new int[] {Designer.NUM_DESIGNS/2, Designer.NUM_DESIGNS/2};
 	
+	/**
+	 * Instantiates a new value label.
+	 */
 	public ValueLabel() {
 		this.setPreferredSize(new Dimension(200,200));
 		this.setOpaque(true);
@@ -36,6 +60,13 @@ public class ValueLabel extends JLabel {
 		});
 	}
 	
+	/**
+	 * Binds this label to the actions of a designer application.
+	 *
+	 * @param app the application
+	 * @param myStrategy the my strategy
+	 * @param partnerStrategy the partner strategy
+	 */
 	public void bindTo(DesignerApp app, int myStrategy, int partnerStrategy) {
 		this.app = app;
 		this.app.getManager().addObserver(new Observer() {
@@ -72,15 +103,13 @@ public class ValueLabel extends JLabel {
 		this.partnerStrategy = partnerStrategy;
 	}
 	
+	/**
+	 * Update the label in response to a design/strategy decision.
+	 */
 	protected void updateLabel() {
 		int value = app.getValue(myStrategy, myDesigns, partnerStrategy, partnerDesigns);
 		if(app.getManager().isDesignEnabled() && value >= 0 && value <= 100) {
 			this.setBackground(DesignerUI.VALUE_COLORS[ (int) Math.round(value) ]);
-//			if(Designer.VALUE_DELTA == 5) {
-//				this.setBackground(DesignerUI.VALUE_COLORS_21[ (int) Math.round(value/Designer.VALUE_DELTA) ]);
-//			} else if(Designer.VALUE_DELTA == 2) {
-//				this.setBackground(DesignerUI.VALUE_COLORS_51[ (int) Math.round(value/Designer.VALUE_DELTA) ]);
-//			}
 			this.setText(new Integer(value).toString());
 			if (value > VCOLOR_SWITCH) {
 				this.setForeground(Color.BLACK);

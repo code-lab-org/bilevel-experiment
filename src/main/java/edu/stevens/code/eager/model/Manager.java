@@ -1,17 +1,37 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.model;
 
 import java.util.Arrays;
 import java.util.Observable;
 
 /**
- * The Class Manager.
+ * Manager object class. A manager maintains the list of current tasks and can
+ * compute the payoff value for a designer based on the set of design/strategy
+ * decisions.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
+ * @author Ambrosio Valencia-Romero <avalenci@stevens.edu>
  */
 public class Manager extends Observable {
 	public static final Object PROPERTY_ROUND = new Object();
 	public static final Object PROPERTY_TIME = new Object();
 	public static final Object PROPERTY_TASKS = new Object();
-	public static final int STRATEGY_TIME = 15; /* 0.25 minutes (previously 1/3 minutes) */
-	public static final int MAX_TASK_TIME = 106 + STRATEGY_TIME; /* 1.75 minutes (previously 2.0) + STRATEGY_TIME */
+	public static final int STRATEGY_TIME = 15; // seconds
+	public static final int MAX_TASK_TIME = 106 + STRATEGY_TIME; // seconds
 	public static final int NUM_DESIGNERS = 4;
 	public static final int NUM_TASKS = 2;
 	
@@ -29,7 +49,7 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Sets the round.
+	 * Sets the current round.
 	 *
 	 * @param round the new round
 	 */
@@ -81,7 +101,7 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Gets the time remaining.
+	 * Gets the time remaining (seconds).
 	 *
 	 * @return the time remaining
 	 */
@@ -90,7 +110,7 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Sets the time remaining.
+	 * Sets the time remaining (seconds).
 	 *
 	 * @param timeRemaining the new time remaining
 	 */
@@ -105,9 +125,9 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Gets the task.
+	 * Gets the task given by an index.
 	 *
-	 * @param index the index
+	 * @param index the task index
 	 * @return the task
 	 */
 	public synchronized Task getTask(int index) {
@@ -118,7 +138,7 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Gets the tasks.
+	 * Gets the list of current tasks.
 	 *
 	 * @return the tasks
 	 */
@@ -127,10 +147,10 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Gets the design partner.
+	 * Gets the partner assigned to a designer (by designer id).
 	 *
 	 * @param designerId the designer id
-	 * @return the design partner
+	 * @return the design partner id
 	 */
 	public synchronized int getDesignPartner(int designerId) {
 		if(designerId < 0 || designerId >= NUM_DESIGNERS) {
@@ -149,7 +169,7 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Gets the task by designer id.
+	 * Gets the task assigned to a designer (by designer id).
 	 *
 	 * @param designerId the designer id
 	 * @return the task
@@ -169,7 +189,7 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Gets the value.
+	 * Gets the payoff value for a designer (by designer id) for a set of design/strategy decisions.
 	 *
 	 * @param designerId the designer id
 	 * @param strategy the strategy
@@ -189,7 +209,7 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Checks if is design enabled.
+	 * Checks if design is enabled.
 	 *
 	 * @return true, if is design enabled
 	 */
@@ -198,7 +218,7 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Sets the task.
+	 * Sets the current task by index.
 	 *
 	 * @param index the index
 	 * @param task the task
@@ -217,7 +237,7 @@ public class Manager extends Observable {
 	}
 	
 	/**
-	 * Sets the tasks.
+	 * Sets the current list of tasks.
 	 *
 	 * @param tasks the new tasks
 	 */
@@ -234,9 +254,6 @@ public class Manager extends Observable {
 		this.notifyObservers(PROPERTY_TASKS);
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Manager";

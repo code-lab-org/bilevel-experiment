@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.io;
 
 import java.util.ArrayList;
@@ -26,6 +41,11 @@ import edu.stevens.code.eager.model.Designer;
 import edu.stevens.code.eager.model.Manager;
 import edu.stevens.code.eager.model.Task;
 
+/**
+ * Zero MQ (ZMQ) implementation of the middleware ambassador.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
+ */
 public class ZmqAmbassador implements Ambassador {
 	private static Logger logger = LogManager.getLogger(ZmqAmbassador.class);
 	private static final int PROXY_IN_PORT = 5563;
@@ -47,12 +67,15 @@ public class ZmqAmbassador implements Ambassador {
 	private final Map<String, Object> discoveredInstances = 
 			Collections.synchronizedMap(new HashMap<String, Object>());
 	
+	/**
+	 * Instantiates a new ZMQ ambassador.
+	 */
 	public ZmqAmbassador() { }
 
 	@Override
 	public void connectManager(ManagerApp managerApp, String federationName) {
 		this.app = managerApp;
-
+		// set up the ZMQ proxy
 		logger.debug("Setting up proxy.");
 		ZThread.start(new IDetachedRunnable() {
 			@Override
@@ -68,9 +91,8 @@ public class ZmqAmbassador implements Ambassador {
 				}
 			}
 		});
-
+		// configure the ZMQ context and publisher/subscriber sockets
 		context = new ZContext();
-
 		logger.debug("Setting up manager subscriber.");
 		ZThread.fork(context, new IAttachedRunnable() {
 			@Override
@@ -86,7 +108,7 @@ public class ZmqAmbassador implements Ambassador {
 	            while (!Thread.currentThread().isInterrupted()) {
 	                String address = subscriber.recvStr();
 	                String contents = subscriber.recvStr();
-	                //logger.debug(String.format("%s RECV: %s : %s", managerApp.getController().toString(), address, contents));
+	                logger.trace(String.format("%s RECV: %s : %s", managerApp.getController().toString(), address, contents));
 	                if(UPDATE_TOPIC.contentEquals(address) && managerApp.getController().toString().contentEquals(contents)) {
 	                	updateManager(managerApp.getController());
 	                } else if(DESIGNER_TOPICS.contains(address)) {
@@ -99,11 +121,9 @@ public class ZmqAmbassador implements Ambassador {
 	            ctx.destroySocket(subscriber);
 			}
 		});
-
 		logger.debug("Setting up manager publisher.");
 		publisher = context.createSocket(SocketType.PUB);
 		publisher.connect(String.format("tcp://%s:%d", federationName, PROXY_IN_PORT));
-		
 		registeredInstances.put(
 			managerApp.getController(), 
 			managerApp.getController().toString()
@@ -114,9 +134,8 @@ public class ZmqAmbassador implements Ambassador {
 	@Override
 	public void connectDesigner(DesignerApp designerApp, String federationName) {
 		this.app = designerApp;
-		
+		// configure the ZMQ context and publisher/subscriber sockets
 		context = new ZContext();
-		
 		logger.debug("Setting up designer subscriber.");
 		ZThread.fork(context, new IAttachedRunnable() {
 			@Override
@@ -135,7 +154,7 @@ public class ZmqAmbassador implements Ambassador {
 	            while (!Thread.currentThread().isInterrupted()) {
 	                String address = subscriber.recvStr();
 	                String contents = subscriber.recvStr();
-	                //logger.debug(String.format("%s RECV: %s : %s", designerApp.getController().toString(), address, contents));
+	                logger.trace(String.format("%s RECV: %s : %s", designerApp.getController().toString(), address, contents));
 	                if(UPDATE_TOPIC.contentEquals(address) && designerApp.getController().toString().contentEquals(contents)) {
 	                	updateDesigner(designerApp.getController());
 	                } else if(DESIGNER_TOPICS.contains(address)) {
@@ -147,11 +166,9 @@ public class ZmqAmbassador implements Ambassador {
 	            ctx.destroySocket(subscriber);
 			}
 		});
-
 		logger.debug("Setting up designer publisher.");
 		publisher = context.createSocket(SocketType.PUB);
 		publisher.connect(String.format("tcp://%s:%d", federationName, PROXY_IN_PORT));
-		
 		registeredInstances.put(
 			designerApp.getController(), 
 			designerApp.getController().toString()
@@ -199,12 +216,23 @@ public class ZmqAmbassador implements Ambassador {
 		}
 	}
 	
+	/**
+	 * Request updates from ZMQ.
+	 *
+	 * @param name the name
+	 */
 	private void requestUpdates(String name) {
 		logger.debug(String.format("Requesting %s attribute value updates.", name));
 		publisher.sendMore(UPDATE_TOPIC);
 		publisher.send(name);
 	}
 	
+	/**
+	 * Reflect manager updates.
+	 *
+	 * @param name the name
+	 * @param model the model
+	 */
 	private void reflectManagerUpdates(String name, ManagerModel model) {
 		logger.info("Reflecting manager attibute values.");
 		if(!discoveredInstances.containsKey(name)) {
@@ -240,6 +268,12 @@ public class ZmqAmbassador implements Ambassador {
 		}
 	}
 	
+	/**
+	 * Reflect designer updates.
+	 *
+	 * @param name the name
+	 * @param model the model
+	 */
 	private void reflectDesignerUpdates(String name, DesignerModel model) {
 		logger.info("Reflecting designer attibute values.");
 		if(!discoveredInstances.containsKey(name)) {
@@ -316,6 +350,11 @@ public class ZmqAmbassador implements Ambassador {
 		context.destroySocket(publisher);
 	}
 	
+	/**
+	 * A simple designer model for serialization/deserialization.
+	 * 
+	 * @author Paul T. Grogan <pgrogan@stevens.edu>
+	 */
 	public static class DesignerModel {
 		Integer id;
 		List<Integer> designs;
@@ -357,6 +396,11 @@ public class ZmqAmbassador implements Ambassador {
 		}
 	}
 	
+	/**
+	 * A simple manager model for serialization/deserialization.
+	 * 
+	 * @author Paul T. Grogan <pgrogan@stevens.edu>
+	 */
 	public static class ManagerModel {
 		String roundName;
 		Integer timeRemaining;
@@ -389,6 +433,11 @@ public class ZmqAmbassador implements Ambassador {
 		}
 	}
 	
+	/**
+	 * A simple task model for serialization/deserialization.
+	 * 
+	 * @author Paul T. Grogan <pgrogan@stevens.edu>
+	 */
 	public static class TaskModel {		
 		String name;
 		List<Integer> designerIds;

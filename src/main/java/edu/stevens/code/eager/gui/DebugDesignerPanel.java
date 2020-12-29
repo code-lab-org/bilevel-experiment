@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.gui;
 
 import java.awt.Dimension;
@@ -24,7 +39,9 @@ import edu.stevens.code.eager.DesignerApp;
 import edu.stevens.code.eager.model.Designer;
 
 /**
- * The Class DebugDesignerPanel.
+ * A designer panel that provides debug features.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
  */
 public class DebugDesignerPanel extends DesignerPanel {
 	private static final long serialVersionUID = 2488259187981650893L;
@@ -92,17 +109,14 @@ public class DebugDesignerPanel extends DesignerPanel {
 	}
 	
 	/**
-	 * Sets the always share.
+	 * Set to always share the design information.
 	 *
-	 * @param alwaysShare the new always share
+	 * @param alwaysShare true, if design information should always be shared
 	 */
 	public void setAlwaysShare(boolean alwaysShare) {
 		this.alwaysShare = alwaysShare;
 	}
-	
-	/* (non-Javadoc)
-	 * @see javax.swing.JComponent#setEnabled(boolean)
-	 */
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
@@ -113,9 +127,6 @@ public class DebugDesignerPanel extends DesignerPanel {
 		shareButton.setEnabled(enabled);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.gui.DesignerPanel#observe(edu.stevens.code.ptg.Designer)
-	 */
 	@Override
 	public void observe(Designer designer) {
 		this.setBorder(BorderFactory.createTitledBorder(designer.toString()));
@@ -138,9 +149,6 @@ public class DebugDesignerPanel extends DesignerPanel {
 		});
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.gui.DesignerPanel#bindTo(edu.stevens.code.ptg.Designer)
-	 */
 	@Override
 	public void bindTo(Designer designer) {
 		this.setBorder(BorderFactory.createTitledBorder(designer.toString()));
@@ -171,9 +179,6 @@ public class DebugDesignerPanel extends DesignerPanel {
 		this.setEnabled(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.gui.DesignerPanel#bindTo(edu.stevens.code.ptg.DesignerApp)
-	 */
 	@Override
 	public void bindTo(DesignerApp app) {
 		for(Designer designer : app.getDesigners()) {
@@ -200,15 +205,19 @@ public class DebugDesignerPanel extends DesignerPanel {
 		setEnabled(app.getManager().isDesignEnabled());
 	}
 	
+	/**
+	 * Update scores.
+	 *
+	 * @param app the application
+	 * @param designer the designer
+	 */
 	private void updateScores(DesignerApp app, Designer designer) {
 		Designer controller = app.getController();
 		Designer partner = app.getDesignPartner();
-		
 		// update partner designs if ready to share
 		if(alwaysShare || (designer == partner && designer.isReadyToShare())) {
 			partnerDesigns = designer.getDesigns();
 		}
-		
 		// update if the designer is either controller or partner
 		if(designer == controller || designer == partner) {
 			for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {

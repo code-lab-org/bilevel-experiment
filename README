@@ -1,3 +1,17 @@
-Requires the following environment variables:
+# Bi-level Experiment (bilevel-experiment)
 
-PRTI1516E_HOME - set to the Pitch pRTI home, e.g. C:\Program Files\prti1516e
+## Introduction
+
+This project contains the source code for a distributed software application to investigate a bi-level model of design.
+
+## Getting Started
+
+This project includes a Maven `pom.xml` file which simplifies dependency management. If you are using an integrated development environment (IDE) like Eclipse, import as an existing Maven project.
+
+The application can be launched from the `Main.java` file; however, it requires some command line arguments to configure.
+
+
+
+## Acknowledgement
+
+This material is based upon work supported by the National Science Foundation under Grant No. 1742971. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.

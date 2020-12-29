@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager;
 
 import java.awt.GraphicsEnvironment;
@@ -14,14 +29,17 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import edu.stevens.code.eager.gui.DesignerAppPanel;
-import edu.stevens.code.eager.gui.DesignerUI3;
+import edu.stevens.code.eager.gui.DesignerUI;
 import edu.stevens.code.eager.io.Ambassador;
 import edu.stevens.code.eager.io.ZmqAmbassador;
 import edu.stevens.code.eager.model.Designer;
 import edu.stevens.code.eager.model.Manager;
 
 /**
- * The Class DesignerApp.
+ * The software application used by designers.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
+ * @author Ambrosio Valencia-Romero <avalenci@stevens.edu>
  */
 public class DesignerApp implements App {
 	private final Designer[] designers = new Designer[Manager.NUM_DESIGNERS];
@@ -30,9 +48,9 @@ public class DesignerApp implements App {
 	private Ambassador ambassador = null;
 	
 	/**
-	 * Instantiates a new designer app.
+	 * Instantiates a new designer application for the designer with specified id.
 	 *
-	 * @param id the id
+	 * @param id the designer id
 	 */
 	public DesignerApp(int id) {
 		if(id < 0 || id >= Manager.NUM_DESIGNERS) {
@@ -46,51 +64,45 @@ public class DesignerApp implements App {
 		designer = designers[id];
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#init(java.lang.String)
-	 */
 	@Override
 	public void init(String federationName) {
+		// initialize the ambassador
 		if(ambassador == null) {
 			ambassador = new ZmqAmbassador();
 		}
-
+		// connect the ambassador
 		ambassador.connectDesigner(this, federationName);
-		
+		// add an observer to the designer to process ambassador updates
 		designer.addObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
 				ambassador.updateDesigner(designer, arg);
 			}
 		});
-		
+		// launch the graphical user interface
 		DesignerApp self = this;
-
         SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {								
 				JFrame f = new JFrame();
 				f.setIconImages(App.ICONS);
-				// DesignerAppPanel panel = new DebugDesignerAppPanel();
-				DesignerAppPanel panel = new DesignerUI3();
-//				panel.setPreferredSize(new Dimension(1920,1080));
+				// using version 3 of the designer user interface here
+				DesignerAppPanel panel = new DesignerUI();
 				panel.bindTo(self);
 				f.setContentPane(panel);
 				f.setTitle(designer.toString());
 				f.setVisible(true);
 		        f.pack();
 		        f.setLocationRelativeTo(null);
-//		        f.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		        f.addWindowListener(new WindowAdapter() {
 					@Override
 					public void windowClosing(WindowEvent e) {
 						kill();
 					}
 		        });
-				
+				// add an action (triggered by f11) to toggle fullscreen
 		    	AbstractAction toggleFullscreen = new AbstractAction() {
 		    		private static final long serialVersionUID = -3717417473415884817L;
-
 		    		@Override
 		    		public void actionPerformed(ActionEvent e) {
 		    			if(!f.isUndecorated()) {
@@ -115,33 +127,23 @@ public class DesignerApp implements App {
 		    			}
 		    		}
 		    	};
-
 		    	panel.getInputMap(DesignerAppPanel.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F11"), "toggleFullscreen");
 		    	panel.getActionMap().put("toggleFullscreen", toggleFullscreen);
 			}
         });
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#kill()
-	 */
 	@Override
 	public void kill() {
 		ambassador.disconnect();
 		System.exit(0);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getController()
-	 */
 	@Override
 	public Designer getController() {
 		return designer;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getDesigner(int)
-	 */
 	@Override
 	public Designer getDesigner(int index) {
 		if(index < 0 || index >= Manager.NUM_DESIGNERS) {
@@ -150,24 +152,18 @@ public class DesignerApp implements App {
 		return designers[index];
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getDesigners()
-	 */
 	@Override
 	public Designer[] getDesigners() {
 		return Arrays.copyOf(designers, Manager.NUM_DESIGNERS);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.App#getManager()
-	 */
 	@Override
 	public Manager getManager() {
 		return manager;
 	}
 	
 	/**
-	 * Gets the design partner.
+	 * Convenience function to get the design partner.
 	 *
 	 * @return the design partner
 	 */
@@ -181,7 +177,7 @@ public class DesignerApp implements App {
 	}
 	
 	/**
-	 * Gets the value.
+	 * Convenience function to get the value of a pair of design/strategy decisions.
 	 *
 	 * @param myStrategy the my strategy
 	 * @param myDesign the my design

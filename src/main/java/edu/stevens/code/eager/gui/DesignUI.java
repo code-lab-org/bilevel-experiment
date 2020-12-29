@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.gui;
 
 import java.awt.Color;
@@ -13,7 +28,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
@@ -34,6 +48,12 @@ import edu.stevens.code.eager.DesignerApp;
 import edu.stevens.code.eager.model.Designer;
 import edu.stevens.code.eager.model.Manager;
 
+/**
+ * A panel for a user interface to design decisions.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
+ * @author Ambrosio Valencia-Romero <avalenci@stevens.edu>
+ */
 public class DesignUI extends JPanel {
 	private static final long serialVersionUID = -4318471579781451005L;
 	
@@ -45,19 +65,22 @@ public class DesignUI extends JPanel {
 	private JSlider mySlider;
 	private JSlider partnerSlider;
 	
+	/**
+	 * Instantiates a new design UI.
+	 *
+	 * @param strategy the strategy
+	 */
 	public DesignUI(int strategy) {
 		if(strategy < 0 || strategy >= Designer.NUM_STRATEGIES) {
 			throw new IllegalArgumentException("invalid strategy index");
 		}
 		this.strategy = strategy;
-//		this.setBackground(DesignerUI.STRATEGY_COLORS[strategy]);
 		this.setBackground(Color.WHITE);
 		this.setBorder(BorderFactory.createCompoundBorder(
 				       BorderFactory.createMatteBorder(1,1,1,1, Color.BLACK),
 				       BorderFactory.createEmptyBorder(12, 12, 12, 12)));
 		
 		this.setLayout(new GridBagLayout());
-		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -68,6 +91,7 @@ public class DesignUI extends JPanel {
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 3;
+		// add a panel to display the value (currently disabled)
 		JPanel scorePanel = new JPanel(new FlowLayout());
 		scorePanel.add(new JLabel("Value:"));
 		{
@@ -89,12 +113,11 @@ public class DesignUI extends JPanel {
 			}
 		}
 		scorePanel.setOpaque(false);
-//		this.add(scorePanel, c);
-		
+		// this.add(scorePanel, c);
+		// add a panel to toggle partner strategies (currently disabled)
 		JLabel strategyID = new JLabel("<html>&nbsp;&nbsp;&emsp;"+DesignerUI.STRATEGY_LABELS[strategy]+"</html>");
 		strategyID.setFont(new Font("Arial", Font.BOLD, 72));
 		this.add(strategyID, c);
-		
 		c.gridx = 2;
 		c.gridwidth = 1;		
 		c.weightx = 0;
@@ -112,8 +135,8 @@ public class DesignUI extends JPanel {
 		comboPanel.setOpaque(false);
 		comboPanel.add(new JLabel("Partner:"));
 		comboPanel.add(strategyToggle);
-//		add(comboPanel, c);
-		
+		// add(comboPanel, c);
+		// add the value panels
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy++;
@@ -125,7 +148,6 @@ public class DesignUI extends JPanel {
 		partnerSlider.setEnabled(false);
 		partnerSlider.setOpaque(false);
 		this.add(partnerSlider, c);
-		
 		c.gridx++;
 		c.weightx = 1;
 		c.weighty = 1;
@@ -151,6 +173,7 @@ public class DesignUI extends JPanel {
 		String key = strategy == 1 ? "N" : "V";
 		this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("pressed " + key), "shiftStates");
 		this.getActionMap().put("shiftStates", new AbstractAction() {
+			private static final long serialVersionUID = -6000894619328234043L;
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				strategyToggle.setSelected(true);
@@ -159,16 +182,18 @@ public class DesignUI extends JPanel {
 		});
 		this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("released " + key), "unshiftStates");
 		this.getActionMap().put("unshiftStates", new AbstractAction() {
+			private static final long serialVersionUID = -65459306537253835L;
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				strategyToggle.setSelected(false);
 				updateValues();
 			}
 		});
-		valueContainer = new JPanel(new GridBagLayout()); // GridBag needed to align sliders
+		valueContainer = new JPanel(new GridBagLayout()); // use layout to align sliders
 		valueContainer.setOpaque(false);
 		valueContainer.add(valuePanels[strategy]);
 		this.add(valueContainer, c);
+		// add a color bar panel
 		c.gridx+=2;
 		c.weightx = 0.26;
 		c.weighty = 1;
@@ -176,7 +201,7 @@ public class DesignUI extends JPanel {
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.VERTICAL;
 		this.add(new ColorBarPanel(), c);
-		
+		// add a slider for my design decisions
 		c.gridx = 1;
 		c.gridy++;
 		c.weightx = 0;
@@ -187,7 +212,6 @@ public class DesignUI extends JPanel {
 		mySlider = new JSlider(Designer.MIN_DESIGN_VALUE, Designer.MAX_DESIGN_VALUE, Designer.NUM_DESIGNS/2);
 		mySlider.setOpaque(false);
 		this.add(mySlider, c);
-		
 		// set up listener to always keep value panels in correct aspect ratio
 		valueContainer.addComponentListener(new ComponentAdapter() {
 			@Override
@@ -208,20 +232,23 @@ public class DesignUI extends JPanel {
 		});
 	}
 	
+	/**
+	 * Update values.
+	 */
 	private void updateValues() {
-		//valueContainer.removeAll();
 		valuePanels[strategy].shiftStates(strategyToggle.isSelected());
 		if(strategyToggle.isSelected()) {
 			strategyToggle.setText("Disagree");
-			//valueContainer.add(valuePanels[1-strategy], BorderLayout.CENTER);
 		} else {
 			strategyToggle.setText("Agree");
-			//valueContainer.add(valuePanels[strategy], BorderLayout.CENTER);
 		}
-		//valueContainer.validate();
-		//valueContainer.repaint();
 	}
 	
+	/**
+	 * Reset UI.
+	 *
+	 * @param app the designer application
+	 */
 	private void resetUI(DesignerApp app) {
 		mySlider.setValue(Designer.NUM_DESIGNS/2);
 		partnerSlider.setValue(Designer.NUM_DESIGNS/2);
@@ -237,6 +264,11 @@ public class DesignUI extends JPanel {
 		}
 	}
 	
+	/**
+	 * Bind to a designer application.
+	 *
+	 * @param app the designer application
+	 */
 	public void bindTo(DesignerApp app) {		
 		mySlider.setValue(app.getController().getDesign(strategy));
 		mySlider.addFocusListener(new FocusAdapter() {
@@ -256,7 +288,6 @@ public class DesignUI extends JPanel {
 					Border white_b = BorderFactory.createMatteBorder(2,2,2,2, Color.WHITE);
 					Border bandw_b = BorderFactory.createCompoundBorder(black_b,white_b);
 					empty_b = BorderFactory.createCompoundBorder(empty_b,bandw_b);
-//					setBorder(BorderFactory.createMatteBorder(11, 11, 11, 11, Color.BLACK));
 					setBorder(BorderFactory.createCompoundBorder(empty_b,black_b));
 					setBackground(Color.decode("#ffcca2"));
 				} else {

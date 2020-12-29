@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.gui;
 
 import java.awt.BorderLayout;
@@ -24,6 +39,12 @@ import edu.stevens.code.eager.DesignerApp;
 import edu.stevens.code.eager.model.Designer;
 import edu.stevens.code.eager.model.Manager;
 
+/**
+ * A panel for a user interface to strategy decisions.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
+ * @author Ambrosio Valencia-Romero <avalenci@stevens.edu>
+ */
 public class StrategyUI extends JPanel {
 	private static final long serialVersionUID = -4318471579781451005L;
 	
@@ -34,15 +55,16 @@ public class StrategyUI extends JPanel {
 	
 	private JToggleButton toggleButton;
 	
+	/**
+	 * Instantiates a new strategy UI.
+	 */
 	public StrategyUI() {		
 		this.setLayout(new GridBagLayout());
-		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 0;
 		c.weighty = 0;
-
 		c.gridwidth = 4;
 		c.anchor = GridBagConstraints.EAST;
 		toggleButton = new JToggleButton("Detail");
@@ -68,7 +90,6 @@ public class StrategyUI extends JPanel {
 			}
 		});
 		// add(toggleButton, c);
-		
 		c.gridy++;
 		c.gridx = Designer.NUM_STRATEGIES + 1;
 		c.gridwidth = 1;
@@ -76,7 +97,6 @@ public class StrategyUI extends JPanel {
 		c.fill = GridBagConstraints.BOTH;
 		c.anchor = GridBagConstraints.CENTER;
 		this.add(new ColorBarPanel(), c);
-		
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.BOTH;
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
@@ -90,7 +110,6 @@ public class StrategyUI extends JPanel {
 			c.gridx++;
 			c.weightx = 1;
 			c.weighty = 1;
-			
 			for(int j = 0; j < Designer.NUM_STRATEGIES; j++) {
 				valueContainers[i][j] = new JPanel(new BorderLayout());
 				final int strategy = j;
@@ -122,7 +141,6 @@ public class StrategyUI extends JPanel {
 			}
 			c.gridy++;
 		}
-		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridheight = 1;
 		c.gridx = 0;
@@ -159,6 +177,9 @@ public class StrategyUI extends JPanel {
 		}
 	}
 	
+	/**
+	 * Reset UI.
+	 */
 	private void resetUI() {
 		strategyRadios[0].doClick();
 		if(toggleButton.isSelected()) {
@@ -174,6 +195,11 @@ public class StrategyUI extends JPanel {
 		}
 	}
 	
+	/**
+	 * Bind to a designer application.
+	 *
+	 * @param app the designer application
+	 */
 	public void bindTo(DesignerApp app) {		
 		for(int i = 0; i < Designer.NUM_STRATEGIES; i++) {
 			final int strategy = i;

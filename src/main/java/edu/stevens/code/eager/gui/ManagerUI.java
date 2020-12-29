@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.gui;
 
 import java.awt.GridBagConstraints;
@@ -9,7 +24,9 @@ import edu.stevens.code.eager.ManagerApp;
 import edu.stevens.code.eager.model.Designer;
 
 /**
- * The Class ManagerUI.
+ * A user interface for the manager application.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
  */
 public class ManagerUI extends ManagerAppPanel {
 	private static final long serialVersionUID = -582914205975711140L;
@@ -17,7 +34,7 @@ public class ManagerUI extends ManagerAppPanel {
 	private JPanel dPanels;
 	
 	/**
-	 * Instantiates a new manager app panel impl.
+	 * Instantiates a new manager user interface.
 	 */
 	public ManagerUI() {
 		this.setLayout(new GridBagLayout());
@@ -28,7 +45,7 @@ public class ManagerUI extends ManagerAppPanel {
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
 		c.weighty = 1;
-		mPanel = new ManagerPanelImpl();
+		mPanel = new ManageUI();
 		add(mPanel, c);
 		c.gridx++;
 		dPanels = new JPanel();
@@ -36,9 +53,6 @@ public class ManagerUI extends ManagerAppPanel {
 		add(dPanels, c);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.gui.ManagerAppPanel#bindTo(edu.stevens.code.ptg.ManagerApp)
-	 */
 	@Override
 	public void bindTo(ManagerApp app) {
 		mPanel.observe(app.getManager());
@@ -48,6 +62,7 @@ public class ManagerUI extends ManagerAppPanel {
 		c.weightx = 1;
 		c.weighty = 1;
 		c.fill = GridBagConstraints.BOTH;
+		// add debug panels for each designer
 		for(Designer designer : app.getDesigners()) {
 			DebugDesignerPanel dPanel = new DebugDesignerPanel();
 			dPanel.setAlwaysShare(true);

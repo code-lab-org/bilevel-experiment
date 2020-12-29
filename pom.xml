@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>edu.stevens.code</groupId>
-  <artifactId>eager.designer_exp</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>bilevel-experiment</artifactId>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
-  <name>eager.designer_exp</name>
+  <name>bilevel-experiment</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -22,13 +22,6 @@
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.pitch</groupId>
-    	<artifactId>prti1516e</artifactId>
-    	<version>5.4.5.0</version>
-    	<scope>system</scope>
-    	<systemPath>C:/Program Files/prti1516e/lib/prti1516e.jar</systemPath>
     </dependency>
     <dependency>
     	<groupId>org.apache.logging.log4j</groupId>

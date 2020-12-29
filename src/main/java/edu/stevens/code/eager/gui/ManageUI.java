@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.gui;
 
 import java.awt.FlowLayout;
@@ -36,9 +51,11 @@ import edu.stevens.code.eager.ManagerApp;
 import edu.stevens.code.eager.model.Manager;
 
 /**
- * The Class ManagerPanelImpl.
+ * A user interface for the manager.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
  */
-public class ManagerPanelImpl extends ManagerPanel {
+public class ManageUI extends ManagerPanel {
 	private static final long serialVersionUID = -4935834958965987709L;
 	
 	private JTextField roundText;
@@ -52,22 +69,22 @@ public class ManagerPanelImpl extends ManagerPanel {
 	private JButton nextRound;
 	
 	private static ImageIcon playIcon = new ImageIcon(
-			ManagerPanelImpl.class.getResource("/icons/silk/control_play.png"));
+			ManageUI.class.getResource("/icons/silk/control_play.png"));
 	private static ImageIcon pauseIcon = new ImageIcon(
-			ManagerPanelImpl.class.getResource("/icons/silk/control_pause.png"));
+			ManageUI.class.getResource("/icons/silk/control_pause.png"));
 	private static ImageIcon resetIcon = new ImageIcon(
-			ManagerPanelImpl.class.getResource("/icons/silk/control_repeat.png"));
+			ManageUI.class.getResource("/icons/silk/control_repeat.png"));
 	private static ImageIcon scoreIcon = new ImageIcon(
-			ManagerPanelImpl.class.getResource("/icons/silk/wand.png"));
+			ManageUI.class.getResource("/icons/silk/wand.png"));
 	private static ImageIcon rightArrowIcon = new ImageIcon(
-			ManagerPanelImpl.class.getResource("/icons/silk/arrow_right.png"));
+			ManageUI.class.getResource("/icons/silk/arrow_right.png"));
 	private static ImageIcon leftArrowIcon = new ImageIcon(
-			ManagerPanelImpl.class.getResource("/icons/silk/arrow_left.png"));
+			ManageUI.class.getResource("/icons/silk/arrow_left.png"));
 	
 	/**
-	 * Instantiates a new manager panel impl.
+	 * Instantiates a new manage UI.
 	 */
-	public ManagerPanelImpl() {
+	public ManageUI() {
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -139,9 +156,6 @@ public class ManagerPanelImpl extends ManagerPanel {
 		this.add(buttonPanel, c);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.gui.ManagerPanel#observe(edu.stevens.code.ptg.Manager)
-	 */
 	@Override
 	public void observe(Manager manager) {
 		this.setBorder(BorderFactory.createTitledBorder(manager.toString()));
@@ -156,7 +170,7 @@ public class ManagerPanelImpl extends ManagerPanel {
 				if((manager.getTimeRemaining() - Manager.STRATEGY_TIME) == 10
 				 || manager.getTimeRemaining() == 10) {
 					try {
-						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/10s_countdown.wav");
+						InputStream audioStream = ManageUI.class.getResourceAsStream("/10s_countdown.wav");
 						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);
 						Clip clip = AudioSystem.getClip();
 						clip.addLineListener(new LineListener() {
@@ -181,7 +195,7 @@ public class ManagerPanelImpl extends ManagerPanel {
 				if( ((manager.getTimeRemaining() - Manager.STRATEGY_TIME) % 30) == 0
 				  && (manager.getTimeRemaining() - Manager.STRATEGY_TIME) <= 90) {
 					try {
-						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/metronome.wav");
+						InputStream audioStream = ManageUI.class.getResourceAsStream("/metronome.wav");
 						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);
 						Clip clip = AudioSystem.getClip();
 						clip.addLineListener(new LineListener() {
@@ -205,7 +219,7 @@ public class ManagerPanelImpl extends ManagerPanel {
 
 				if(manager.getTimeRemaining() == 0 && arg == Manager.PROPERTY_TIME) {
 					try {
-						InputStream audioStream = ManagerPanelImpl.class.getResourceAsStream("/success-1.wav");
+						InputStream audioStream = ManageUI.class.getResourceAsStream("/success-1.wav");
 						final AudioInputStream inputStream = AudioSystem.getAudioInputStream(audioStream);
 						Clip clip = AudioSystem.getClip();
 						clip.addLineListener(new LineListener() {
@@ -233,9 +247,6 @@ public class ManagerPanelImpl extends ManagerPanel {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.gui.ManagerPanel#bindTo(edu.stevens.code.ptg.ManagerApp)
-	 */
 	@Override
 	public void bindTo(ManagerApp app) {
 		Timer timer = new Timer(1000, new ActionListener(){
@@ -330,9 +341,6 @@ public class ManagerPanelImpl extends ManagerPanel {
 		});
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.stevens.code.ptg.gui.ManagerPanel#bindTo(edu.stevens.code.ptg.Manager)
-	 */
 	@Override
 	public void bindTo(Manager manager) {
 		/* unused
@@ -384,7 +392,9 @@ public class ManagerPanelImpl extends ManagerPanel {
 	}
 	
 	/**
-	 * The Class ScoreTableModel.
+	 * A table model for scores.
+	 * 
+	 * @author Paul T. Grogan <pgrogan@stevens.edu>
 	 */
 	class ScoreTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 2952712852662467213L;
@@ -394,15 +404,12 @@ public class ManagerPanelImpl extends ManagerPanel {
 		/**
 		 * Instantiates a new score table model.
 		 *
-		 * @param app the app
+		 * @param app the manager application
 		 */
 		public ScoreTableModel(ManagerApp app) {
 			this.app = app;
 		}
 		
-		/* (non-Javadoc)
-		 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
-		 */
 		@Override
 		public String getColumnName(int columnIndex) {
 			if(columnIndex == 0) {
@@ -412,25 +419,16 @@ public class ManagerPanelImpl extends ManagerPanel {
 			}
 		}
 		
-		/* (non-Javadoc)
-		 * @see javax.swing.table.TableModel#getRowCount()
-		 */
 		@Override
 		public int getRowCount() {
 			return app.getSession().getRounds().length+1;
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.swing.table.TableModel#getColumnCount()
-		 */
 		@Override
 		public int getColumnCount() {
 			return app.getDesigners().length+1;
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.swing.table.TableModel#getValueAt(int, int)
-		 */
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			if(columnIndex == 0) {

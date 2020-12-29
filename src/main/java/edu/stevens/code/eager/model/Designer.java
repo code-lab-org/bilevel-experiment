@@ -1,10 +1,30 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.model;
 
 import java.util.Arrays;
 import java.util.Observable;
 
 /**
- * The Class Designer.
+ * Designer object class. A designer makes lower-level design decisions and 
+ * upper-level strategy decisions. There is a unique lower-level decision for 
+ * each strategy alternative.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
+ * @author Ambrosio Valencia-Romero <avalenci@stevens.edu>
  */
 public class Designer extends Observable {
 	public static final Object PROPERTY_ID = new Object();
@@ -14,7 +34,7 @@ public class Designer extends Observable {
 	
 	public static final int NUM_STRATEGIES = 2;
 	public static final int MIN_DESIGN_VALUE = 0;
-	public static final int MAX_DESIGN_VALUE = 8; /* 6 */
+	public static final int MAX_DESIGN_VALUE = 8;
 	public static final int NUM_DESIGNS = MAX_DESIGN_VALUE - MIN_DESIGN_VALUE + 1;
 	public static final int VALUE_DELTA = 1;
 	
@@ -24,13 +44,16 @@ public class Designer extends Observable {
 	private int strategy = 0;
 	private boolean readyToShare = false;
 	
+	/**
+	 * Instantiates a new designer.
+	 */
 	public Designer(){
 		for(int i = 0; i < NUM_STRATEGIES; i++)
 			designs[i] = NUM_DESIGNS/2;
 	}
 	
 	/**
-	 * Gets the id.
+	 * Gets the designer id.
 	 *
 	 * @return the id
 	 */
@@ -39,7 +62,7 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Sets the id.
+	 * Sets the designer id.
 	 *
 	 * @param id the new id
 	 */
@@ -57,7 +80,7 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Resets this designer.
+	 * Resets the design and strategy decisions.
 	 */
 	public void reset() {
 		for(int index = 0; index < NUM_STRATEGIES; index++) {
@@ -67,7 +90,7 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Gets the designs.
+	 * Gets the design decisions (one per strategy alternative).
 	 *
 	 * @return the designs
 	 */
@@ -76,7 +99,7 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Gets the agreed designs.
+	 * Gets the agreed design decisions (one per strategy alternative).
 	 *
 	 * @return the agreed designs
 	 */
@@ -85,9 +108,9 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Gets the design.
+	 * Gets the design decision for a given strategy index.
 	 *
-	 * @param index the index
+	 * @param index the strategy index
 	 * @return the design
 	 */
 	public synchronized int getDesign(int index) {
@@ -98,9 +121,9 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Gets the agreed design.
+	 * Gets the agreed design decision for a given strategy index.
 	 *
-	 * @param index the index
+	 * @param index the strategy index
 	 * @return the agreed design
 	 */
 	public synchronized int getAgreedDesign(int index) {
@@ -111,9 +134,9 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Sets the design.
+	 * Sets the design decision for a given strategy index.
 	 *
-	 * @param index the index
+	 * @param index the strategy index
 	 * @param value the value
 	 */
 	public void setDesign(int index, int value) {
@@ -133,9 +156,9 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Sets the agreed design.
+	 * Sets the agreed design decision for a given strategy index.
 	 *
-	 * @param index the index
+	 * @param index the strategy index
 	 * @param value the value
 	 */
 	public void setAgreedDesign(int index, int value) {
@@ -155,7 +178,7 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Sets the designs.
+	 * Sets the design decisions (one per strategy alternative).
 	 *
 	 * @param value the values
 	 */
@@ -178,7 +201,7 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Sets the agreed designs.
+	 * Sets the agreed design decisions (one per strategy alternative).
 	 *
 	 * @param value the values
 	 */
@@ -201,7 +224,7 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Gets the strategy.
+	 * Gets the strategy decision.
 	 *
 	 * @return the strategy
 	 */
@@ -210,7 +233,7 @@ public class Designer extends Observable {
 	}
 	
 	/**
-	 * Sets the strategy.
+	 * Sets the strategy decision.
 	 *
 	 * @param value the new strategy
 	 */
@@ -251,9 +274,6 @@ public class Designer extends Observable {
 		this.notifyObservers(PROPERTY_SHARE);
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "Designer " + id;

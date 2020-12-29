@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Stevens Institute of Technology, Collective Design Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.stevens.code.eager.gui;
 
 import java.awt.Color;
@@ -11,6 +26,12 @@ import javax.swing.JPanel;
 
 import edu.stevens.code.eager.model.Designer;
 
+/**
+ * Panel that displays color bar information.
+ * 
+ * @author Paul T. Grogan <pgrogan@stevens.edu>
+ * @author Ambrosio Valencia-Romero <avalenci@stevens.edu>
+ */
 public class ColorBarPanel extends JPanel {
 	private static final long serialVersionUID = -1241763890892204288L;
 
@@ -23,9 +44,6 @@ public class ColorBarPanel extends JPanel {
 		this.setBorder(BorderFactory.createEmptyBorder(50,4,48,10));
 	}
 	
-	/* (non-Javadoc)
-	 * @see javax.swing.JComponent#paint(java.awt.Graphics)
-	 */
 	@Override
 	public void paint(Graphics g) {
 		Insets insets = this.getInsets();
@@ -38,13 +56,7 @@ public class ColorBarPanel extends JPanel {
 		
 		for(int value = 0; value <= 100; value+=Designer.VALUE_DELTA) {
 			if(value >= 0 && value <= 100) {
-				if(Designer.VALUE_DELTA == 5) {
-					g.setColor(DesignerUI.VALUE_COLORS_21[value/Designer.VALUE_DELTA]);
-				} else if(Designer.VALUE_DELTA == 2) {
-					g.setColor(DesignerUI.VALUE_COLORS_51[value/Designer.VALUE_DELTA]);
-				} else {
-					g.setColor(DesignerUI.VALUE_COLORS[value/Designer.VALUE_DELTA]);
-				}
+				g.setColor(DesignerUI.VALUE_COLORS[value/Designer.VALUE_DELTA]);
 			} else {
 				g.setColor(Color.BLACK);
 			}
@@ -53,7 +65,7 @@ public class ColorBarPanel extends JPanel {
 			g.fillRect(x, y, width, height);
 
 			g.setColor(Color.BLACK);
-			if (value%10 == 0) {
+			if (value % 10 == 0) {
 				String text = new Integer(value).toString();
 				int textX = (int) (x + width + textPadding);
 				int textY = (int) (y+0.5*height - fm.getStringBounds(text, g).getCenterY());

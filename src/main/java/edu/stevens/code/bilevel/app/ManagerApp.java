@@ -251,13 +251,13 @@ public class ManagerApp implements App {
 	}
 
 	@Override
-	public void init(String federationName) {
+	public void init(String hostname) {
 		// initialize the ambassador
 		if(ambassador == null) {
 			ambassador = new ZmqAmbassador();
 		}
 		// connect the ambassador
-		ambassador.connectManager(this, federationName);
+		ambassador.connectManager(this, hostname);
 		// add an observer to the manager to process ambassador updates
 		manager.addObserver(new Observer() {
 			@Override

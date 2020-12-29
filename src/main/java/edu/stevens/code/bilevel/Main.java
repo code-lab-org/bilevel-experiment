@@ -73,22 +73,22 @@ public class Main {
 	    			.build()
     			);
     	options.addOption(
-    			Option.builder("f")
-	    			.longOpt("federation")
+    			Option.builder("h")
+	    			.longOpt("hostname")
     				.hasArg()
     				.argName("name")
-	    			.desc("HLA federation name or ZMQ manager IP address/hostname (default: code)")
+	    			.desc("Manager IP address/hostname (default: localhost)")
 	    			.build()
     			);
     	// try to parse the command line arguments
 		try {
 			CommandLine cmd = parser.parse(options, args);
-			String federationName = cmd.getOptionValue("f", "code");
+			String hostname = cmd.getOptionValue("h", "localhost");
 			if(cmd.hasOption("d")) {
 				for(String value : cmd.getOptionValues("d")) {
 					try {
 						int id = Integer.parseInt(value);
-						new DesignerApp(id).init(federationName);
+						new DesignerApp(id).init(hostname);
 					} catch(NumberFormatException e) {
 						logger.error(e);
 					}
@@ -100,7 +100,7 @@ public class Main {
 					String path = cmd.getOptionValue("m");
 					BufferedReader reader = new BufferedReader(new FileReader(path));
 					Session session = gson.fromJson(reader, Session.class);
-					new ManagerApp(session).init(federationName);
+					new ManagerApp(session).init(hostname);
 				} catch(FileNotFoundException e) {
 					logger.error(e);
 				}

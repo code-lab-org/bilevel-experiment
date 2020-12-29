@@ -31,17 +31,17 @@ public interface Ambassador {
 	 * Connect a manager application to the middleware.
 	 *
 	 * @param managerApp the manager application
-	 * @param federationName the federation name
+	 * @param hostname the manager hostname
 	 */
-	public void connectManager(ManagerApp managerApp, String federationName);
+	public void connectManager(ManagerApp managerApp, String hostname);
 	
 	/**
 	 * Connect a designer application to the middleware.
 	 *
 	 * @param designerApp the designer application
-	 * @param federationName the federation name
+	 * @param hostname the manager hostname
 	 */
-	public void connectDesigner(DesignerApp designerApp, String federationName);
+	public void connectDesigner(DesignerApp designerApp, String hostname);
 	
 	/**
 	 * Callback function to process an update for a manager.
